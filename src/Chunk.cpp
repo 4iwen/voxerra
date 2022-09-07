@@ -39,10 +39,6 @@ void Chunk::GenerateChunk(FastNoiseLite noise, int iPosX,int iPosY,  int iLength
 }
 void Chunk::GenerateData()
 {
-    cout << indices.size()<<endl;
-    cout << ("Generating GL Chunk")<<endl;
-
-
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
             for (int z = 0; z < length; z++) {
