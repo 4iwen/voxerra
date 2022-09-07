@@ -89,6 +89,13 @@ void Chunk::GenerateGLData()
     }
 }
 
+void Chunk::AddIndi(indi indi)
+{
+    indices.push_back(indi);
+    cout << "x : " << indi.x << " y : " << indi.y<< " z : " << indi.z << endl;
+    i++;
+}
+
 void Chunk::AddTop(int blockX,int blockY,int blockZ)
 {
     indi curIndi;
@@ -98,88 +105,96 @@ void Chunk::AddTop(int blockX,int blockY,int blockZ)
     curIndi.red = 1;
     curIndi.green = 1;
     curIndi.blue = 1;
-    indices.push_back(curIndi);
+    AddIndi(curIndi);
+
     curIndi.x = blockX + 1;
     curIndi.y = blockY + 1;
     curIndi.z = blockZ;
     curIndi.red = 1;
     curIndi.green = 1;
     curIndi.blue = 1;
-    indices.push_back(curIndi);
+    AddIndi(curIndi);
+
     curIndi.x = blockX;
     curIndi.y = blockY + 1;
     curIndi.z = blockZ + 1;
     curIndi.red = 1;
     curIndi.green = 1;
     curIndi.blue = 1;
-    indices.push_back(curIndi);
+    AddIndi(curIndi);
+
     curIndi.x = blockX + 1;
     curIndi.y = blockY + 1;
     curIndi.z = blockZ + 1;
     curIndi.red = 1;
     curIndi.green = 1;
     curIndi.blue = 1;
-    indices.push_back(curIndi);
+    AddIndi(curIndi);
 
-    GLvertices[v] = i - 3;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
 
-    GLvertices[v] = i;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
+    //GLvertices[v] = i - 3;
+    //v++;
+    //GLvertices[v] = i - 2;
+    //v++;
+    //GLvertices[v] = i - 1;
+    //v++;
+
+    //GLvertices[v] = i;
+    //v++;
+    //GLvertices[v] = i - 1;
+    //v++;
+    //GLvertices[v] = i - 2;
+    //v++;
 }
 
 void Chunk::AddBottom(int blockX,int blockY,int blockZ)
 {
-    indices[i].x = blockX;
-    indices[i].y = blockY;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX;
-    indices[i].y = blockY;
-    indices[i].z = blockZ + 1;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY;
-    indices[i].z = blockZ + 1;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
+    indi curIndi;
+    curIndi.x = blockX;
+    curIndi.y = blockY;
+    curIndi.z = blockZ;
+    curIndi.red = 1;
+    curIndi.green = 1;
+    curIndi.blue = 1;
+    AddIndi(curIndi);
 
-    GLvertices[v] = i - 3;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
+    curIndi.x = blockX + 1;
+    curIndi.y = blockY;
+    curIndi.z = blockZ;
+    curIndi.red = 1;
+    curIndi.green = 1;
+    curIndi.blue = 1;
+    AddIndi(curIndi);
 
-    GLvertices[v] = i;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
+    curIndi.x = blockX;
+    curIndi.y = blockY;
+    curIndi.z = blockZ + 1;
+    curIndi.red = 1;
+    curIndi.green = 1;
+    curIndi.blue = 1;
+    AddIndi(curIndi);
+
+    curIndi.x = blockX + 1;
+    curIndi.y = blockY;
+    curIndi.z = blockZ + 1;
+    curIndi.red = 1;
+    curIndi.green = 1;
+    curIndi.blue = 1;
+    AddIndi(curIndi);
+
+    //GLvertices[v] = i - 3;
+    //v++;
+    //GLvertices[v] = i - 2;
+    //v++;
+    //GLvertices[v] = i - 1;
+    //v++;
+//
+    //GLvertices[v] = i;
+    //v++;
+    //GLvertices[v] = i - 1;
+    //v++;
+    //GLvertices[v] = i - 2;
+    //v++;
 }
 
 void Chunk::AddBack(int blockX,int blockY,int blockZ)

@@ -28,7 +28,7 @@ private:
 
     bool CheckAround(int x,int y,int z);
 
-
+    void AddIndi(indi i);
     void AddTop(int blockX,int blockY,int blockZ);
     void AddBottom(int blockX,int blockY,int blockZ);
     void AddLeft(int blockX,int blockY,int blockZ);
