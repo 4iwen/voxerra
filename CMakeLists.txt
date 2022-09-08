@@ -5,7 +5,13 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(${PROJECT_NAME}
         src/core/main.cpp
-        src/core/glad/glad.c)
+        src/core/glad/glad.c
+        src/core/VertexArray.cpp
+        src/core/VertexBuffer.cpp
+        src/core/ElementBuffer.cpp
+        src/core/Shader.cpp
+        src/core/Shader.cpp
+        )
 
 add_subdirectory(ext/glfw)
 
