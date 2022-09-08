@@ -3,7 +3,7 @@
 #include "vector"
 #include "glm/glm.hpp"
 #include "glad/glad.h"
-#include "indi.h"
+#include "vert.h"
 
 using namespace std;
 
@@ -21,20 +21,23 @@ public:
 private:
     vector<GLfloat> GLvertices;
     vector<GLuint> GLindices;
-    vector<indi> indices;
+    vector<vert> verts;
+    vector<int> indices;
 
     enum blocks { grass, dirt, stone, air};
     blocks blockData[4][4][16];
 
     bool CheckAround(int x,int y,int z);
 
-    void AddIndi(indi i);
+    void AddVert(vert i);
     void AddTop(int blockX,int blockY,int blockZ);
     void AddBottom(int blockX,int blockY,int blockZ);
     void AddLeft(int blockX,int blockY,int blockZ);
     void AddRight(int blockX,int blockY,int blockZ);
     void AddBack(int blockX,int blockY,int blockZ);
     void AddForth(int blockX,int blockY,int blockZ);
+
+    void GenerateIndicies();
 
     int posX;
     int posY;

@@ -37,6 +37,7 @@ void Chunk::GenerateChunk(FastNoiseLite noise, int iPosX,int iPosY,  int iLength
         }
     }
 }
+
 void Chunk::GenerateData()
 {
     for (int x = 0; x < width; x++) {
@@ -68,313 +69,259 @@ void Chunk::GenerateGLData()
 {
     cout << ("Generating GL Chunk");
 
-    GLindices[0] = indices[0].x;
-    GLindices[1] = indices[1].y;
-    GLindices[2] = indices[2].z;
-    GLindices[3] = indices[3].red;
-    GLindices[4] = indices[4].green;
-    GLindices[5] = indices[5].blue;
-    for (int c = 1; c < indices.size(); c++) // X coordinates
+    GLvertices[0] = verts[0].x;
+    GLvertices[1] = verts[1].y;
+    GLvertices[2] = verts[2].z;
+    GLvertices[3] = verts[3].red;
+    GLvertices[4] = verts[4].green;
+    GLvertices[5] = verts[5].blue;
+    for (int c = 1; c < verts.size(); c++) // X coordinates
     {
-        GLindices[(c * 6) + 0] = indices[c].x;
-        GLindices[(c * 6) + 1] = indices[c].y;
-        GLindices[(c * 6) + 2] = indices[c].z;
-        GLindices[(c * 6) + 3] = indices[c].red;
-        GLindices[(c * 6) + 4] = indices[c].green;
-        GLindices[(c * 6) + 5] = indices[c].blue;
+        GLvertices[(c * 6) + 0] = verts[c].x;
+        GLvertices[(c * 6) + 1] = verts[c].y;
+        GLvertices[(c * 6) + 2] = verts[c].z;
+        GLvertices[(c * 6) + 3] = verts[c].red;
+        GLvertices[(c * 6) + 4] = verts[c].green;
+        GLvertices[(c * 6) + 5] = verts[c].blue;
     }
 }
 
-void Chunk::AddIndi(indi indi)
+//function that deletes overlapping indices
+void Chunk::AddVert(vert v)
 {
-    indices.push_back(indi);
-    cout << "x : " << indi.x << " y : " << indi.y<< " z : " << indi.z << endl;
-    i++;
+    for (int c = 0; c < verts.size(); c++) // X coordinates
+    {
+        if(verts[c].x == v.x && verts[c].y == v.y && verts[c].z == v.z)
+        {
+            verts.erase(verts.begin() + c);
+            return;
+        }
+    }
+    verts.push_back(v);
+}
+
+void Chunk::GenerateIndicies() {
+    for(int one = 0; one > verts.size();one++)
+    {
+        for(int two = 0; two > verts.size();two++)
+        {
+            for(int three = 0; three > verts.size();three++)
+            {
+                if(one != two && two != three && one != three)
+                {
+                    if(verts[one].x == verts[three].x + 1 && verts[one].y == verts[three].y && verts[one].z == verts[three].z)
+                    {
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)
+                        {
+                            indices.push_back(one);
+                            indices.push_back(two);
+                            indices.push_back(three);
+                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                        }
+                    }
+                    if(verts[one].x == verts[three].x - 1 && verts[one].y == verts[three].y && verts[one].z == verts[three].z)
+                    {
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)
+                        {
+                            indices.push_back(one);
+                            indices.push_back(two);
+                            indices.push_back(three);
+                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Chunk::AddTop(int blockX,int blockY,int blockZ)
 {
-    indi curIndi;
-    curIndi.x = blockX;
-    curIndi.y = blockY + 1;
-    curIndi.z = blockZ;
-    curIndi.red = 1;
-    curIndi.green = 1;
-    curIndi.blue = 1;
-    AddIndi(curIndi);
+    vert curVert;
+    curVert.x = blockX;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+    cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
 
-    curIndi.x = blockX + 1;
-    curIndi.y = blockY + 1;
-    curIndi.z = blockZ;
-    curIndi.red = 1;
-    curIndi.green = 1;
-    curIndi.blue = 1;
-    AddIndi(curIndi);
+    curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+    cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
 
-    curIndi.x = blockX;
-    curIndi.y = blockY + 1;
-    curIndi.z = blockZ + 1;
-    curIndi.red = 1;
-    curIndi.green = 1;
-    curIndi.blue = 1;
-    AddIndi(curIndi);
+    curVert.x = blockX;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+    cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
 
-    curIndi.x = blockX + 1;
-    curIndi.y = blockY + 1;
-    curIndi.z = blockZ + 1;
-    curIndi.red = 1;
-    curIndi.green = 1;
-    curIndi.blue = 1;
-    AddIndi(curIndi);
-
-
-    //GLvertices[v] = i - 3;
-    //v++;
-    //GLvertices[v] = i - 2;
-    //v++;
-    //GLvertices[v] = i - 1;
-    //v++;
-
-    //GLvertices[v] = i;
-    //v++;
-    //GLvertices[v] = i - 1;
-    //v++;
-    //GLvertices[v] = i - 2;
-    //v++;
+    curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+    cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
 }
 
 void Chunk::AddBottom(int blockX,int blockY,int blockZ)
 {
-    indi curIndi;
-    curIndi.x = blockX;
-    curIndi.y = blockY;
-    curIndi.z = blockZ;
-    curIndi.red = 1;
-    curIndi.green = 1;
-    curIndi.blue = 1;
-    AddIndi(curIndi);
+    vert curVert;
+    curVert.x = blockX;
+    curVert.y = blockY;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
-    curIndi.x = blockX + 1;
-    curIndi.y = blockY;
-    curIndi.z = blockZ;
-    curIndi.red = 1;
-    curIndi.green = 1;
-    curIndi.blue = 1;
-    AddIndi(curIndi);
+    curVert.x = blockX + 1;
+    curVert.y = blockY;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
-    curIndi.x = blockX;
-    curIndi.y = blockY;
-    curIndi.z = blockZ + 1;
-    curIndi.red = 1;
-    curIndi.green = 1;
-    curIndi.blue = 1;
-    AddIndi(curIndi);
+    curVert.x = blockX;
+    curVert.y = blockY;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
-    curIndi.x = blockX + 1;
-    curIndi.y = blockY;
-    curIndi.z = blockZ + 1;
-    curIndi.red = 1;
-    curIndi.green = 1;
-    curIndi.blue = 1;
-    AddIndi(curIndi);
-
-    //GLvertices[v] = i - 3;
-    //v++;
-    //GLvertices[v] = i - 2;
-    //v++;
-    //GLvertices[v] = i - 1;
-    //v++;
-//
-    //GLvertices[v] = i;
-    //v++;
-    //GLvertices[v] = i - 1;
-    //v++;
-    //GLvertices[v] = i - 2;
-    //v++;
+    curVert.x = blockX + 1;
+    curVert.y = blockY;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 }
 
 void Chunk::AddBack(int blockX,int blockY,int blockZ)
 {
-    indices[i].x = blockX;
-    indices[i].y = blockY;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX;
-    indices[i].y = blockY + 1;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX;
-    indices[i].y = blockY + 1;
-    indices[i].z = blockZ + 1;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX;
-    indices[i].y = blockY;
-    indices[i].z = blockZ + 1;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
 
-    GLvertices[v] = i - 3;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
-
-    GLvertices[v] = i;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
 }
 
 void Chunk::AddForth(int blockX,int blockY,int blockZ)
 {
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY + 1;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY;
-    indices[i].z = blockZ + 1;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY + 1;
-    indices[i].z = blockZ + 1;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
+    vert curVert;
+    curVert.x = blockX + 1;
+    curVert.y = blockY;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
-    GLvertices[v] = i - 3;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
+    curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
-    GLvertices[v] = i;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
+    curVert.x = blockX + 1;
+    curVert.y = blockY;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+
+    curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 }
 
 void Chunk::AddLeft(int blockX,int blockY,int blockZ)
 {
-    indices[i].x = blockX;
-    indices[i].y = blockY;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX;
-    indices[i].y = blockY + 1;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY + 1;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY;
-    indices[i].z = blockZ + 1;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
+    vert curVert;
+    curVert.x = blockX;
+    curVert.y = blockY;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
-    GLvertices[v] = i - 3;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
+    curVert.x = blockX;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
-    GLvertices[v] = i;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
+    curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+
+    curVert.x = blockX + 1;
+    curVert.y = blockY;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 }
 
 void Chunk::AddRight(int blockX,int blockY,int blockZ)
 {
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY + 1;
-    indices[i].z = blockZ;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY + 1;
-    indices[i].z = blockZ + 1;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
-    indices[i].x = blockX + 1;
-    indices[i].y = blockY;
-    indices[i].z = blockZ + 1;
-    indices[i].red = 1;
-    indices[i].green = 1;
-    indices[i].blue = 1;
-    i++;
+    vert curVert;
+    curVert.x = blockX + 1;
+    curVert.y = blockY;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
-    GLvertices[v] = i - 3;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
+    curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
-    GLvertices[v] = i;
-    v++;
-    GLvertices[v] = i - 1;
-    v++;
-    GLvertices[v] = i - 2;
-    v++;
+    curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+
+    curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 }
 
 

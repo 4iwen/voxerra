@@ -83,10 +83,6 @@ int main()
     GLuint indices[indicesV->size()];
     std::copy(indicesV->begin(), indicesV->end(), indices);
 
-    for (int i = 0; i < indicesV->size(); ++i) {
-        std::cout << indices[i] << " ind | " << &indicesV[i] << " indV";
-    }
-
     // initialize glfw
     if (!glfwInit())
     {

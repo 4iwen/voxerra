@@ -6,7 +6,7 @@
 #define VOXERRA_INDI_H
 
 
-class indi {
+class vert {
 public :
     int x;
     int y;
