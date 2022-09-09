@@ -129,6 +129,26 @@ void Chunk::GenerateIndicies() {
                             cout << ("Added 3 Triangles ") << indices.size() << endl;
                         }
                     }
+                    if(verts[one].x == verts[three].x && verts[one].y == verts[three].y && verts[one].z == verts[three].z + 1)
+                    {
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)
+                        {
+                            indices.push_back(one);
+                            indices.push_back(two);
+                            indices.push_back(three);
+                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                        }
+                    }
+                    if(verts[one].x == verts[three].x && verts[one].y == verts[three].y && verts[one].z == verts[three].z - 1)
+                    {
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)
+                        {
+                            indices.push_back(one);
+                            indices.push_back(two);
+                            indices.push_back(three);
+                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                        }
+                    }
                 }
             }
         }
