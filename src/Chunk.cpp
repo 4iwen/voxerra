@@ -109,9 +109,9 @@ void Chunk::GenerateIndicies() {
             {
                 if(one != two && two != three && one != three)
                 {
-                    if(verts[one].x == verts[three].x + 1 && verts[one].y == verts[three].y && verts[one].z == verts[three].z)
+                    if(verts[one].x == verts[two].x + 1 && verts[one].y == verts[two].y && verts[one].z == verts[two].z)// Check for vert to the right.
                     {
-                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)// Check for vert up.
                         {
                             indices.push_back(one);
                             indices.push_back(two);
@@ -119,9 +119,9 @@ void Chunk::GenerateIndicies() {
                             cout << ("Added 3 Triangles ") << indices.size() << endl;
                         }
                     }
-                    if(verts[one].x == verts[three].x - 1 && verts[one].y == verts[three].y && verts[one].z == verts[three].z)
+                    if(verts[one].x == verts[two].x - 1 && verts[one].y == verts[two].y && verts[one].z == verts[two].z)// Check for vert to the left.
                     {
-                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)// Check for vert down.
                         {
                             indices.push_back(one);
                             indices.push_back(two);
@@ -129,9 +129,9 @@ void Chunk::GenerateIndicies() {
                             cout << ("Added 3 Triangles ") << indices.size() << endl;
                         }
                     }
-                    if(verts[one].x == verts[three].x && verts[one].y == verts[three].y && verts[one].z == verts[three].z + 1)
+                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z + 1)// Check for vert forward.
                     {
-                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)// Check for vert up.
                         {
                             indices.push_back(one);
                             indices.push_back(two);
@@ -139,9 +139,29 @@ void Chunk::GenerateIndicies() {
                             cout << ("Added 3 Triangles ") << indices.size() << endl;
                         }
                     }
-                    if(verts[one].x == verts[three].x && verts[one].y == verts[three].y && verts[one].z == verts[three].z - 1)
+                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z - 1)// Check for vert backward.
                     {
-                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)// Check for vert up.
+                        {
+                            indices.push_back(one);
+                            indices.push_back(two);
+                            indices.push_back(three);
+                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                        }
+                    }
+                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z + 1)// Check for vert forward.
+                    {
+                        if(verts[one].x == verts[three].x + 1 && verts[one].y == verts[three].y && verts[one].z == verts[three].z)// Check for vert to the right.
+                        {
+                            indices.push_back(one);
+                            indices.push_back(two);
+                            indices.push_back(three);
+                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                        }
+                    }
+                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z - 1)// Check for vert forward.
+                    {
+                        if(verts[one].x == verts[three].x - 1 && verts[one].y == verts[three].y && verts[one].z == verts[three].z)// Check for vert to the left.
                         {
                             indices.push_back(one);
                             indices.push_back(two);
