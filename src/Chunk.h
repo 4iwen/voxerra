@@ -12,9 +12,6 @@ using namespace std;
 class Chunk{
 public:
     void GenerateChunk(FastNoiseLite noise, int posX,int posY, int length, int width, int height);
-    void GenerateData();
-    void GenerateGLData();
-
     vector<GLuint>* ReturnIndecies();
     vector<GLfloat>* ReturnVerticies();
 
@@ -24,8 +21,13 @@ private:
     vector<vert> verts;
     vector<int> indices;
 
-    enum blocks { grass, dirt, stone, air};
-    blocks blockData[4][4][16];
+    void GenerateVertices();
+    void GenerateGLData();
+    void GenerateNoise(FastNoiseLite noise);
+    void FillEmpty();
+
+    enum blocks {air, dirt, grass,stone,bedrock};
+    blocks blockData[16][16][32];
 
     bool CheckAround(int x,int y,int z);
 
@@ -48,8 +50,6 @@ private:
     int width;
     int length;
     int height;
-
-    float noiseData[4][4];
 };
 
 #define VOXERRA_CHUNK_H

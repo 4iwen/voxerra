@@ -1,9 +1,8 @@
 #include "Chunk.h"
 
-void Chunk::GenerateChunk(FastNoiseLite noise, int iPosX,int iPosY,  int iLength, int iWidth,int iHeight)
+void Chunk::GenerateChunk(FastNoiseLite iNoise, int iPosX,int iPosY,  int iLength, int iWidth,int iHeight)
 {
     cout << ("Generating Chunk");
-
     posX = iPosX;
     posY = iPosY;
 
@@ -11,8 +10,18 @@ void Chunk::GenerateChunk(FastNoiseLite noise, int iPosX,int iPosY,  int iLength
     length = iLength;
     height = iHeight;
 
+    FillEmpty();
 
+    GenerateNoise(iNoise);
 
+    GenerateVertices(); //VERTS ALWAYS FIRST
+    GenerateIndicies();
+
+    GenerateGLData();
+}
+
+void Chunk::FillEmpty()
+{
     for (int x = 0; x < width; x++) // X coordinates
     {
         for (int y = 0; y < height; y++) // Y coordinates
@@ -23,73 +32,104 @@ void Chunk::GenerateChunk(FastNoiseLite noise, int iPosX,int iPosY,  int iLength
             }
         }
     }
+}
 
+void Chunk::GenerateNoise(FastNoiseLite noise)
+{
     for (int x = 0; x < width; x++) // X coordinates
     {
         for (int z = 0; z < length; z++) // Y coordinates
         {
-            int y = noise.GetNoise((float)x, (float)y) * 10;
-            blockData[x][y][z] = grass;
-            for (int j = y; j >= 0; --j)
+            float y = abs(noise.GetNoise((float)x, (float)z) * 50);
+            cout << "noise for " << x << z << " is " << (int)y << " height" << endl;
+            blockData[x][(int)y][z] = grass;
+            for (int j = (int)y; j >= 0; --j)
             {
                 blockData[x][j][z] = dirt;
             }
         }
     }
+    //FOR WRITING OUT IN THE CONSOLE
+    for (int x = 0; x < width; x++) // X coordinates
+    {
+        for (int z = 0; z < length; z++) // Y coordinates
+        {
+            if(blockData[x][4][z] != dirt)
+            {
+                cout<< "#";
+            }
+            else if(blockData[x][7][z] != dirt)
+            {
+                cout<< "H";
+            }
+            else if(blockData[x][10][z] != dirt)
+            {
+                cout<< "A";
+            }
+            else
+            {
+                cout<< "O";
+            }
+        }
+        cout << endl;
+    }
 }
 
-void Chunk::GenerateData()
+void Chunk::GenerateVertices()
 {
     for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            for (int z = 0; z < length; z++) {
+        for (int z = 0; z < length; z++) {
+            for (int y = 0; y < height; y++) {
                 if(blockData[x][y][z] != air) // If block is occupied we check around.
-                {
-                    if(x >= 0 && CheckAround(x - 1,y,z)) // Checks Left
+                    {
+                    if(x > 0 && CheckAround(x - 1,y,z)) // Checks Left
+                    {
                         AddLeft(x,y,z);
+                        cout << "Left x :" << x << " y : " << y << " z : " << z << endl;
+                    }
                     if(x < width && CheckAround(x + 1,y,z))// Checks Right
+                    {
                         AddRight(x,y,z);
-
-                    if(y >= 0 && CheckAround(x,y - 1,z))// Checks Down
+                        cout << "right x : " << x << " y : " << y << " z : " << z << endl;
+                    }
+                    if(y > 0 && CheckAround(x,y - 1,z))// Checks Down
+                    {
                         AddBottom(x,y,z);
+                        cout << "bot x : " << x << " y : " << y << " z : " << z << endl;
+                    }
                     if(y < height && CheckAround(x,y + 1,z))// Checks Top
+                    {
                         AddTop(x,y,z);
+                        cout << "top x : " << x << " y : " << y << " z : " << z << endl;
+                    }
 
                     if(z >= 0 && CheckAround(x,y,z - 1))// Checks Back
+                    {
                         AddBack(x,y,z);
+                        cout << "back x : " << x << " y : " << y << " z : " << z << endl;
+                    }
                     if(z < length && CheckAround(x,y,z + 1))// Checks Forth
-                        AddForth(x,y,z);
+                    {
+                        AddForth(x, y, z);
+                        cout << "forth x : " << x << " y : " << y << " z : " << z << endl;
+                    }
                 }
             }
         }
     }
 }
 
-void Chunk::GenerateGLData()
+bool Chunk::CheckAround(int blockX,int blockY,int blockZ)
 {
-    cout << ("Generating GL Chunk");
-
-    GLvertices[0] = verts[0].x;
-    GLvertices[1] = verts[1].y;
-    GLvertices[2] = verts[2].z;
-    GLvertices[3] = verts[3].red;
-    GLvertices[4] = verts[4].green;
-    GLvertices[5] = verts[5].blue;
-    for (int c = 1; c < verts.size(); c++) // X coordinates
-    {
-        GLvertices[(c * 6) + 0] = verts[c].x;
-        GLvertices[(c * 6) + 1] = verts[c].y;
-        GLvertices[(c * 6) + 2] = verts[c].z;
-        GLvertices[(c * 6) + 3] = verts[c].red;
-        GLvertices[(c * 6) + 4] = verts[c].green;
-        GLvertices[(c * 6) + 5] = verts[c].blue;
-    }
+    return(blockData[blockX][blockY][blockZ] == air);
 }
 
-//function that deletes overlapping indices
+
+
+//function that only adds the vertices to the vector if they dont overlap with another vert
 void Chunk::AddVert(vert v)
 {
-    for (int c = 0; c < verts.size(); c++) // X coordinates
+    for (int c = 0; c < verts.size(); c++)
     {
         if(verts[c].x == v.x && verts[c].y == v.y && verts[c].z == v.z)
         {
@@ -101,72 +141,55 @@ void Chunk::AddVert(vert v)
 }
 
 void Chunk::GenerateIndicies() {
-    for(int one = 0; one > verts.size();one++)
+    for(int one = 0; one < verts.size();one++)
     {
-        for(int two = 0; two > verts.size();two++)
+        cout << "";
+        for(int two = 0; two < verts.size();two++)
         {
-            for(int three = 0; three > verts.size();three++)
+            cout << "";
+            for(int three = 0; three < verts.size();three++)
             {
+                cout << "";
                 if(one != two && two != three && one != three)
                 {
-                    if(verts[one].x == verts[two].x + 1 && verts[one].y == verts[two].y && verts[one].z == verts[two].z)// Check for vert to the right.
+                    if(verts[one].x == verts[two].x + 1 && verts[one].y == verts[two].y && verts[one].z == verts[two].z)
                     {
-                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)// Check for vert up.
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)
                         {
                             indices.push_back(one);
                             indices.push_back(two);
                             indices.push_back(three);
-                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                            //cout << ("Added triangle for ")<< one << " " << two << " " << three << " " << indices.size() << endl;
                         }
                     }
-                    if(verts[one].x == verts[two].x - 1 && verts[one].y == verts[two].y && verts[one].z == verts[two].z)// Check for vert to the left.
+                    if(verts[one].x == verts[two].x - 1 && verts[one].y == verts[two].y && verts[one].z == verts[two].z)
                     {
-                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)// Check for vert down.
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)
                         {
                             indices.push_back(one);
                             indices.push_back(two);
                             indices.push_back(three);
-                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                            //cout << ("Added triangle for ")<< one << " " << two << " " << three << " " << indices.size() << endl;
                         }
                     }
-                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z + 1)// Check for vert forward.
+                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z + 1)
                     {
-                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)// Check for vert up.
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y + 1 && verts[one].z == verts[three].z)
                         {
                             indices.push_back(one);
                             indices.push_back(two);
                             indices.push_back(three);
-                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                            //cout << ("Added triangle for ")<< one << " " << two << " " << three << " " << indices.size() << endl;
                         }
                     }
-                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z - 1)// Check for vert backward.
+                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z - 1)
                     {
-                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)// Check for vert up.
+                        if(verts[one].x == verts[three].x && verts[one].y == verts[three].y - 1 && verts[one].z == verts[three].z)
                         {
                             indices.push_back(one);
                             indices.push_back(two);
                             indices.push_back(three);
-                            cout << ("Added 3 Triangles ") << indices.size() << endl;
-                        }
-                    }
-                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z + 1)// Check for vert forward.
-                    {
-                        if(verts[one].x == verts[three].x + 1 && verts[one].y == verts[three].y && verts[one].z == verts[three].z)// Check for vert to the right.
-                        {
-                            indices.push_back(one);
-                            indices.push_back(two);
-                            indices.push_back(three);
-                            cout << ("Added 3 Triangles ") << indices.size() << endl;
-                        }
-                    }
-                    if(verts[one].x == verts[two].x && verts[one].y == verts[two].y && verts[one].z == verts[two].z - 1)// Check for vert forward.
-                    {
-                        if(verts[one].x == verts[three].x - 1 && verts[one].y == verts[three].y && verts[one].z == verts[three].z)// Check for vert to the left.
-                        {
-                            indices.push_back(one);
-                            indices.push_back(two);
-                            indices.push_back(three);
-                            cout << ("Added 3 Triangles ") << indices.size() << endl;
+                            //cout << ("Added triangle for ")<< one << " " << two << " " << three << " " << indices.size() << endl;
                         }
                     }
                 }
@@ -185,7 +208,6 @@ void Chunk::AddTop(int blockX,int blockY,int blockZ)
     curVert.green = 1;
     curVert.blue = 1;
     AddVert(curVert);
-    cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
 
     curVert.x = blockX + 1;
     curVert.y = blockY + 1;
@@ -194,16 +216,6 @@ void Chunk::AddTop(int blockX,int blockY,int blockZ)
     curVert.green = 1;
     curVert.blue = 1;
     AddVert(curVert);
-    cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
-
-    curVert.x = blockX;
-    curVert.y = blockY + 1;
-    curVert.z = blockZ + 1;
-    curVert.red = 1;
-    curVert.green = 1;
-    curVert.blue = 1;
-    AddVert(curVert);
-    cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
 
     curVert.x = blockX + 1;
     curVert.y = blockY + 1;
@@ -212,7 +224,15 @@ void Chunk::AddTop(int blockX,int blockY,int blockZ)
     curVert.green = 1;
     curVert.blue = 1;
     AddVert(curVert);
-    cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
+
+    curVert.x = blockX;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+    //cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
 }
 
 void Chunk::AddBottom(int blockX,int blockY,int blockZ)
@@ -234,7 +254,7 @@ void Chunk::AddBottom(int blockX,int blockY,int blockZ)
     curVert.blue = 1;
     AddVert(curVert);
 
-    curVert.x = blockX;
+    curVert.x = blockX + 1;
     curVert.y = blockY;
     curVert.z = blockZ + 1;
     curVert.red = 1;
@@ -242,7 +262,7 @@ void Chunk::AddBottom(int blockX,int blockY,int blockZ)
     curVert.blue = 1;
     AddVert(curVert);
 
-    curVert.x = blockX + 1;
+    curVert.x = blockX;
     curVert.y = blockY;
     curVert.z = blockZ + 1;
     curVert.red = 1;
@@ -253,7 +273,38 @@ void Chunk::AddBottom(int blockX,int blockY,int blockZ)
 
 void Chunk::AddBack(int blockX,int blockY,int blockZ)
 {
+    vert curVert;
+    curVert.x = blockX;
+    curVert.y = blockY;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 
+    curVert.x = blockX;
+    curVert.y = blockY;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+
+    curVert.x = blockX;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+
+    curVert.x = blockX;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
 }
 
 void Chunk::AddForth(int blockX,int blockY,int blockZ)
@@ -268,14 +319,6 @@ void Chunk::AddForth(int blockX,int blockY,int blockZ)
     AddVert(curVert);
 
     curVert.x = blockX + 1;
-    curVert.y = blockY + 1;
-    curVert.z = blockZ;
-    curVert.red = 1;
-    curVert.green = 1;
-    curVert.blue = 1;
-    AddVert(curVert);
-
-    curVert.x = blockX + 1;
     curVert.y = blockY;
     curVert.z = blockZ + 1;
     curVert.red = 1;
@@ -284,6 +327,14 @@ void Chunk::AddForth(int blockX,int blockY,int blockZ)
     AddVert(curVert);
 
     curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ + 1;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+
+    curVert.x = blockX;
     curVert.y = blockY + 1;
     curVert.z = blockZ + 1;
     curVert.red = 1;
@@ -303,25 +354,25 @@ void Chunk::AddLeft(int blockX,int blockY,int blockZ)
     curVert.blue = 1;
     AddVert(curVert);
 
+    curVert.x = blockX + 1;
+    curVert.y = blockY;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+
+    curVert.x = blockX + 1;
+    curVert.y = blockY + 1;
+    curVert.z = blockZ;
+    curVert.red = 1;
+    curVert.green = 1;
+    curVert.blue = 1;
+    AddVert(curVert);
+
     curVert.x = blockX;
     curVert.y = blockY + 1;
     curVert.z = blockZ;
-    curVert.red = 1;
-    curVert.green = 1;
-    curVert.blue = 1;
-    AddVert(curVert);
-
-    curVert.x = blockX + 1;
-    curVert.y = blockY + 1;
-    curVert.z = blockZ;
-    curVert.red = 1;
-    curVert.green = 1;
-    curVert.blue = 1;
-    AddVert(curVert);
-
-    curVert.x = blockX + 1;
-    curVert.y = blockY;
-    curVert.z = blockZ + 1;
     curVert.red = 1;
     curVert.green = 1;
     curVert.blue = 1;
@@ -340,8 +391,8 @@ void Chunk::AddRight(int blockX,int blockY,int blockZ)
     AddVert(curVert);
 
     curVert.x = blockX + 1;
-    curVert.y = blockY + 1;
-    curVert.z = blockZ;
+    curVert.y = blockY;
+    curVert.z = blockZ + 1;
     curVert.red = 1;
     curVert.green = 1;
     curVert.blue = 1;
@@ -355,7 +406,7 @@ void Chunk::AddRight(int blockX,int blockY,int blockZ)
     curVert.blue = 1;
     AddVert(curVert);
 
-    curVert.x = blockX + 1;
+    curVert.x = blockX;
     curVert.y = blockY + 1;
     curVert.z = blockZ + 1;
     curVert.red = 1;
@@ -365,12 +416,24 @@ void Chunk::AddRight(int blockX,int blockY,int blockZ)
 }
 
 
-
-bool Chunk::CheckAround(int blockX,int blockY,int blockZ)
+void Chunk::GenerateGLData()
 {
-    cout << "check " << blockX << blockY << blockZ << endl;
-    return(blockData[blockX][blockY][blockZ] == air);
+    cout<< indices.size() << endl;
+    cout<< verts.size() << endl;
+    for (int j = 0; j <sizeof(verts); ++j) {
+        cout <<"x : " << verts[j].x <<" y : " << verts[j].y <<" z : " << verts[j].z << endl;
+    }
+    for (int c = 0; c < verts.size(); c++) // X coordinates
+    {
+        GLvertices[(c * 6) + 0] = verts[c].x;
+        GLvertices[(c * 6) + 1] = verts[c].y;
+        GLvertices[(c * 6) + 2] = verts[c].z;
+        GLvertices[(c * 6) + 3] = verts[c].red;
+        GLvertices[(c * 6) + 4] = verts[c].green;
+        GLvertices[(c * 6) + 5] = verts[c].blue;
+    }
 }
+
 
 vector<GLuint>* Chunk::ReturnIndecies()
 {

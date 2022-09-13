@@ -24,7 +24,6 @@ const unsigned int chunkHeight = 16;
 
 FastNoiseLite noise;
 
-
 // cube
 //GLfloat vertices[] =
 //{
@@ -68,20 +67,22 @@ FastNoiseLite noise;
 int main()
 {
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    noise.SetSeed(1337);
+    noise.SetFrequency(0.01f);
 
     chunk.GenerateChunk(noise, 1, 1, 4, 4, 16);
-    chunk.GenerateData();
-    chunk.GenerateGLData();
 
-    vector<GLfloat>* verticesV;
-    verticesV = chunk.ReturnVerticies();
-    GLfloat vertices[verticesV->size()];
-    std::copy(verticesV->begin(), verticesV->end(), vertices);
-
+    GLfloat vertices[chunk.ReturnVerticies()->size()];
+    std::copy(chunk.ReturnVerticies()->begin(), chunk.ReturnVerticies()->end(), vertices);
+    for (int i = 0; i < sizeof(vertices); ++i) {
+        cout << vertices[i] << endl;
+    }
     vector<GLuint>* indicesV;
     indicesV = chunk.ReturnIndecies();
     GLuint indices[indicesV->size()];
     std::copy(indicesV->begin(), indicesV->end(), indices);
+
+
 
     // initialize glfw
     if (!glfwInit())
