@@ -25,7 +25,7 @@ const unsigned int chunkHeight = 16;
 FastNoiseLite noise;
 
 // cube
-//GLfloat vertices[] =
+//GLfloat testVertices[] =
 //{
 //    -0.5f, -0.5f, 0.0f, 0.7f, 0.6f, 0.84f,
 //    0.5f, -0.5f, 0.0f, 0.6f, 0.5f, 0.74f,
@@ -37,7 +37,7 @@ FastNoiseLite noise;
 //    0.5f, 0.5f, -1.0f, 0.0f, 0.1f, 0.14f,
 //};
 //
-//GLuint indices[] =
+//GLuint testIndices[] =
 //{
 //        // top
 //        2, 6, 7,
@@ -72,17 +72,26 @@ int main()
 
     chunk.GenerateChunk(noise, 1, 1, 4, 4, 16);
 
-    GLfloat vertices[chunk.ReturnVerticies()->size()];
-    std::copy(chunk.ReturnVerticies()->begin(), chunk.ReturnVerticies()->end(), vertices);
-    for (int i = 0; i < sizeof(vertices); ++i) {
-        cout << vertices[i] << endl;
+    // Create a vector of integers
+    vector<GLfloat> verticesVec = *chunk.ReturnVerticies();
+    // Create an array of size equivalent to vector
+    GLfloat vertices[verticesVec.size()];
+    // Iterate over vector and copy elements to array
+    for(int i = 0; i < verticesVec.size(); i++)
+    {
+        vertices[i] = verticesVec[i];
     }
-    vector<GLuint>* indicesV;
-    indicesV = chunk.ReturnIndecies();
-    GLuint indices[indicesV->size()];
-    std::copy(indicesV->begin(), indicesV->end(), indices);
+    // Iterate over the array and print the contents
+    for(auto x: vertices) {
+        std::cout<<x<<", ";
+    }
 
-
+    GLuint indices[chunk.ReturnIndecies()->size()];
+    std::copy(chunk.ReturnIndecies()->begin(), chunk.ReturnIndecies()->end(), indices);
+    for (int i = 0; i < sizeof(indices) / sizeof(int); ++i) {
+        cout<< indices[i] << endl;
+    }
+    cout <<sizeof(indices) / sizeof(int) << endl;
 
     // initialize glfw
     if (!glfwInit())
@@ -162,7 +171,7 @@ int main()
 
         glad_glUniform1f(uniID, 1);
         VAO1.Bind();
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, sizeof(vertices), GL_UNSIGNED_INT, nullptr);
 
         // swap buffers
         glfwSwapBuffers(window);

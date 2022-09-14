@@ -85,38 +85,39 @@ void Chunk::GenerateVertices()
                     if(x > 0 && CheckAround(x - 1,y,z)) // Checks Left
                     {
                         AddLeft(x,y,z);
-                        cout << "Left x :" << x << " y : " << y << " z : " << z << endl;
+                        cout << "Left x :" << x  - 1 << " y : " << y << " z : " << z << endl;
                     }
                     if(x < width && CheckAround(x + 1,y,z))// Checks Right
                     {
                         AddRight(x,y,z);
-                        cout << "right x : " << x << " y : " << y << " z : " << z << endl;
+                        cout << "right x : " << x + 1 << " y : " << y << " z : " << z << endl;
                     }
                     if(y > 0 && CheckAround(x,y - 1,z))// Checks Down
                     {
                         AddBottom(x,y,z);
-                        cout << "bot x : " << x << " y : " << y << " z : " << z << endl;
+                        cout << "bot x : " << x << " y : " << y - 1 << " z : " << z << endl;
                     }
                     if(y < height && CheckAround(x,y + 1,z))// Checks Top
                     {
                         AddTop(x,y,z);
-                        cout << "top x : " << x << " y : " << y << " z : " << z << endl;
+                        cout << "top x : " << x << " y : " << y + 1 << " z : " << z << endl;
                     }
 
                     if(z >= 0 && CheckAround(x,y,z - 1))// Checks Back
                     {
                         AddBack(x,y,z);
-                        cout << "back x : " << x << " y : " << y << " z : " << z << endl;
+                        cout << "back x : " << x << " y : " << y << " z : " << z - 1 << endl;
                     }
                     if(z < length && CheckAround(x,y,z + 1))// Checks Forth
                     {
                         AddForth(x, y, z);
-                        cout << "forth x : " << x << " y : " << y << " z : " << z << endl;
+                        cout << "forth x : " << x << " y : " << y << " z : " << z + 1 << endl;
                     }
                 }
             }
         }
     }
+    cout<< "Vertices Generated" << endl;
 }
 
 bool Chunk::CheckAround(int blockX,int blockY,int blockZ)
@@ -232,7 +233,8 @@ void Chunk::AddTop(int blockX,int blockY,int blockZ)
     curVert.green = 1;
     curVert.blue = 1;
     AddVert(curVert);
-    //cout << curVert.x << " " << curVert.y << " " << curVert.z << endl;
+
+    cout<<"added top"<<endl;
 }
 
 void Chunk::AddBottom(int blockX,int blockY,int blockZ)
@@ -269,6 +271,8 @@ void Chunk::AddBottom(int blockX,int blockY,int blockZ)
     curVert.green = 1;
     curVert.blue = 1;
     AddVert(curVert);
+
+    cout<<"added bottom"<<endl;
 }
 
 void Chunk::AddBack(int blockX,int blockY,int blockZ)
@@ -305,6 +309,8 @@ void Chunk::AddBack(int blockX,int blockY,int blockZ)
     curVert.green = 1;
     curVert.blue = 1;
     AddVert(curVert);
+
+    cout<<"added back"<<endl;
 }
 
 void Chunk::AddForth(int blockX,int blockY,int blockZ)
@@ -341,6 +347,8 @@ void Chunk::AddForth(int blockX,int blockY,int blockZ)
     curVert.green = 1;
     curVert.blue = 1;
     AddVert(curVert);
+
+    cout<<"added forth"<<endl;
 }
 
 void Chunk::AddLeft(int blockX,int blockY,int blockZ)
@@ -377,6 +385,7 @@ void Chunk::AddLeft(int blockX,int blockY,int blockZ)
     curVert.green = 1;
     curVert.blue = 1;
     AddVert(curVert);
+    cout<<"added lefts"<<endl;
 }
 
 void Chunk::AddRight(int blockX,int blockY,int blockZ)
@@ -413,6 +422,7 @@ void Chunk::AddRight(int blockX,int blockY,int blockZ)
     curVert.green = 1;
     curVert.blue = 1;
     AddVert(curVert);
+    cout<<"added right"<<endl;
 }
 
 
@@ -420,17 +430,15 @@ void Chunk::GenerateGLData()
 {
     cout<< indices.size() << endl;
     cout<< verts.size() << endl;
-    for (int j = 0; j <sizeof(verts); ++j) {
-        cout <<"x : " << verts[j].x <<" y : " << verts[j].y <<" z : " << verts[j].z << endl;
-    }
+
     for (int c = 0; c < verts.size(); c++) // X coordinates
     {
-        GLvertices[(c * 6) + 0] = verts[c].x;
-        GLvertices[(c * 6) + 1] = verts[c].y;
-        GLvertices[(c * 6) + 2] = verts[c].z;
-        GLvertices[(c * 6) + 3] = verts[c].red;
-        GLvertices[(c * 6) + 4] = verts[c].green;
-        GLvertices[(c * 6) + 5] = verts[c].blue;
+        indices.push_back(verts[c].x);
+        indices.push_back(verts[c].y);
+        indices.push_back(verts[c].z);
+        indices.push_back(verts[c].red);
+        indices.push_back(verts[c].green);
+        indices.push_back(verts[c].blue);
     }
 }
 
