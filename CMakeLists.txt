@@ -4,8 +4,18 @@ project(voxerra)
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(${PROJECT_NAME}
-        src/core/main.cpp
-        src/core/glad/glad.c)
+        src/core/glad/glad.c
+        src/Chunk.cpp
+        src/Chunk.h
+        src/main.cpp
+        src/vert.cpp
+        src/VBO.cpp
+        src/EBO.cpp
+        src/Shader.cpp
+        src/VAO.cpp
+        src/FastNoiseLite.h
+        src/Chunk.cpp
+        src/)
 
 add_subdirectory(ext/glfw)
 

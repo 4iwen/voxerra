@@ -74,13 +74,14 @@ int main()
 
     // Create a vector of integers
     vector<GLfloat> verticesVec = *chunk.ReturnVerticies();
-    // Create an array of size equivalent to vector
+    // Create a vector of integers
     GLfloat vertices[verticesVec.size()];
-    // Iterate over vector and copy elements to array
-    for(int i = 0; i < verticesVec.size(); i++)
-    {
-        vertices[i] = verticesVec[i];
-    }
+    // Copy all elements of vector to array
+    std::copy(  verticesVec.begin(),
+                verticesVec.end(),
+                vertices);
+    cout << "vertices size: " << sizeof(vertices) * sizeof(int) << endl;
+    cout << "vertices size: " << sizeof(verticesVec) * sizeof(int) << endl;
     // Iterate over the array and print the contents
     for(auto x: vertices) {
         std::cout<<x<<", ";
