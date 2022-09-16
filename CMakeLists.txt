@@ -11,7 +11,7 @@ add_executable(${PROJECT_NAME}
         src/core/ElementBuffer.cpp
         src/core/Shader.cpp
         src/core/Shader.cpp
-        )
+        src/game/Camera.cpp src/game/Camera.h)
 
 add_subdirectory(ext/glfw)
 

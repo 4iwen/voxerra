@@ -9,18 +9,18 @@
 #include "ElementBuffer.h"
 #include "Shader.h"
 
-// vertices for quad that covers the whole screen
+// triangle vertices
 float quadVertices[] = {
-    -1.0f, -1.0f, 0.0f,
-    1.0f, -1.0f, 0.0f,
-    1.0f, 1.0f, 0.0f,
-    -1.0f, 1.0f, 0.0f,
+    //  x         y          z         r         g         b
+    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
 
 };
-// indices for the quad above
+
+// indices for the triangle above
 unsigned int quadIndices[] = {
     0, 1, 2,
-    0, 2, 3
 };
 
 int main()
@@ -30,6 +30,8 @@ int main()
     {
         spdlog::error("Failed to initialize GLFW");
     }
+
+    spdlog::info("Initialized GLFW, version: {0}", glfwGetVersionString());
 
     // set glfw error callback
     glfwSetErrorCallback([](int error, const char* description)
@@ -66,6 +68,8 @@ int main()
         return -1;
     }
 
+    spdlog::info("Initialized glad, OpenGL version: {0}.{1}", GLVersion.major, GLVersion.minor);
+
     // create vertex array object
     VertexArray vao;
     vao.Bind();
@@ -81,8 +85,10 @@ int main()
     ebo.SetData(quadIndices, sizeof(quadIndices));
 
     // set vertex attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     // unbind vertex array object
     vao.Unbind();
@@ -103,7 +109,7 @@ int main()
         // draw
         shader.Use();
         vao.Bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
         // swap buffers
         glfwSwapBuffers(window);

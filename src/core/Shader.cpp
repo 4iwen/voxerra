@@ -24,7 +24,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     const char* vertexSource = vertexCode.c_str();
     const char* fragmentSource = fragmentCode.c_str();
 
-    //
+    // specify shaders source code
     glShaderSource(vertexShader, 1, &vertexSource, nullptr);
     glShaderSource(fragmentShader, 1, &fragmentSource, nullptr);
 

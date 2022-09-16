@@ -27,3 +27,8 @@ void VertexArray::Unbind()
 {
     glBindVertexArray(0);
 }
+
+void VertexArray::SetAttribute()
+{
+
+}

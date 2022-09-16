@@ -7,4 +7,5 @@ public:
     ~VertexArray();
     void Bind();
     void Unbind();
+    void SetAttribute();
 };
