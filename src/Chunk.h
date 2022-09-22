@@ -14,12 +14,13 @@ public:
     void GenerateChunk(FastNoiseLite noise, int posX,int posY, int length, int width, int height);
     vector<GLuint>* ReturnIndecies();
     vector<GLfloat>* ReturnVerticies();
+    int ReturnIndeciesSize();
+    int ReturnVerticiesSize();
 
 private:
     vector<GLfloat> GLvertices;
     vector<GLuint> GLindices;
     vector<vert> verts;
-    vector<int> indices;
 
     void GenerateVertices();
     void GenerateGLData();
