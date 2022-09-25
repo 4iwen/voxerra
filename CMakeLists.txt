@@ -15,7 +15,7 @@ add_executable(${PROJECT_NAME}
         src/VAO.cpp
         src/FastNoiseLite.h
         src/Chunk.cpp
-        src/)
+        src/ src/ChunkManager.cpp src/ChunkManager.h)
 
 add_subdirectory(ext/glfw)
 
