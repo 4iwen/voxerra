@@ -14,8 +14,13 @@ add_executable(${PROJECT_NAME}
         src/Shader.cpp
         src/VAO.cpp
         src/FastNoiseLite.h
-        src/Chunk.cpp
-        src/ src/ChunkManager.cpp src/ChunkManager.h)
+        src/enums.h
+        src/ChunkManager.cpp
+        src/ChunkManager.h
+        src/WeaponClass.cpp
+        src/WeaponClass.h
+        src/Random.cpp
+        src/Random.h)
 
 add_subdirectory(ext/glfw)
 

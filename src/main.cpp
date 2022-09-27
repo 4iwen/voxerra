@@ -11,6 +11,9 @@
 #include "VBO.h"
 #include "EBO.h"
 #include "FastNoiseLite.h"
+#include "WeaponClass.h"
+#include "enums.h"
+
 
 // screen
 const unsigned int width = 800;
@@ -66,6 +69,9 @@ GLuint testIndices[] =
 
 int main()
 {
+    WeaponClass weapon(30,30,30,30,30,3,Sword, "Swrd","Nods");
+    cout << "Damage dealt was : " << weapon.GetDamage(200) <<endl;
+
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
     noise.SetSeed(1337);
     noise.SetFrequency(0.01f);
@@ -76,8 +82,8 @@ int main()
     vector<GLfloat> *verticesVec = chunk.ReturnVerticies();
     vector<GLuint> *indicesVec = chunk.ReturnIndecies();
 
-    cout << chunk.ReturnIndeciesSize() << endl;
-    cout << chunk.ReturnVerticiesSize() << endl;
+    //cout << chunk.ReturnIndeciesSize() << endl;
+    //cout << chunk.ReturnVerticiesSize() << endl;
 
     // initialize glfw
     if (!glfwInit())
