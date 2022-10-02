@@ -51,6 +51,8 @@ private:
     int width;
     int length;
     int height;
+
+    void PushBackIndice(int one, int two, int three);
 };
 
 #define VOXERRA_CHUNK_H

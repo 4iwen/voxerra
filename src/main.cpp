@@ -70,7 +70,7 @@ GLuint testIndices[] =
 int main()
 {
     WeaponClass weapon(30,30,30,30,30,3,Sword, "Swrd","Nods");
-    cout << "Damage dealt was : " << weapon.GetDamage(200) <<endl;
+    //cout << "Damage dealt was : " << weapon.GetDamage(200) <<endl;
 
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
     noise.SetSeed(1337);
@@ -82,9 +82,19 @@ int main()
     vector<GLfloat> *verticesVec = chunk.ReturnVerticies();
     vector<GLuint> *indicesVec = chunk.ReturnIndecies();
 
-    //cout << chunk.ReturnIndeciesSize() << endl;
-    //cout << chunk.ReturnVerticiesSize() << endl;
+    GLfloat vertices[chunk.ReturnVerticiesSize()];
+    GLuint indices[chunk.ReturnIndeciesSize()];
 
+    for (int i = 0; i < chunk.ReturnIndeciesSize(); i++) {
+        indices[i] = indicesVec->at(i);
+    }
+
+    for (int v = 0; v < chunk.ReturnVerticiesSize(); v++) {
+        vertices[v] = verticesVec->at(v);
+    }
+
+    cout << chunk.ReturnIndeciesSize() << endl;
+    cout << chunk.ReturnVerticiesSize() << endl;
     // initialize glfw
     if (!glfwInit())
     {
@@ -116,8 +126,8 @@ int main()
     VAO VAO1;
     VAO1.Bind();
 
-    VBO VBO1(testVertices, 48);
-    EBO EBO1(testIndices, 36);
+    VBO VBO1(vertices, chunk.ReturnVerticiesSize());
+    EBO EBO1(indices, chunk.ReturnIndeciesSize());
 
     VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), nullptr);
     VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -150,9 +160,9 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 proj = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 1.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
-        proj = glm::perspective(glm::radians(90.0f), (float)(width / height), 0.1f, 100.0f);
+        model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.1f, 0.0f));
+        view = glm::translate(view, glm::vec3(0.0f, -5.0f, -10.0f));
+        proj = glm::perspective(glm::radians(80.0f), (float)(width / height), 0.1f, 100.0f);
 
         int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
         glad_glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -163,7 +173,9 @@ int main()
 
         glad_glUniform1f(uniID, 1);
         VAO1.Bind();
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, chunk.ReturnIndeciesSize(), GL_UNSIGNED_INT, nullptr);
+
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
         // swap buffers
         glfwSwapBuffers(window);
