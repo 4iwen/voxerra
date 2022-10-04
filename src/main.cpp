@@ -126,8 +126,8 @@ int main()
     VAO VAO1;
     VAO1.Bind();
 
-    VBO VBO1(vertices, chunk.ReturnVerticiesSize());
-    EBO EBO1(indices, chunk.ReturnIndeciesSize());
+    VBO VBO1(vertices, sizeof(vertices));
+    EBO EBO1(indices, sizeof(indices));
 
     VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), nullptr);
     VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -139,7 +139,7 @@ int main()
 
     float rotation = 0.0f;
     double previousTime = glfwGetTime();
-
+    glfwSwapInterval(1);
     // main loop
     while (!glfwWindowShouldClose(window))
     {
