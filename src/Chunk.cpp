@@ -1,21 +1,19 @@
 #include "Chunk.h"
 
-void Chunk::GenerateChunk(FastNoiseLite iNoise, int iPosX,int iPosY,  int iLength, int iWidth,int iHeight)
+void Chunk::GenerateChunk(FastNoiseLite iNoise, int posX,int posY,  int length, int width,int height)
 {
-    //cout << ("Generating Chunk");
-    posX = iPosX;
-    posY = iPosY;
+    this->posX = posX;
+    this->posY = posY;
 
-    width = iWidth;
-    length = iLength;
-    height = iHeight;
+    this->width = width;
+    this->length = length;
+    this->height = height;
 
     FillEmpty();
 
     GenerateNoise(iNoise);
 
-
-
+    //Cunk size is 4x4x16 and the y is set to 4 rn so it should draw a 4x4x4 cube
     GenerateVertices(); //VERTS ALWAYS FIRST
     GenerateIndicies();
 
@@ -44,7 +42,7 @@ void Chunk::GenerateNoise(FastNoiseLite noise)
         {
             //float y = abs(noise.GetNoise((float)x, (float)z) * 50);
 
-            int y = 3;
+            int y = 4;
 
             blockData[x][(int)y][z] = grass;
             for (int j = (int)y; j >= 0; --j)
@@ -67,7 +65,7 @@ void Chunk::GenerateNoise(FastNoiseLite noise)
             //{
             //    cout << y << " ";
             //}
-            cout << "3";
+            cout << "4";
         }
         cout << endl;
     }
@@ -76,32 +74,32 @@ void Chunk::GenerateNoise(FastNoiseLite noise)
 void Chunk::GenerateVertices()
 {
     for (int x = 0; x < width; x++) {
-        for (int z = 0; z < length; z++) {
-            for (int y = 0; y < height; y++) {
+        for (int y = 0; y < height; y++) {
+            for (int z = 0; z < length; z++) {
                 if(blockData[x][y][z] != air) // If block is occupied we check around.
                     {
-                    if(x - 1 < 0 || CheckAround(x - 1,y,z)) // Checks Left
+                    if(CheckAround(x - 1,y,z) || x - 1 < 0) // Checks Left
                     {
                         AddLeft(x,y,z);
                     }
-                    if(x + 1 < width || CheckAround(x,y,z + 1))// Checks Right
+                    if(CheckAround(x + 1,y,z) || x + 1 > width)// Checks Right
                     {
                         AddRight(x,y,z);
                     }
-                    if(y - 1 > 0 || CheckAround(x,y - 1,z))// Checks Down
+                    if(CheckAround(x,y - 1,z) || y - 1 < 0)// Checks Down
                     {
                         AddBottom(x,y,z);
                     }
-                    if(y + 1 < height || CheckAround(x,y + 1,z))// Checks Top
+                    if(CheckAround(x,y + 1,z))// Checks Top
                     {
                         AddTop(x,y,z);
                     }
 
-                    if(z - 1 > 0 || CheckAround(x - 1,y,z))// Checks Back
+                    if(CheckAround(x,y,z - 1) || z - 1 < 0)// Checks Back
                     {
                         AddBack(x,y,z);
                     }
-                    if(z + 1 < length || CheckAround(x + 1,y,z))// Checks Forth
+                    if(CheckAround(x,y,z + 1) || z + 1 > length)// Checks Forth
                     {
                         AddForth(x, y, z);
                     }
@@ -116,16 +114,14 @@ bool Chunk::CheckAround(int blockX,int blockY,int blockZ)
     return(blockData[blockX][blockY][blockZ] == air);
 }
 
-
-
 //function that only adds the vertices to the vector if they dont overlap with another vert
 void Chunk::AddVert(vert v)
 {
-    for (int c = 0; c < verts.size(); c++)
+    for (int i = 0; i < verts.size(); i++)
     {
-        if(verts[c].x == v.x && verts[c].y == v.y && verts[c].z == v.z)
+        if(verts[i].x == v.x && verts[i].y == v.y && verts[i].z == v.z)
         {
-            verts.erase(verts.begin() + c);
+            verts.erase(verts.begin() + i);
             return;
         }
     }
@@ -411,8 +407,6 @@ void Chunk::AddRight(int blockX,int blockY,int blockZ)
 
 void Chunk::GenerateGLData()
 {
-    //cout<< GLindices.size()  << " GLINDICES " << endl;
-
     for (int c = 0; c < verts.size(); c++) // X coordinates
     {
         GLvertices.push_back(verts[c].x);
@@ -422,8 +416,6 @@ void Chunk::GenerateGLData()
         GLvertices.push_back(verts[c].green);
         GLvertices.push_back(verts[c].blue);
     }
-    //cout<< verts.size() << " VERTICES " << endl;
-    //cout<< GLvertices.size() << " GLVERTICES " << endl;
 }
 
 vector<GLuint>* Chunk::ReturnIndecies()
