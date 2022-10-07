@@ -1,0 +1,4 @@
+C:/Projects/C++/voxerra/build/release/CMakeFiles/voxerra.dir
+C:/Projects/C++/voxerra/build/release/CMakeFiles/shaders.dir
+C:/Projects/C++/voxerra/build/release/CMakeFiles/edit_cache.dir
+C:/Projects/C++/voxerra/build/release/CMakeFiles/rebuild_cache.dir

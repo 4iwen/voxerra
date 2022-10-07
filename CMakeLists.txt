@@ -3,30 +3,51 @@ project(voxerra)
 
 set(CMAKE_CXX_STANDARD 23)
 
+# get core source files
+set(CORE
+        dependencies/source/glad/glad.c
+        source/core/main.cpp
+        source/core/VertexArray.cpp
+        source/core/VertexBuffer.cpp
+        source/core/ElementBuffer.cpp
+        source/core/Shader.cpp
+        source/core/Shader.cpp
+        source/core/debuggui/DebugGui.cpp)
+
+# get game source files
+set(GAME
+        source/game/Camera.cpp)
+
+# get util source files
+set(UTILS
+        dependencies/source/imgui/imgui.cpp
+        dependencies/source/imgui/imgui_demo.cpp
+        dependencies/source/imgui/imgui_draw.cpp
+        dependencies/source/imgui/imgui_tables.cpp
+        dependencies/source/imgui/imgui_widgets.cpp
+        dependencies/source/imgui/imgui_impl_glfw.cpp
+        dependencies/source/imgui/imgui_impl_opengl3.cpp)
+
+# get compiled libraries files
+set(LIBS
+        ${CMAKE_SOURCE_DIR}/dependencies/binaries/libglfw3.a)
+
+# link all source files
 add_executable(${PROJECT_NAME}
-        src/core/main.cpp
-        src/core/glad/glad.c
-        src/core/VertexArray.cpp
-        src/core/VertexBuffer.cpp
-        src/core/ElementBuffer.cpp
-        src/core/Shader.cpp
-        src/core/Shader.cpp
-        src/game/Camera.cpp src/game/Camera.h)
+        ${CORE}
+        ${GAME}
+        ${UTILS})
 
-add_subdirectory(ext/glfw)
+# link libraries
+target_link_libraries(${PROJECT_NAME} ${LIBS})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ext/glfw/include)
-target_link_directories(${PROJECT_NAME} PRIVATE ext/glfw/src)
+# include files
+include_directories(${PROJECT_NAME} dependencies/include)
+include_directories(${PROJECT_NAME} dependencies/include/imgui)
 
-target_link_libraries(${PROJECT_NAME} glfw)
-
-include_directories(${PROJECT_NAME} deps/include)
-
+# copy shaders to output directory
 add_custom_target(shaders
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/shaders
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/src/core/shaders ${CMAKE_BINARY_DIR}/shaders
-        COMMENT "copying ${CMAKE_SOURCE_DIR}/src/core/shaders to ${CMAKE_BINARY_DIR}/shaders"
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        )
-
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/source/core/shaders ${CMAKE_BINARY_DIR}/shaders
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 add_dependencies(voxerra shaders)
