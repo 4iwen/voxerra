@@ -1,3 +1,0 @@
-D:\JetBrains\Toolbox\apps\CLion\ch-0\222.4167.35\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\voxerra.dir/objects.a
-C:\mingw64\bin\ar.exe qc CMakeFiles\voxerra.dir/objects.a @CMakeFiles\voxerra.dir\objects1.rsp
-C:\mingw64\bin\g++.exe -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\voxerra.dir/objects.a -Wl,--no-whole-archive -o voxerra.exe -Wl,--out-implib,libvoxerra.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\voxerra.dir\linklibs.rsp
