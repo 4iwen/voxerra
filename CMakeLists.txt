@@ -5,22 +5,22 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(${PROJECT_NAME}
         src/core/glad/glad.c
-        src/Chunk.cpp
-        src/Chunk.h
+        src/world-generation/Chunk.cpp
+        src/world-generation/Chunk.h
         src/main.cpp
         src/vert.cpp
         src/VBO.cpp
         src/EBO.cpp
         src/Shader.cpp
         src/VAO.cpp
-        src/FastNoiseLite.h
+        src/world-generation/FastNoiseLite.h
         src/enums.h
-        src/ChunkManager.cpp
-        src/ChunkManager.h
-        src/WeaponClass.cpp
-        src/WeaponClass.h
+        src/world-generation/ChunkManager.cpp
+        src/world-generation/ChunkManager.h
+        src/items/WeaponClass.cpp
+        src/items/WeaponClass.h
         src/Random.cpp
-        src/Random.h)
+        src/Random.h src/vectors/vec2.cpp src/vectors/vec2.h src/vectors/vec3.cpp src/vectors/vec3.h)
 
 add_subdirectory(ext/glfw)
 

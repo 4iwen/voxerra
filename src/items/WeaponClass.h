@@ -4,8 +4,8 @@
 
 #ifndef VOXERRA_WEAPONCLASS_H
 #define VOXERRA_WEAPONCLASS_H
-#include "Random.h"
-#include "enums.h"
+#include "../Random.h"
+#include "../enums.h"
 #include <cmath>
 #include <iostream>
 

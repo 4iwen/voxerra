@@ -6,12 +6,12 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include "Shader.h"
-#include "Chunk.h"
+#include "world-generation/Chunk.h"
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
-#include "FastNoiseLite.h"
-#include "WeaponClass.h"
+#include "world-generation/FastNoiseLite.h"
+#include "items/WeaponClass.h"
 #include "enums.h"
 
 
