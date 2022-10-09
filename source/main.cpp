@@ -1,14 +1,13 @@
-#include "iostream"
-#include "fstream"
-
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "ElementBuffer.h"
-#include "Shader.h"
-#include "debuggui/DebugGui.h"
+#include "core/VertexArray.h"
+#include "core/VertexBuffer.h"
+#include "core/ElementBuffer.h"
+#include "core/Shader.h"
+#include "core/debuggui/DebugGui.h"
+#include "game/Camera.h"
+#include "core/FrameBuffer.h"
 
 // triangle vertices
 float vertices[] = {
@@ -56,8 +55,6 @@ int main()
         return -1;
     }
 
-    DebugGui debugGui(window);
-
     // create vertex array object
     VertexArray vao;
     vao.Bind();
@@ -72,6 +69,11 @@ int main()
     ebo.Bind();
     ebo.SetData(indices, sizeof(indices));
 
+    // TODO: implement frame buffer
+    // create frame buffer object
+    //FrameBuffer fbo;
+    //fbo.Bind();
+
     // set vertex attributes
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -84,23 +86,37 @@ int main()
     // create shader program
     Shader shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 
+    // create camera
+    Camera camera(window, glm::vec3(0.0f, 0.0f, 3.0f), 90.0f, 0.1f, 100.0f);
+
+    // create debug gui
+    DebugGui debugGui(window, &camera);
+
     // main loop
     while (!glfwWindowShouldClose(window))
     {
         // input
         glfwPollEvents();
 
+        // set render settings
+        glfwSwapInterval(debugGui.GetVsync());
+        glPolygonMode(GL_FRONT_AND_BACK, debugGui.GetPolygonMode());
+
         // clear screen
         ImVec4 clearColor = debugGui.GetClearColor();
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        camera.Update();
+        shader.SetMat4("view", camera.GetView());
+        shader.SetMat4("projection", camera.GetProjection());
+
         // draw
         shader.Use();
         vao.Bind();
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-
         debugGui.Draw();
+
 
         // swap buffers
         glfwSwapBuffers(window);

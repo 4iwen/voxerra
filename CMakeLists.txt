@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD 23)
 # get core source files
 set(CORE
         dependencies/source/glad/glad.c
-        source/core/main.cpp
+        source/main.cpp
         source/core/VertexArray.cpp
         source/core/VertexBuffer.cpp
         source/core/ElementBuffer.cpp
         source/core/Shader.cpp
         source/core/Shader.cpp
-        source/core/debuggui/DebugGui.cpp)
+        source/core/debuggui/DebugGui.cpp source/core/FrameBuffer.cpp source/core/FrameBuffer.h)
 
 # get game source files
 set(GAME
@@ -46,8 +46,8 @@ include_directories(${PROJECT_NAME} dependencies/include)
 include_directories(${PROJECT_NAME} dependencies/include/imgui)
 
 # copy shaders to output directory
-add_custom_target(shaders
+add_custom_target(copy_shaders
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/shaders
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/source/core/shaders ${CMAKE_BINARY_DIR}/shaders
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-add_dependencies(voxerra shaders)
+add_dependencies(voxerra copy_shaders)

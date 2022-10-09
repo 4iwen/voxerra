@@ -1,19 +1,39 @@
-#include "glm/vec3.hpp"
+#pragma once
 
-class Camera {
+#include "glm/vec3.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "GLFW/glfw3.h"
+
+class Camera
+{
 public:
-    Camera(glm::vec3 position, float fov, float near, float far);
+    Camera(GLFWwindow* window, glm::vec3 position, float fov, float near, float far);
     void Update();
+    glm::vec3 GetPosition();
+    glm::mat4 GetView();
+    glm::mat4 GetProjection();
+    float GetYaw() const;
+    float GetPitch() const;
+    float GetFov() const;
 
 private:
-    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
-    glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f);
+    GLFWwindow* _window;
+    glm::vec3 _position;
+    glm::vec3 _front = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 _up = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 _right = glm::vec3(1.0f, 0.0f, 0.0f);
+    glm::mat4 _view;
+    glm::mat4 _projection;
+    float _fov;
+    float _nearPlane;
+    float _farPlane;
+    float _yaw = -90.0f;
+    float _pitch = 0.0f;
+    float _sensitivity = 0.05f;
+    float _speed = 0.1f;
+    bool _showCursor = true;
 
-    float yaw = 0.0f;
-    float pitch = 0.0f;
-    float fov = 90.0f;
-    float nearPlane = 0.1f;
-    float farPlane = 100.0f;
+    void ProcessMouseInputs();
+    void ProcessKeyboardInputs();
 };
