@@ -12,7 +12,7 @@
 #include "EBO.h"
 #include "world-generation/FastNoiseLite.h"
 #include "items/WeaponClass.h"
-#include "enums.h"
+#include "utils/enums.h"
 
 
 // screen

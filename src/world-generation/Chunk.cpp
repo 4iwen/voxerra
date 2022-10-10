@@ -117,6 +117,7 @@ bool Chunk::CheckAround(int blockX,int blockY,int blockZ)
 //function that only adds the vertices to the vector if they dont overlap with another vert
 void Chunk::AddVert(vert v)
 {
+    std::cout << v.position.x << " " << v.position.y << " " << v.position.z << std::endl;
     for (int i = 0; i < verts.size(); i++)
     {
         if(verts[i].position == v.position)
@@ -126,20 +127,18 @@ void Chunk::AddVert(vert v)
         }
     }
     verts.push_back(v);
+    cout << sizeof(verts) << endl;
 }
 
 void Chunk::GenerateIndicies() {
     for(int i = 0; i < verts.size(); i++)
     {
-        if(std::none_of(verts.begin()->position, verts.end()->position, glm::vec3(verts[i].position.x, verts[i].position.y, verts[i].position.z)))
+        if(std::count_if(verts.begin(), verts.end(), [&](vert v) { return v.position == glm::vec3(verts[i].position.x,verts[i].position.y + 1,verts[i].position.z); }) > 1
+        && std::count_if(verts.begin(), verts.end(), [&](vert v) { return v.position == glm::vec3(verts[i].position.x,verts[i].position.y + 1,verts[i].position.z + 1); }) > 1
+        && std::count_if(verts.begin(), verts.end(), [&](vert v) { return v.position == glm::vec3(verts[i].position.x,verts[i].position.y,verts[i].position.z + 1); }) > 1)
+
         {
-            indicies.push_back(i);
-        }
-        {
-            indices.push_back(i);
-        }
-        {
-            verts.erase(verts.begin() + i);
+            GLindices.push_back(i);
         }
     }
 

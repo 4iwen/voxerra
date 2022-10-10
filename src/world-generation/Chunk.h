@@ -3,7 +3,8 @@
 #include "vector"
 #include "glm/glm.hpp"
 #include "glad/glad.h"
-#include "../vert.h"
+#include "../utils/vert.h"
+
 
 using namespace std;
 
