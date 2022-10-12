@@ -9,9 +9,8 @@ vert::vert(glm::vec3 pos, float red, float green, float blue) {
     this->red = red;
     this->green = green;
     this->blue = blue;
-
 }
 vert vert::zero{
-    vert(glm::vec3(0,0,0),0,0,0);
+    vert(glm::vec3(0,0,0),0,0,0)
 };
 

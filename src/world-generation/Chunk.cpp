@@ -154,35 +154,35 @@ bool Chunk::CheckAround(int blockX,int blockY,int blockZ)
     return(blockData[blockX][blockY][blockZ] == air);
 }
 
-//function that only adds the vertices to the vector if they dont overlap with another vert
 void Chunk::AddVert(vert v)
 {
-    if(std::find(verts.begin(), verts.end(), v) != verts.end()) {
-
-    }
     for (int i = 0; i < verts.size(); i++)
     {
         if(verts[i].position == v.position)
         {
+            cout << GLindices.size() << " | " << GLindices.at(i) << endl;
+            GLindices.at(i) = GLindices.size();
             verts.erase(verts.begin() + i);
+
             return;
         }
     }
     verts.push_back(v);
-    cout << sizeof(verts) << endl;
+    GLindices.push_back(verts.size());
 }
 
-void Chunk::GenerateIndicies() {
-
-}
-
-void Chunk::PushBackIndice(int one, int two, int three)
+void Chunk::PushBackIndice()
 {
-    GLindices.push_back(one);
-    GLindices.push_back(two);
-    GLindices.push_back(three);
+    GLindices.push_back(verts.size() - 4);
+    GLindices.push_back(verts.size() - 3);
+    GLindices.push_back(verts.size() - 2);
+
+    GLindices.push_back(verts.size() - 2);
+    GLindices.push_back(verts.size() - 1);
+    GLindices.push_back(verts.size());
 }
 
+void Chunk::GenerateIndicies() {}
 
 void Chunk::AddTop(int blockX,int blockY,int blockZ)
 {
@@ -190,10 +190,11 @@ void Chunk::AddTop(int blockX,int blockY,int blockZ)
     AddVert(cornerOne);
     vert cornerTwo(glm::vec3(blockX + 1,blockY + 1,blockZ),1,1,1);
     AddVert(cornerTwo);
-    vert cornerThree(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
+    vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-    vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
+    vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
+    PushBackIndice();
 }
 void Chunk::AddBottom(int blockX,int blockY,int blockZ)
 {
@@ -201,21 +202,23 @@ void Chunk::AddBottom(int blockX,int blockY,int blockZ)
     AddVert(cornerOne);
     vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ),1,1,1);
     AddVert(cornerTwo);
-    vert cornerThree(glm::vec3(blockX + 1,blockY,blockZ + 1),1,1,1);
+    vert cornerThree(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-    vert cornerFour(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
+    vert cornerFour(glm::vec3(blockX + 1,blockY,blockZ + 1),1,1,1);
     AddVert(cornerFour);
+    PushBackIndice();
 }
 void Chunk::AddBack(int blockX,int blockY,int blockZ)
 {
-    vert cornerOne(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
+    vert cornerOne(glm::vec3(blockX,blockY,blockZ),1,1,1);
     AddVert(cornerOne);
     vert cornerTwo(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
     AddVert(cornerTwo);
     vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-    vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
+    vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ),1,1,1);
     AddVert(cornerFour);
+    PushBackIndice();
 }
 void Chunk::AddForth(int blockX,int blockY,int blockZ)
 {
@@ -227,6 +230,7 @@ void Chunk::AddForth(int blockX,int blockY,int blockZ)
     AddVert(cornerThree);
     vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
+    PushBackIndice();
 }
 void Chunk::AddLeft(int blockX,int blockY,int blockZ)
 {
@@ -234,10 +238,11 @@ void Chunk::AddLeft(int blockX,int blockY,int blockZ)
     AddVert(cornerOne);
     vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ),1,1,1);
     AddVert(cornerTwo);
-    vert cornerThree(glm::vec3(blockX + 1,blockY + 1,blockZ),1,1,1);
+    vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ),1,1,1);
     AddVert(cornerThree);
-    vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ),1,1,1);
+    vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ),1,1,1);
     AddVert(cornerFour);
+    PushBackIndice();
 }
 void Chunk::AddRight(int blockX,int blockY,int blockZ)
 {
@@ -245,10 +250,11 @@ void Chunk::AddRight(int blockX,int blockY,int blockZ)
     AddVert(cornerOne);
     vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ + 1),1,1,1);
     AddVert(cornerTwo);
-    vert cornerThree(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
+    vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-    vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
+    vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
+    PushBackIndice();
 }
 
 void Chunk::GenerateGLData()

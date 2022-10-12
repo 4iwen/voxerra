@@ -49,14 +49,13 @@ private:
     int posX;
     int posY;
 
-    int v = 0;
-    int i = 0;
+    int indiCount = 0;
 
     int width;
     int length;
     int height;
 
-    void PushBackIndice(int one, int two, int three);
+    void PushBackIndice();
 
     void TestVertAndIndiGen();
 

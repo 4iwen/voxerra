@@ -6,6 +6,7 @@
 
 
 #include "glm/glm.hpp"
+#include <vector>
 
 class vert {
 public :
@@ -16,7 +17,7 @@ public :
     int red;
     int green;
     int blue;
-
+    std::vector<int> indices;
 };
 
 

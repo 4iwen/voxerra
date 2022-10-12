@@ -94,9 +94,7 @@ int main()
     }
 
     cout << chunk.ReturnIndeciesSize() << endl;
-    cout << sizeof(indices) << endl;
     cout << chunk.ReturnVerticiesSize() << endl;
-    cout << sizeof(vertices) << endl;
 
     // initialize glfw
     if (!glfwInit())
