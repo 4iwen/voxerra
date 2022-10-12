@@ -20,6 +20,46 @@ void Chunk::GenerateChunk(FastNoiseLite iNoise, int posX,int posY,  int length, 
     GenerateGLData();
 }
 
+void Chunk::TestVertAndIndiGen()
+{
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            for (int z = 0; z < length; z++) {
+                if(blockData[x][y][z] != air) // If block is occupied we check around.
+                {
+                    if(CheckAround(x - 1,y,z) || x - 1 < 0) // Checks Left
+                    {
+                        AddLeft(x,y,z);
+                    }
+                    if(CheckAround(x + 1,y,z) || x + 1 > width)// Checks Right
+                    {
+                        AddRight(x,y,z);
+                    }
+                    if(CheckAround(x,y - 1,z) || y - 1 < 0)// Checks Down
+                    {
+                        AddBottom(x,y,z);
+                    }
+                    if(CheckAround(x,y + 1,z))// Checks Top
+                    {
+                        AddTop(x,y,z);
+                    }
+
+                    if(CheckAround(x,y,z - 1) || z - 1 < 0)// Checks Back
+                    {
+                        AddBack(x,y,z);
+                    }
+                    if(CheckAround(x,y,z + 1) || z + 1 > length)// Checks Forth
+                    {
+                        AddForth(x, y, z);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 void Chunk::FillEmpty()
 {
     for (int x = 0; x < width; x++) // X coordinates
@@ -117,7 +157,9 @@ bool Chunk::CheckAround(int blockX,int blockY,int blockZ)
 //function that only adds the vertices to the vector if they dont overlap with another vert
 void Chunk::AddVert(vert v)
 {
-    std::cout << v.position.x << " " << v.position.y << " " << v.position.z << std::endl;
+    if(std::find(verts.begin(), verts.end(), v) != verts.end()) {
+
+    }
     for (int i = 0; i < verts.size(); i++)
     {
         if(verts[i].position == v.position)
@@ -131,58 +173,7 @@ void Chunk::AddVert(vert v)
 }
 
 void Chunk::GenerateIndicies() {
-    for(int i = 0; i < verts.size(); i++)
-    {
-        if(std::count_if(verts.begin(), verts.end(), [&](vert v) { return v.position == glm::vec3(verts[i].position.x,verts[i].position.y + 1,verts[i].position.z); }) > 1
-        && std::count_if(verts.begin(), verts.end(), [&](vert v) { return v.position == glm::vec3(verts[i].position.x,verts[i].position.y + 1,verts[i].position.z + 1); }) > 1
-        && std::count_if(verts.begin(), verts.end(), [&](vert v) { return v.position == glm::vec3(verts[i].position.x,verts[i].position.y,verts[i].position.z + 1); }) > 1)
 
-        {
-            GLindices.push_back(i);
-        }
-    }
-
-    //for(int one = 0; one < verts.size();one++)
-    //{
-    //    for(int two = 0; two < verts.size();two++)
-    //    {
-    //        for(int three = 0; three < verts.size();three++)
-    //        {
-    //            for(int four = 0; four < verts.size();four++)
-    //            {
-    //                if(verts[two].x == verts[one].x && verts[two].y == verts[one].y + 1 && verts[two].z == verts[one].z)//LEFT TYPE WALL
-    //                {
-    //                    if(verts[three].x == verts[one].x + 1 && verts[three].y == verts[one].y && verts[three].z == verts[one].z &&
-    //                       verts[four].x == verts[one].x + 1 && verts[four].y == verts[one].y + 1 && verts[four].z == verts[one].z)
-    //                    {
-    //                        PushBackIndice(one,two,four);
-    //                        PushBackIndice(one,three,four);
-    //                    }
-    //                }
-//
-    //                if(verts[two].x == verts[one].x && verts[two].y == verts[one].y + 1 && verts[two].z == verts[one].z)//RIGHT TYPE WALL
-    //                {
-    //                    if(verts[three].x == verts[one].x && verts[three].y == verts[one].y && verts[three].z == verts[one].z  + 1 &&
-    //                       verts[four].x == verts[one].x && verts[four].y == verts[one].y + 1 && verts[four].z == verts[one].z  + 1 )
-    //                    {
-    //                        PushBackIndice(one,two,four);
-    //                        PushBackIndice(one,three,four);
-    //                    }
-    //                }
-//
-    //                if(verts[two].x == verts[one].x + 1 && verts[two].y == verts[one].y && verts[two].z == verts[one].z)//FLOOR
-    //                {
-    //                    if(verts[three].x == verts[one].x && verts[three].y == verts[one].y && verts[three].z == verts[one].z  + 1 &&
-    //                       verts[four].x == verts[one].x + 1 && verts[four].y == verts[one].y && verts[four].z == verts[one].z  + 1 )
-    //                    {
-    //                        PushBackIndice(one,two,four);
-    //                        PushBackIndice(one,three,four);
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
 }
 
 void Chunk::PushBackIndice(int one, int two, int three)
@@ -192,92 +183,70 @@ void Chunk::PushBackIndice(int one, int two, int three)
     GLindices.push_back(three);
 }
 
+
 void Chunk::AddTop(int blockX,int blockY,int blockZ)
 {
     vert cornerOne(glm::vec3(blockX,blockY + 1,blockZ),1,1,1);
     AddVert(cornerOne);
-
     vert cornerTwo(glm::vec3(blockX + 1,blockY + 1,blockZ),1,1,1);
     AddVert(cornerTwo);
-
     vert cornerThree(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-
     vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
 }
-
 void Chunk::AddBottom(int blockX,int blockY,int blockZ)
 {
     vert cornerOne(glm::vec3(blockX,blockY,blockZ),1,1,1);
     AddVert(cornerOne);
-
     vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ),1,1,1);
     AddVert(cornerTwo);
-
     vert cornerThree(glm::vec3(blockX + 1,blockY,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-
     vert cornerFour(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
     AddVert(cornerFour);
 }
-
 void Chunk::AddBack(int blockX,int blockY,int blockZ)
 {
     vert cornerOne(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
     AddVert(cornerOne);
-
     vert cornerTwo(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
     AddVert(cornerTwo);
-
     vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-
     vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
 }
-
 void Chunk::AddForth(int blockX,int blockY,int blockZ)
 {
     vert cornerOne(glm::vec3(blockX + 1,blockY,blockZ),1,1,1);
     AddVert(cornerOne);
-
     vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ + 1),1,1,1);
     AddVert(cornerTwo);
-
     vert cornerThree(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-
     vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
 }
-
 void Chunk::AddLeft(int blockX,int blockY,int blockZ)
 {
     vert cornerOne(glm::vec3(blockX,blockY,blockZ),1,1,1);
     AddVert(cornerOne);
-
     vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ),1,1,1);
     AddVert(cornerTwo);
-
     vert cornerThree(glm::vec3(blockX + 1,blockY + 1,blockZ),1,1,1);
     AddVert(cornerThree);
-
     vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ),1,1,1);
     AddVert(cornerFour);
 }
-
 void Chunk::AddRight(int blockX,int blockY,int blockZ)
 {
     vert cornerOne(glm::vec3(blockX + 1,blockY,blockZ),1,1,1);
     AddVert(cornerOne);
-
     vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ + 1),1,1,1);
     AddVert(cornerTwo);
-
     vert cornerThree(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-
     vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
 }

@@ -1,3 +1,4 @@
+#include <map>
 #include "iostream"
 #include "FastNoiseLite.h"
 #include "vector"
@@ -22,6 +23,8 @@ private:
     vector<GLfloat> GLvertices;
     vector<GLuint> GLindices;
     vector<vert> verts;
+
+    void PushBackIndiciAndVertMap();
 
     void GenerateVertices();
     void GenerateGLData();
@@ -54,6 +57,10 @@ private:
     int height;
 
     void PushBackIndice(int one, int two, int three);
+
+    void TestVertAndIndiGen();
+
+    void AddMapVert(vert v);
 };
 
 #define VOXERRA_CHUNK_H
