@@ -20,46 +20,6 @@ void Chunk::GenerateChunk(FastNoiseLite iNoise, int posX,int posY,  int length, 
     GenerateGLData();
 }
 
-void Chunk::TestVertAndIndiGen()
-{
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            for (int z = 0; z < length; z++) {
-                if(blockData[x][y][z] != air) // If block is occupied we check around.
-                {
-                    if(CheckAround(x - 1,y,z) || x - 1 < 0) // Checks Left
-                    {
-                        AddLeft(x,y,z);
-                    }
-                    if(CheckAround(x + 1,y,z) || x + 1 > width)// Checks Right
-                    {
-                        AddRight(x,y,z);
-                    }
-                    if(CheckAround(x,y - 1,z) || y - 1 < 0)// Checks Down
-                    {
-                        AddBottom(x,y,z);
-                    }
-                    if(CheckAround(x,y + 1,z))// Checks Top
-                    {
-                        AddTop(x,y,z);
-                    }
-
-                    if(CheckAround(x,y,z - 1) || z - 1 < 0)// Checks Back
-                    {
-                        AddBack(x,y,z);
-                    }
-                    if(CheckAround(x,y,z + 1) || z + 1 > length)// Checks Forth
-                    {
-                        AddForth(x, y, z);
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
 void Chunk::FillEmpty()
 {
     for (int x = 0; x < width; x++) // X coordinates
@@ -212,23 +172,23 @@ void Chunk::AddBack(int blockX,int blockY,int blockZ)
 {
     vert cornerOne(glm::vec3(blockX,blockY,blockZ),1,1,1);
     AddVert(cornerOne);
-    vert cornerTwo(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
+    vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ),1,1,1);
     AddVert(cornerTwo);
-    vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
+    vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ),1,1,1);
     AddVert(cornerThree);
-    vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ),1,1,1);
+    vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ),1,1,1);
     AddVert(cornerFour);
     PushBackIndice();
 }
 void Chunk::AddForth(int blockX,int blockY,int blockZ)
 {
-    vert cornerOne(glm::vec3(blockX + 1,blockY,blockZ),1,1,1);
+    vert cornerOne(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
     AddVert(cornerOne);
     vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ + 1),1,1,1);
     AddVert(cornerTwo);
-    vert cornerThree(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
+    vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerThree);
-    vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
+    vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
     PushBackIndice();
 }
@@ -236,11 +196,11 @@ void Chunk::AddLeft(int blockX,int blockY,int blockZ)
 {
     vert cornerOne(glm::vec3(blockX,blockY,blockZ),1,1,1);
     AddVert(cornerOne);
-    vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ),1,1,1);
+    vert cornerTwo(glm::vec3(blockX,blockY,blockZ + 1),1,1,1);
     AddVert(cornerTwo);
     vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ),1,1,1);
     AddVert(cornerThree);
-    vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ),1,1,1);
+    vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
     PushBackIndice();
 }
@@ -250,7 +210,7 @@ void Chunk::AddRight(int blockX,int blockY,int blockZ)
     AddVert(cornerOne);
     vert cornerTwo(glm::vec3(blockX + 1,blockY,blockZ + 1),1,1,1);
     AddVert(cornerTwo);
-    vert cornerThree(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
+    vert cornerThree(glm::vec3(blockX + 1,blockY + 1,blockZ),1,1,1);
     AddVert(cornerThree);
     vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
