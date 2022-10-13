@@ -120,29 +120,29 @@ void Chunk::AddVert(vert v)
     {
         if(verts[i].position == v.position)
         {
-            cout << GLindices.size() << " | " << GLindices.at(i) << endl;
-            GLindices.at(i) = GLindices.size();
             verts.erase(verts.begin() + i);
-
             return;
         }
     }
     verts.push_back(v);
-    GLindices.push_back(verts.size());
 }
 
-void Chunk::PushBackIndice()
-{
-    GLindices.push_back(verts.size() - 4);
-    GLindices.push_back(verts.size() - 3);
-    GLindices.push_back(verts.size() - 2);
-
-    GLindices.push_back(verts.size() - 2);
-    GLindices.push_back(verts.size() - 1);
-    GLindices.push_back(verts.size());
+void Chunk::GenerateIndicies() {
+    for (int x = 0; x < verts.size(); x++) {
+        for (int y = 0; y < verts.size(); y++) {
+            for (int z = 0; z < verts.size(); z++) {
+                if (verts[x].position == verts[y].position && verts[x].position != verts[z].position) {
+                    if(verts[x].position.x == verts[z].position.x && verts[x].position.y + 1 == verts[z].position.y && verts[x].position.z == verts[y].position.z
+                    && verts[x].position.x == verts[y].position.x && verts[x].position.y == verts[y].position.y && verts[x].position.z + 1 == verts[y].position.z
+                    )
+                    {
+                        GLindices.push_back(z);
+                    }
+                }
+            }
+        }
+    }
 }
-
-void Chunk::GenerateIndicies() {}
 
 void Chunk::AddTop(int blockX,int blockY,int blockZ)
 {
@@ -154,7 +154,7 @@ void Chunk::AddTop(int blockX,int blockY,int blockZ)
     AddVert(cornerThree);
     vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
-    PushBackIndice();
+
 }
 void Chunk::AddBottom(int blockX,int blockY,int blockZ)
 {
@@ -166,7 +166,6 @@ void Chunk::AddBottom(int blockX,int blockY,int blockZ)
     AddVert(cornerThree);
     vert cornerFour(glm::vec3(blockX + 1,blockY,blockZ + 1),1,1,1);
     AddVert(cornerFour);
-    PushBackIndice();
 }
 void Chunk::AddBack(int blockX,int blockY,int blockZ)
 {
@@ -178,7 +177,6 @@ void Chunk::AddBack(int blockX,int blockY,int blockZ)
     AddVert(cornerThree);
     vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ),1,1,1);
     AddVert(cornerFour);
-    PushBackIndice();
 }
 void Chunk::AddForth(int blockX,int blockY,int blockZ)
 {
@@ -190,7 +188,6 @@ void Chunk::AddForth(int blockX,int blockY,int blockZ)
     AddVert(cornerThree);
     vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
-    PushBackIndice();
 }
 void Chunk::AddLeft(int blockX,int blockY,int blockZ)
 {
@@ -202,7 +199,6 @@ void Chunk::AddLeft(int blockX,int blockY,int blockZ)
     AddVert(cornerThree);
     vert cornerFour(glm::vec3(blockX,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
-    PushBackIndice();
 }
 void Chunk::AddRight(int blockX,int blockY,int blockZ)
 {
@@ -214,7 +210,6 @@ void Chunk::AddRight(int blockX,int blockY,int blockZ)
     AddVert(cornerThree);
     vert cornerFour(glm::vec3(blockX + 1,blockY + 1,blockZ + 1),1,1,1);
     AddVert(cornerFour);
-    PushBackIndice();
 }
 
 void Chunk::GenerateGLData()

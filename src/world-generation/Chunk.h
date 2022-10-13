@@ -55,8 +55,6 @@ private:
     int length;
     int height;
 
-    void PushBackIndice();
-
     void TestVertAndIndiGen();
 
     void AddMapVert(vert v);
