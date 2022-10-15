@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 23)
 add_executable(${PROJECT_NAME}
         src/core/glad/glad.c
         src/world-generation/FastNoiseLite.h
+        src/world-generation/block.cpp
+        src/world-generation/block.h
         src/world-generation/Chunk.cpp
         src/world-generation/Chunk.h
         src/world-generation/ChunkManager.cpp
@@ -22,7 +24,8 @@ add_executable(${PROJECT_NAME}
         src/items/ArmorClass.cpp
         src/items/ArmorClass.h
         src/utils/Random.cpp
-        src/utils/Random.h)
+        src/utils/Random.h
+        )
 
 add_subdirectory(ext/glfw)
 

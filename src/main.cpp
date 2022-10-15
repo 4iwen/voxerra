@@ -70,7 +70,7 @@ GLuint testIndices[] =
 int main()
 {
     WeaponClass weapon(30,30,30,30,30,3,Sword, "Swrd","Nods");
-    //cout << "Damage dealt was : " << weapon.GetDamage(200) <<endl;
+    cout << (5 * 5 * 2) + (3 * 5 * 2) + (3 * 3 * 2) << endl;
 
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
     noise.SetSeed(1337);
@@ -94,7 +94,7 @@ int main()
     }
 
     cout << chunk.ReturnIndeciesSize() << endl;
-    cout << chunk.ReturnVerticiesSize() << endl;
+    cout << chunk.ReturnVerticiesSize() / 6 << endl;
 
     // initialize glfw
     if (!glfwInit())
@@ -162,8 +162,8 @@ int main()
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 proj = glm::mat4(1.0f);
         model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.1f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, -5.0f, -10.0f));
-        proj = glm::perspective(glm::radians(80.0f), (float)(width / height), 0.1f, 100.0f);
+        view = glm::translate(view, glm::vec3(0.0f, -5.0f, -12.0f));
+        proj = glm::perspective(glm::radians(90.0f), (float)(width / height), 0.1f, 100.0f);
 
         int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
         glad_glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));

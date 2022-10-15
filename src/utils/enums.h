@@ -6,5 +6,5 @@
 #define VOXERRA_ENUMS_H
 
 enum weaponType {Sword,Axe,Dagger,Spear,Hammer,Fists,Staff};
-
+enum blockType {dirt,grass,stone,bedrock,air};
 #endif //VOXERRA_ENUMS_H

@@ -5,6 +5,7 @@
 #include "glm/glm.hpp"
 #include "glad/glad.h"
 #include "../utils/vert.h"
+#include "block.h"
 
 
 using namespace std;
@@ -13,6 +14,8 @@ using namespace std;
 
 class Chunk{
 public:
+    Chunk() {};
+
     void GenerateChunk(FastNoiseLite noise, int posX,int posY, int length, int width, int height);
     vector<GLuint>* ReturnIndecies();
     vector<GLfloat>* ReturnVerticies();
@@ -24,40 +27,31 @@ private:
     vector<GLuint> GLindices;
     vector<vert> verts;
 
-    void PushBackIndiciAndVertMap();
-
     void GenerateVertices();
     void GenerateGLData();
     void GenerateNoise(FastNoiseLite noise);
     void FillEmpty();
 
-    enum blocks {air, dirt, grass,stone,bedrock};
-    blocks blockData[16][16][32];
+    block blockData[16][16][32];
 
-    bool CheckAround(int x,int y,int z);
+    bool CheckAround(glm::vec3);
 
     void AddVert(vert i);
-    void AddTop(int blockX,int blockY,int blockZ);
-    void AddBottom(int blockX,int blockY,int blockZ);
-    void AddLeft(int blockX,int blockY,int blockZ);
-    void AddRight(int blockX,int blockY,int blockZ);
-    void AddBack(int blockX,int blockY,int blockZ);
-    void AddForth(int blockX,int blockY,int blockZ);
-
-    void GenerateIndicies();
+    void AddTop(int blockX,int blockY,int blockZ,int r ,int g ,int b);
+    void AddBottom(int blockX,int blockY,int blockZ,int r ,int g ,int b);
+    void AddLeft(int blockX,int blockY,int blockZ,int r ,int g ,int b);
+    void AddRight(int blockX,int blockY,int blockZ,int r ,int g ,int b);
+    void AddBack(int blockX,int blockY,int blockZ,int r ,int g ,int b);
+    void AddForth(int blockX,int blockY,int blockZ,int r ,int g ,int b);
 
     int posX;
     int posY;
-
-    int indiCount = 0;
 
     int width;
     int length;
     int height;
 
-    void TestVertAndIndiGen();
-
-    void AddMapVert(vert v);
+    void PushBackIndicies();
 };
 
 #define VOXERRA_CHUNK_H
