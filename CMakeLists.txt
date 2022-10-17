@@ -12,6 +12,8 @@ add_executable(${PROJECT_NAME}
         src/world-generation/Chunk.h
         src/world-generation/ChunkManager.cpp
         src/world-generation/ChunkManager.h
+        src/world-generation/heightGenerator.cpp
+        src/world-generation/heightGenerator.h
         src/main.cpp
         src/VBO.cpp
         src/EBO.cpp

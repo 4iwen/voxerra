@@ -14,8 +14,6 @@ using namespace std;
 
 class Chunk{
 public:
-    Chunk() {};
-
     void GenerateChunk(FastNoiseLite noise, int posX,int posY, int length, int width, int height);
     vector<GLuint>* ReturnIndecies();
     vector<GLfloat>* ReturnVerticies();

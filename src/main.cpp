@@ -13,19 +13,13 @@
 #include "world-generation/FastNoiseLite.h"
 #include "items/WeaponClass.h"
 #include "utils/enums.h"
+#include "world-generation/heightGenerator.h"
 
 
 // screen
 const unsigned int width = 800;
 const unsigned int height = 800;
 
-// chunk ?
-Chunk chunk;
-const unsigned int chunkWidth = 4;
-const unsigned int chunkLength = 4;
-const unsigned int chunkHeight = 16;
-
-FastNoiseLite noise;
 
 // cube
 GLfloat testVertices[] =
@@ -69,32 +63,27 @@ GLuint testIndices[] =
 
 int main()
 {
-    WeaponClass weapon(30,30,30,30,30,3,Sword, "Swrd","Nods");
-    cout << (5 * 5 * 2) + (3 * 5 * 2) + (3 * 3 * 2) << endl;
+    FastNoiseLite noiseOne;
+    noiseOne.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    noiseOne.SetSeed(1337);
+    noiseOne.SetFrequency(0.01f);
+    FastNoiseLite noiseTwo;
+    noiseTwo.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    noiseTwo.SetSeed(1337);
+    noiseTwo.SetFrequency(0.04f);
 
-    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    noise.SetSeed(1337);
-    noise.SetFrequency(0.01f);
-
-    chunk.GenerateChunk(noise, 1, 1, 4, 4, 16);
-
-    // Create a vector of integers
-    vector<GLfloat> *verticesVec = chunk.ReturnVerticies();
-    vector<GLuint> *indicesVec = chunk.ReturnIndecies();
-
-    GLfloat vertices[chunk.ReturnVerticiesSize()];
-    GLuint indices[chunk.ReturnIndeciesSize()];
-
-    for (int i = 0; i < chunk.ReturnIndeciesSize(); i++) {
-        indices[i] = indicesVec->at(i);
+    //WeaponClass weapon(30,30,30,30,30,3,Sword, "Swrd","Nods");
+    heightGenerator heightGen;
+    for (int x = 0; x < 32; ++x) {
+        for (int y = 0; y < 64; ++y) {
+            cout << heightGen.getHeight(x,y,flats,noiseOne,noiseTwo);
+        }
+        cout << endl;
     }
 
-    for (int v = 0; v < chunk.ReturnVerticiesSize(); v++) {
-        vertices[v] = verticesVec->at(v);
-    }
 
-    cout << chunk.ReturnIndeciesSize() << endl;
-    cout << chunk.ReturnVerticiesSize() / 6 << endl;
+
+    //chunk.GenerateChunk(noise, 1, 1, 4, 4, 16);
 
     // initialize glfw
     if (!glfwInit())
@@ -127,8 +116,8 @@ int main()
     VAO VAO1;
     VAO1.Bind();
 
-    VBO VBO1(vertices, sizeof(vertices));
-    EBO EBO1(indices, sizeof(indices));
+    VBO VBO1(testVertices, sizeof(testVertices));
+    EBO EBO1(testIndices, sizeof(testIndices));
 
     VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), nullptr);
     VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -174,7 +163,7 @@ int main()
 
         glad_glUniform1f(uniID, 1);
         VAO1.Bind();
-        glDrawElements(GL_TRIANGLES, chunk.ReturnIndeciesSize(), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, sizeof(testIndices), GL_UNSIGNED_INT, nullptr);
 
         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
