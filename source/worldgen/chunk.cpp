@@ -1,24 +1,21 @@
-//
-// Created by Liquid on 10/15/2022.
-//
-
 #include <iostream>
 #include "chunk.h"
+
 chunk::chunk(int width, int height, int length,int posX,int posY,FastNoiseLite noise)
 {
-    this->width = width;
-    this->height = height;
-    this->length = length;
-    this->posX = posX;
-    this->posY = posY;
-    this->noise = noise;
+    //this->width = width;
+    //this->height = height;
+    //this->length = length;
+    //this->posX = posX;
+    //this->posY = posY;
+    //this->noise = noise;
 
     std::cout << "Filling with air" << std::endl;
-    fillBlocksWithAir();
+    //fillBlocksWithAir();
     std::cout << "Generating Noise" << std::endl;
-    generateNoise();
+    //generateNoise();
     std::cout << "Generating Verts" << std::endl;
-    generateVerts();
+    //generateVerts();
     std::cout << "Generated vers" << std::endl;
 }
 
@@ -104,74 +101,74 @@ void chunk::generateVerts()
 
 void chunk::ADD_LEFT_SIDE(int x, int y, int z)
 {
-    float r = blockData[x][y][z].red() / 255.0f;
-    float g = blockData[x][y][z].green() / 255.0f;
-    float b = blockData[x][y][z].blue() / 255.0f;
+    //float r = blockData[x][y][z].red() / 255.0f;
+    //float g = blockData[x][y][z].green() / 255.0f;
+    //float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_RIGHT_SIDE(int x, int y, int z)
 {
-    float r = blockData[x][y][z].red() / 255.0f;
-    float g = blockData[x][y][z].green() / 255.0f;
-    float b = blockData[x][y][z].blue() / 255.0f;
+    //float r = blockData[x][y][z].red() / 255.0f;
+    //float g = blockData[x][y][z].green() / 255.0f;
+    //float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_TOP_SIDE(int x, int y, int z)
 {
-    float r = blockData[x][y][z].red() / 255.0f;
-    float g = blockData[x][y][z].green() / 255.0f;
-    float b = blockData[x][y][z].blue() / 255.0f;
+    //float r = blockData[x][y][z].red() / 255.0f;
+    //float g = blockData[x][y][z].green() / 255.0f;
+    //float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_BOTTOM_SIDE(int x, int y, int z)
 {
-    float r = blockData[x][y][z].red() / 255.0f;
-    float g = blockData[x][y][z].green() / 255.0f;
-    float b = blockData[x][y][z].blue() / 255.0f;
+    //float r = blockData[x][y][z].red() / 255.0f;
+    //float g = blockData[x][y][z].green() / 255.0f;
+    //float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_FRONT_SIDE(int x, int y, int z)
 {
-    float r = blockData[x][y][z].red() / 255.0f;
-    float g = blockData[x][y][z].green() / 255.0f;
-    float b = blockData[x][y][z].blue() / 255.0f;
+    //float r = blockData[x][y][z].red() / 255.0f;
+    //float g = blockData[x][y][z].green() / 255.0f;
+    //float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_BACK_SIDE(int x, int y, int z)
 {
-    float r = blockData[x][y][z].red() / 255.0f;
-    float g = blockData[x][y][z].green() / 255.0f;
-    float b = blockData[x][y][z].blue() / 255.0f;
+    //float r = blockData[x][y][z].red() / 255.0f;
+    //float g = blockData[x][y][z].green() / 255.0f;
+    //float b = blockData[x][y][z].blue() / 255.0f;
     
-    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
-    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
     ADD_INDI_SIDE();
 }
 

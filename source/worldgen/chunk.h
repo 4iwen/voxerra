@@ -1,9 +1,3 @@
-//
-// Created by Liquid on 10/15/2022.
-//
-
-#ifndef VOXERRA_CHUNK_H
-#define VOXERRA_CHUNK_H
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
@@ -58,5 +52,3 @@ private :
     void GENERATE_GL_VERTS();
 };
 
-
-#endif //VOXERRA_CHUNK_H

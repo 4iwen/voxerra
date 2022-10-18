@@ -4,7 +4,7 @@
 
 #include "chunkManager.h"
 
-void chunkManager::addChunk(chunk c)
+void chunkManager::addChunk(const chunk& c)
 {
     chunks.push_back(c);
 }
@@ -28,8 +28,10 @@ void chunkManager::loadChunks()
     }
 }
 void chunkManager::loadChunk() {
-    for (int x = 0; x < chunks.size(); x++) {
-        indices.push_back(chunks[x].getIndices());
-        vertices.push_back(chunks[x].getVerts());
+    for (auto & chunk : chunks) {
+        std::vector<GLfloat> *CHUNK_VERTS = chunk.getVerts();
+        std::vector<GLint> *CHUNK_INDICES = chunk.getIndices();
+        std::push_heap(CHUNK_VERTS->begin(), CHUNK_VERTS->end());
+        std::push_heap(CHUNK_INDICES->begin(), CHUNK_INDICES->end());
     }
 }

@@ -12,23 +12,21 @@ set(CORE
         source/core/ElementBuffer.cpp
         source/core/Shader.cpp
         source/core/Shader.cpp
-        source/core/debuggui/DebugGui.cpp
-        source/core/FrameBuffer.cpp
-        source/core/FrameBuffer.h
+        source/core/debuggui/DebugGui.cpp source/core/FrameBuffer.cpp source/core/FrameBuffer.h
+
+        source/worldgen/chunk.h source/worldgen/chunk.cpp
+        source/worldgen/FastNoiseLite.h
+        source/worldgen/chunkManager.h source/worldgen/chunkManager.cpp
+        source/worldgen/block.h source/worldgen/block.cpp
+
+        source/utils/enums.h
+        source/utils/random.h source/utils/random.cpp
+        source/utils/vert.h source/utils/vert.cpp
         )
 
 # get game source files
 set(GAME
         source/game/Camera.cpp)
-
-set(WORLD_GEN
-        source/world-gen/chunk.h
-        source/world-gen/FastNoiseLite.h
-        source/world-gen/chunkManager.cpp
-        source/world-gen/chunkManager.h
-        source/world-gen/block.cpp
-        source/world-gen/block.h
-        )
 
 # get util source files
 set(UTILS
@@ -38,11 +36,7 @@ set(UTILS
         dependencies/source/imgui/imgui_tables.cpp
         dependencies/source/imgui/imgui_widgets.cpp
         dependencies/source/imgui/imgui_impl_glfw.cpp
-        dependencies/source/imgui/imgui_impl_opengl3.cpp
-        source/utils/enums.h source/utils/random.cpp
-        source/utils/random.h source/utils/vert.cpp
-        source/utils/vert.h source/world-gen/chunk.cpp
-        )
+        dependencies/source/imgui/imgui_impl_opengl3.cpp)
 
 # get compiled libraries files
 set(LIBS
@@ -52,8 +46,7 @@ set(LIBS
 add_executable(${PROJECT_NAME}
         ${CORE}
         ${GAME}
-        ${UTILS}
-        ${WORLD_GEN})
+        ${UTILS})
 
 # link libraries
 target_link_libraries(${PROJECT_NAME} ${LIBS})
@@ -68,3 +61,6 @@ add_custom_target(copy_shaders
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/source/core/shaders ${CMAKE_BINARY_DIR}/shaders
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 add_dependencies(voxerra copy_shaders)
+
+
+
