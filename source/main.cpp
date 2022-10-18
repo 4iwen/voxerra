@@ -32,7 +32,7 @@ int main()
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
     std::cout << "before chunk" << std::endl;
     chunk chunk(32,512,32,0,0,noise);
-    //std::cout << "after chunk" << std::endl;
+    std::cout << "after chunk" << std::endl;
 
     // initialize glfw
     glfwInit();

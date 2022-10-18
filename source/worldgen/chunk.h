@@ -10,7 +10,6 @@
 class chunk {
 public :
     chunk(int width, int height, int length,int posX,int posY,FastNoiseLite noise);
-
     std::vector<GLfloat>* getVerts();
     std::vector<GLint>* getIndices();
 

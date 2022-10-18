@@ -18,7 +18,6 @@ chunk::chunk(int width, int height, int length,int posX,int posY,FastNoiseLite n
     //generateVerts();
     std::cout << "Generated vers" << std::endl;
 }
-
 void chunk::fillBlocksWithAir()
 {
     for (int x = 0; x < width; x++)
