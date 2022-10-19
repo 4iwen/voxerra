@@ -1,7 +1,7 @@
 #include <iostream>
 #include "chunk.h"
 
-chunk::chunk(int width, int height, int length,int posX,int posY)
+chunk::chunk(int width, int height, int length,int posX,int posY, FastNoiseLite noise)
 {
     this->width = width;
     this->height = height;
@@ -39,7 +39,7 @@ void chunk::generateNoise()
         for (int z = 0; z < length; ++z) {
             int y = generateHeight(x,z);
             blockData[x][y][z].type = blockType::GRASS;
-            for (int i = y - 2; i > 0; i--)
+            for (int i = y - 1; i > 0; i--)
             {
                 if(i > y -5)
                 {
@@ -56,7 +56,7 @@ void chunk::generateNoise()
 
 int chunk::generateHeight(int x, int z)
 {
-    int base = 4;//noise.GetNoise((float)(x + posX * width),(float)(z + posY * length)) * 10;
+    int base = noise.GetNoise((float)(x + posX * width),(float)(z + posY * length)) * 20;
 
     return std::clamp(base,0,height);
 }
@@ -67,30 +67,24 @@ void chunk::generateVerts()
         for (int y = 0; y < height; y++) {
             for (int z = 0; z < length; z++) {
                 if (blockData[x][y][z].type != blockType::AIR) {
-                    if(x + 1 > width || checkForBlock(x + 1,y,z))
-                    {
+                    if(x + 1 >= width || checkForBlock(x + 1,y,z))
                         ADD_RIGHT_SIDE(x,y,z);
-                    }
-                    if(x - 1 <= 0 || checkForBlock(x - 1,y,z))
-                    {
+
+                    if(x <= 0 || checkForBlock(x - 1,y,z))
                         ADD_LEFT_SIDE(x,y,z);
-                    }
+
                     if(checkForBlock(x,y + 1,z))
-                    {
                         ADD_TOP_SIDE(x,y,z);
-                    }
-                    if(y - 1 <= 0 || checkForBlock(x,y - 1,z))
-                    {
+
+                    if(y < 0 || checkForBlock(x,y - 1,z))
                         ADD_BOTTOM_SIDE(x,y,z);
-                    }
-                    if(z + 1 > length ||checkForBlock(x,y,z + 1))
-                    {
+
+                    if(z + 1 >= length ||checkForBlock(x,y,z + 1))
                         ADD_FRONT_SIDE(x,y,z);
-                    }
-                    if(z - 1 <= 0 || checkForBlock(x,y,z - 1))
-                    {
+
+                    if(z - 1 < 0 || checkForBlock(x,y,z - 1))
                         ADD_BACK_SIDE(x,y,z);
-                    }
+
                 }
             }
         }
@@ -103,13 +97,10 @@ void chunk::ADD_LEFT_SIDE(int x, int y, int z)
     float g = blockData[x][y][z].green() / 255.0f;
     float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    std::cout << (vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z)).x << std::endl;
-    std::cout << (vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z)).y << std::endl;
-    std::cout << (vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z)).z << std::endl;
+    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_RIGHT_SIDE(int x, int y, int z)
@@ -118,10 +109,10 @@ void chunk::ADD_RIGHT_SIDE(int x, int y, int z)
     float g = blockData[x][y][z].green() / 255.0f;
     float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_TOP_SIDE(int x, int y, int z)
@@ -130,10 +121,10 @@ void chunk::ADD_TOP_SIDE(int x, int y, int z)
     float g = blockData[x][y][z].green() / 255.0f;
     float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_BOTTOM_SIDE(int x, int y, int z)
@@ -142,10 +133,10 @@ void chunk::ADD_BOTTOM_SIDE(int x, int y, int z)
     float g = blockData[x][y][z].green() / 255.0f;
     float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_FRONT_SIDE(int x, int y, int z)
@@ -154,10 +145,10 @@ void chunk::ADD_FRONT_SIDE(int x, int y, int z)
     float g = blockData[x][y][z].green() / 255.0f;
     float b = blockData[x][y][z].blue() / 255.0f;
 
-    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_TOP_FRONT_CORNER + glm::vec3(x,y,z),r,g,b));
     ADD_INDI_SIDE();
 }
 void chunk::ADD_BACK_SIDE(int x, int y, int z)
@@ -166,10 +157,10 @@ void chunk::ADD_BACK_SIDE(int x, int y, int z)
     float g = blockData[x][y][z].green() / 255.0f;
     float b = blockData[x][y][z].blue() / 255.0f;
     
-    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
-    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),0.0f,0.5f,0.0));
+    verts.push_back(vert(vert::LEFT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::LEFT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_BOTTOM_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
+    verts.push_back(vert(vert::RIGHT_TOP_BACK_CORNER + glm::vec3(x,y,z),r,g,b));
     ADD_INDI_SIDE();
 }
 
@@ -214,14 +205,12 @@ std::vector<GLuint>* chunk::getIndices()
 
 int chunk::getVertSize()
 {
-    std::cout << verts.size() * 6 << std::endl;
     GENERATE_GL_VERTS();
     return GLverts.size();
 }
 
 int chunk::getIndiceSize()
 {
-    std::cout << indices.size() << std::endl;
     return indices.size();
 }
 

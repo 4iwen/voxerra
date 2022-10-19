@@ -29,9 +29,10 @@ unsigned int TESTindices[] = {
 int main()
 {
     FastNoiseLite noise;
+    noise.SetFrequency(0.01f);
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
     std::cout << "before chunk" << std::endl;
-    chunk chunk(4,256,4,0,0);
+    chunk chunk(16,256,16,0,0, noise);
     std::cout << "after chunk" << std::endl;
 
     std::vector<GLfloat> *verticesVec = chunk.getVerts( );
@@ -133,6 +134,9 @@ int main()
         ImVec4 clearColor = debugGui.GetClearColor();
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         camera.Update();
         shader.SetMat4("view", camera.GetView());
