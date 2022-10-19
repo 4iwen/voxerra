@@ -9,12 +9,15 @@
 
 class chunk {
 public :
-    chunk(int width, int height, int length,int posX,int posY,FastNoiseLite noise);
+    chunk(int width, int height, int length,int posX,int posY);
     std::vector<GLfloat>* getVerts();
-    std::vector<GLint>* getIndices();
+    std::vector<GLuint>* getIndices();
 
     int getIndiceSize();
     int getVertSize();
+
+    GLuint *getIncide(int i);
+    GLfloat *getVert(int i);
 
 private :
     int width;
@@ -24,11 +27,11 @@ private :
     int posY;
     FastNoiseLite noise;
 
-    block blockData[32][512][32];
+    block blockData[4][256][4];
 
     std::vector<vert> verts;
     std::vector<GLfloat> GLverts;
-    std::vector<GLint> indices;
+    std::vector<GLuint> indices;
 
     void generateVerts();
     void generateNoise();

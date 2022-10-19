@@ -9,7 +9,7 @@ class chunkManager {
         FastNoiseLite noise;
         std::vector<chunk> chunks;
 
-        std::vector<GLint> *indices;
+        std::vector<GLuint> *indices;
         std::vector<GLfloat> *vertices;
 
         void loadChunks();

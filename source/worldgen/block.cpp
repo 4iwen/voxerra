@@ -6,33 +6,33 @@ void block::setType(blockType type) {
     switch(type)
     {
         case(blockType::DIRT):
-            r = 50;
-            g = 100;
-            b = 0;
+            rgb.x = 50;
+            rgb.y = 100;
+            rgb.z = 0;
             break;
         case(blockType::GRASS):
-            r = 0;
-            g = 200;
-            b = 0;
+            rgb.x = 0;
+            rgb.y = 200;
+            rgb.z = 0;
             break;
         case(blockType::STONE):
-            r = 100;
-            g = 100;
-            b = 100;
+            rgb.x = 100;
+            rgb.y = 100;
+            rgb.z = 100;
             break;
     }
 }
 
 int block::red() {
-    return r;
+    return rgb.x;
 }
 
 int block::blue() {
-    return g;
+    return rgb.y;
 }
 
 int block::green() {
-    return b;
+    return rgb.z;
 }
 
 block::block() {

@@ -30,7 +30,7 @@ void chunkManager::loadChunks()
 void chunkManager::loadChunk() {
     for (auto & chunk : chunks) {
         std::vector<GLfloat> *CHUNK_VERTS = chunk.getVerts();
-        std::vector<GLint> *CHUNK_INDICES = chunk.getIndices();
+        std::vector<GLuint> *CHUNK_INDICES = chunk.getIndices();
         std::push_heap(CHUNK_VERTS->begin(), CHUNK_VERTS->end());
         std::push_heap(CHUNK_INDICES->begin(), CHUNK_INDICES->end());
     }

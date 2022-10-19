@@ -31,8 +31,25 @@ int main()
     FastNoiseLite noise;
     noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
     std::cout << "before chunk" << std::endl;
-    chunk chunk(32,512,32,0,0,noise);
+    chunk chunk(4,256,4,0,0);
     std::cout << "after chunk" << std::endl;
+
+    std::vector<GLfloat> *verticesVec = chunk.getVerts( );
+    std::vector<GLuint> *indicesVec = chunk.getIndices();
+
+    GLfloat vertices[chunk.getVertSize()];
+    GLuint indices[chunk.getIndiceSize()];
+
+    for (int i = 0; i < chunk.getIndiceSize(); i++) {
+        indices[i] = indicesVec->at(i);
+    }
+
+    for (int v = 0; v < chunk.getVertSize(); v++) {
+        vertices[v] = verticesVec->at(v);
+    }
+
+    std::cout << chunk.getIndiceSize() << std::endl;
+    std::cout << chunk.getVertSize() << std::endl;
 
     // initialize glfw
     glfwInit();
@@ -71,12 +88,12 @@ int main()
     // create vertex buffer object
     VertexBuffer vbo;
     vbo.Bind();
-    vbo.SetData(TESTvertices, sizeof(TESTvertices));
+    vbo.SetData(vertices, sizeof(vertices));
 
     // create element buffer object
     ElementBuffer ebo;
     ebo.Bind();
-    ebo.SetData(TESTindices, sizeof(TESTindices));
+    ebo.SetData(indices, sizeof(indices));
 
     // TODO: implement frame buffer
     // create frame buffer object
@@ -110,6 +127,7 @@ int main()
         // set render settings
         glfwSwapInterval(debugGui.GetVsync());
         glPolygonMode(GL_FRONT_AND_BACK, debugGui.GetPolygonMode());
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
         // clear screen
         ImVec4 clearColor = debugGui.GetClearColor();
@@ -123,9 +141,8 @@ int main()
         // draw
         shader.Use();
         vao.Bind();
-        glDrawElements(GL_TRIANGLES, sizeof(TESTindices), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, nullptr);
         debugGui.Draw();
-
 
         // swap buffers
         glfwSwapBuffers(window);

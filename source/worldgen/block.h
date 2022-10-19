@@ -1,4 +1,5 @@
 #include "../utils/enums.h"
+#include "glm/vec3.hpp"
 
 
 class block {
@@ -12,7 +13,5 @@ public:
     int red();
     int green();
 private:
-    int r;
-    int g;
-    int b;
+    glm::vec3 rgb;
 };
