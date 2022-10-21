@@ -18,6 +18,7 @@ public :
 
     GLuint *getIncide(int i);
     GLfloat *getVert(int i);
+    glm::vec2 getPos();
 
 private :
     int width;
@@ -52,5 +53,6 @@ private :
     int generateHeight(int x, int z);
 
     void GENERATE_GL_VERTS();
+
 };
 

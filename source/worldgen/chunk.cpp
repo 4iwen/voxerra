@@ -32,6 +32,11 @@ void chunk::fillBlocksWithAir()
     }
 }
 
+glm::vec2 chunk::getPos()
+{
+    return glm::vec2(posX, posY);
+}
+
 void chunk::generateNoise()
 {
     for (int x = 0; x < width; x++)

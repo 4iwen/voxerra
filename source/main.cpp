@@ -30,7 +30,7 @@ int main()
 {
     FastNoiseLite noise;
     noise.SetFrequency(0.01f);
-    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2S);
     std::cout << "before chunk" << std::endl;
     chunk chunk(16,256,16,0,0, noise);
     std::cout << "after chunk" << std::endl;
@@ -48,9 +48,6 @@ int main()
     for (int v = 0; v < chunk.getVertSize(); v++) {
         vertices[v] = verticesVec->at(v);
     }
-
-    std::cout << chunk.getIndiceSize() << std::endl;
-    std::cout << chunk.getVertSize() << std::endl;
 
     // initialize glfw
     glfwInit();
@@ -133,8 +130,6 @@ int main()
         // clear screen
         ImVec4 clearColor = debugGui.GetClearColor();
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-
         glEnable(GL_DEPTH_TEST);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
