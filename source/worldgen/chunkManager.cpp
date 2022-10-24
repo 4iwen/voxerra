@@ -1,7 +1,3 @@
-//
-// Created by Liquid on 10/15/2022.
-//
-
 #include "chunkManager.h"
 
 void chunkManager::addChunk(const chunk& c)
@@ -26,8 +22,7 @@ void chunkManager::loadChunks()
     }
 }
 void chunkManager::loadChunk(chunk c) {
-        std::push_heap(c.getVerts()->begin(), c.getVerts()->end());
-        std::push_heap(c.getIndices()->begin(), c.getIndices()->end());
+
 }
 
 GLfloat* chunkManager::getArrayVerts(){
@@ -41,19 +36,69 @@ void chunkManager::generateArrays(){
     indicesARR = new GLuint[getIndices().size()];
     verticesARR = new GLfloat[getVerts().size()];
 
-    indicesARR = indices->data();
-    verticesARR = vertices->data();
+    for (int i = 0; i < getIndices().size(); ++i) {
+        indicesARR[i] = getIndices()[i];
+    }
+    for (int i = 0; i < getVerts().size(); ++i) {
+        verticesARR[i] = getVerts()[i];
+    }
 }
 
-void chunkManager::generateChunk() {
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            for (int z = 0; z < length; z++) {
-                chunk c = chunk( 16, 256, 16,x, y, noise);
+void chunkManager::updateChunks()
+{
+    for(int i = playerPos.x - renderDistance; i < playerPos.x + renderDistance; i++)
+    {
+        for(int j = playerPos.y - renderDistance; j < playerPos.y + renderDistance; j++)
+        {
+            bool found = false;
+            for (auto & chunk : chunks) {
+                if(!RENDER_DISTANCE_CHECK(chunk.getPos()))
+                {
+                    unloadChunk(chunk);
+                    found = true;
+                    break;
+                }
+                if(chunk.getPos() == glm::vec2(i,j))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found)
+            {
+                chunk c = chunk(16,256,16,i,j,noise);
                 addChunk(c);
             }
         }
     }
-    loadChunks();
-    generateArrays();
+}
+
+bool chunkManager::RENDER_DISTANCE_CHECK(glm::vec2 pos)
+{
+    if(pos.x < playerPos.x - renderDistance
+    || pos.x > playerPos.x + renderDistance
+    || pos.y < playerPos.y - renderDistance
+    || pos.y > playerPos.y+ renderDistance)
+    {
+        return false;
+    }
+    return true;
+}
+
+std::vector<GLuint> chunkManager::getIndices() {
+    for (auto & chunk : chunks) {
+        for (int i = 0; i < chunk.getIndiceSize(); ++i) {
+            indices->push_back(*chunk.getIncide(i));
+        }
+    }
+    return *indices;
+}
+
+std::vector<GLfloat> chunkManager::getVerts() {
+    for (auto & chunk : chunks) {
+        for (int i = 0; i < chunk.getVertSize(); ++i) {
+            vertices->push_back(*chunk.getVert(i));
+        }
+    }
+    return *vertices;
 }

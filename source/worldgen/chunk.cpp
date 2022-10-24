@@ -89,7 +89,6 @@ void chunk::generateVerts()
 
                     if(z - 1 < 0 || checkForBlock(x,y,z - 1))
                         ADD_BACK_SIDE(x,y,z);
-
                 }
             }
         }
