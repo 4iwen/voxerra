@@ -9,7 +9,7 @@
 #include "core/debuggui/DebugGui.h"
 #include "game/Camera.h"
 #include "core/FrameBuffer.h"
-#include "worldgen/chunk.h"
+#include "worldgen/chunkManager.h"
 
 // triangle vertices
 float TESTvertices[] = {
@@ -28,26 +28,31 @@ unsigned int TESTindices[] = {
 
 int main()
 {
+
     FastNoiseLite noise;
     noise.SetFrequency(0.01f);
-    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2S);
-    std::cout << "before chunk" << std::endl;
-    chunk chunk(16,256,16,0,0, noise);
-    std::cout << "after chunk" << std::endl;
+    std::cout <<"a"<<std::endl;
 
-    std::vector<GLfloat> *verticesVec = chunk.getVerts( );
-    std::vector<GLuint> *indicesVec = chunk.getIndices();
+    chunkManager cm;
+    cm.updateChunks();
 
-    GLfloat vertices[chunk.getVertSize()];
-    GLuint indices[chunk.getIndiceSize()];
-
-    for (int i = 0; i < chunk.getIndiceSize(); i++) {
-        indices[i] = indicesVec->at(i);
-    }
-
-    for (int v = 0; v < chunk.getVertSize(); v++) {
-        vertices[v] = verticesVec->at(v);
-    }
+    //std::cout << "before chunk" << std::endl;
+    //chunk chunk(16,256,16,0,0, noise);
+    //std::cout << "after chunk" << std::endl;
+//
+    //std::vector<GLfloat> *verticesVec = chunk.getVerts( );
+    //std::vector<GLuint> *indicesVec = chunk.getIndices();
+//
+    //GLfloat vertices[chunk.getVertSize()];
+    //GLuint indices[chunk.getIndiceSize()];
+//
+    //for (int i = 0; i < chunk.getIndiceSize(); i++) {
+    //    indices[i] = indicesVec->at(i);
+    //}
+//
+    //for (int v = 0; v < chunk.getVertSize(); v++) {
+    //    vertices[v] = verticesVec->at(v);
+    //}
 
     // initialize glfw
     glfwInit();
@@ -86,12 +91,12 @@ int main()
     // create vertex buffer object
     VertexBuffer vbo;
     vbo.Bind();
-    vbo.SetData(vertices, sizeof(vertices));
+    vbo.SetData(cm.generateVertArray(), sizeof(cm.generateVertArray()));
 
     // create element buffer object
     ElementBuffer ebo;
     ebo.Bind();
-    ebo.SetData(indices, sizeof(indices));
+    ebo.SetData(cm.generateIndiArray(), sizeof(cm.generateIndiArray()));
 
     // TODO: implement frame buffer
     // create frame buffer object
@@ -140,7 +145,7 @@ int main()
         // draw
         shader.Use();
         vao.Bind();
-        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, sizeof(cm.generateIndiArray()), GL_UNSIGNED_INT, nullptr);
         debugGui.Draw();
 
         // swap buffers

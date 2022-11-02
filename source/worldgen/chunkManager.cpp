@@ -1,9 +1,21 @@
+#include <iostream>
 #include "chunkManager.h"
 
-void chunkManager::addChunk(const chunk& c)
+void chunkManager::addChunk(chunk c)
 {
+    std::cout << "Adding chunk" << c.getPos().x  << c.getPos().y << std::endl;
     chunks.push_back(c);
 }
+
+void chunkManager::reloadChunks()
+{
+    for (int i = 0; i < chunks.size(); i++)
+    {
+        unloadChunk(chunks[i]);
+    }
+    updateChunks();
+}
+
 void chunkManager::unloadChunk(chunk c) {
     for (int x = 0; x < chunks.size(); x++)
     {
@@ -15,37 +27,27 @@ void chunkManager::unloadChunk(chunk c) {
     }
 }
 
-void chunkManager::loadChunks()
-{
-    for (auto & chunk : chunks) {
-        loadChunk(chunk);
-    }
-}
-void chunkManager::loadChunk(chunk c) {
-
-}
-
-GLfloat* chunkManager::getArrayVerts(){
-    return verticesARR;
-}
-GLuint* chunkManager::getArrayIndices(){
-    return indicesARR;
-}
-
-void chunkManager::generateArrays(){
-    indicesARR = new GLuint[getIndices().size()];
+GLfloat * chunkManager::generateVertArray(){
     verticesARR = new GLfloat[getVerts().size()];
 
-    for (int i = 0; i < getIndices().size(); ++i) {
-        indicesARR[i] = getIndices()[i];
-    }
     for (int i = 0; i < getVerts().size(); ++i) {
         verticesARR[i] = getVerts()[i];
     }
+    return verticesARR;
+}
+
+GLuint * chunkManager::generateIndiArray(){
+    indicesARR = new GLuint[getVerts().size()];
+
+    for (int i = 0; i < getVerts().size(); ++i) {
+        verticesARR[i] = getVerts()[i];
+    }
+    return indicesARR;
 }
 
 void chunkManager::updateChunks()
 {
+    std::cout << "Updating chunks" << std::endl;
     for(int i = playerPos.x - renderDistance; i < playerPos.x + renderDistance; i++)
     {
         for(int j = playerPos.y - renderDistance; j < playerPos.y + renderDistance; j++)
@@ -101,4 +103,14 @@ std::vector<GLfloat> chunkManager::getVerts() {
         }
     }
     return *vertices;
+}
+
+void chunkManager::setRenderDistance(int distance)
+{
+    renderDistance = distance;
+}
+
+int chunkManager::getRenderDistance()
+{
+    return renderDistance;
 }

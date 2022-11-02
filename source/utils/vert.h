@@ -1,5 +1,6 @@
 #include "glm/glm.hpp"
 #include <vector>
+#pragma once
 
 class vert {
 public :
