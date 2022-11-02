@@ -4,7 +4,7 @@
 #include "glad/glad.h"
 #include "string"
 #include "cmath"
-#include "../../game/Camera.h"
+#include "../../game/Camera/Camera.h"
 
 class DebugGui {
 public:
@@ -20,7 +20,7 @@ private:
     Camera* _camera;
     bool _vsync = true;
     int _polygonMode = 0;
-    float _frames[240]{};
+    float _frames[300]{};
     bool _showDemoWindow = false;
     ImVec4 _clearColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 

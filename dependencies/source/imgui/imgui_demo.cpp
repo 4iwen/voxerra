@@ -2561,7 +2561,7 @@ static void ShowDemoWindowWidgets()
     if (disable_all)
         ImGui::EndDisabled();
 
-    IMGUI_DEMO_MARKER("Widgets/Disable Block");
+    IMGUI_DEMO_MARKER("Widgets/Disable block");
     if (ImGui::TreeNode("Disable block"))
     {
         ImGui::Checkbox("Disable entire section above", &disable_all);

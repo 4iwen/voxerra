@@ -1,3 +1,5 @@
+#include <vector>
+#include <iostream>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -6,27 +8,39 @@
 #include "core/ElementBuffer.h"
 #include "core/Shader.h"
 #include "core/debuggui/DebugGui.h"
-#include "game/Camera.h"
-#include "core/FrameBuffer.h"
+#include "game/Camera/Camera.h"
+#include "FastNoiseLite/FastNoiseLite.h"
 
-// triangle vertices
+// cube vertices
 float vertices[] = {
-    //  x         y          z         r         g         b
-    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-
+    //  x         y          z
+    -0.5f, -0.5f, -0.5f,
+    0.5f, -0.5f, -0.5f,
+    0.5f, 0.5f, -0.5f,
+    -0.5f, 0.5f, -0.5f,
+    -0.5f, -0.5f, 0.5f,
+    0.5f, -0.5f, 0.5f,
+    0.5f, 0.5f, 0.5f,
+    -0.5f, 0.5f, 0.5f,
 };
 
-// indices for the triangle above
+// indices for the cube above
 unsigned int indices[] = {
-    0, 1, 2,
+    0, 1, 2, 2, 3, 0,
+    1, 5, 6, 6, 2, 1,
+    7, 6, 5, 5, 4, 7,
+    4, 0, 3, 3, 7, 4,
+    4, 5, 1, 1, 0, 4,
+    3, 2, 6, 6, 7, 3
 };
 
 int main()
 {
     // initialize glfw
-    glfwInit();
+    if (!glfwInit())
+    {
+        return -1;
+    }
 
     // set opengl version
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -52,6 +66,7 @@ int main()
     // initialize glad
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
+        glfwTerminate();
         return -1;
     }
 
@@ -69,28 +84,45 @@ int main()
     ebo.Bind();
     ebo.SetData(indices, sizeof(indices));
 
-    // TODO: implement frame buffer
-    // create frame buffer object
-    //FrameBuffer fbo;
-    //fbo.Bind();
-
     // set vertex attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
 
     // unbind vertex array object
     vao.Unbind();
 
-    // create shader program
-    Shader shader("shaders/vertex.glsl", "shaders/fragment.glsl");
+    // cube shader
+    Shader shader("shaders/cube.vert", "shaders/cube.frag");
+    // light shader
+    Shader lightShader("shaders/light.vert", "shaders/light.frag");
 
     // create camera
     Camera camera(window, glm::vec3(0.0f, 0.0f, 3.0f), 90.0f, 0.1f, 100.0f);
 
     // create debug gui
     DebugGui debugGui(window, &camera);
+
+    // create noise generator
+    FastNoiseLite noise(rand());
+    noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    noise.SetFrequency(0.01f);
+    noise.SetFractalOctaves(5);
+    noise.SetFractalLacunarity(2.0f);
+    noise.SetFractalGain(0.5f);
+    noise.SetFractalType(FastNoiseLite::FractalType_FBm);
+
+
+    std::vector<float> noiseData(128 * 128);
+    int index = 0;
+
+    for (int y = 0; y < 128; y++)
+    {
+        for (int x = 0; x < 128; x++)
+        {
+            noiseData[index] = noise.GetNoise((float)x, (float)y);
+            index++;
+        }
+    }
 
     // main loop
     while (!glfwWindowShouldClose(window))
@@ -101,22 +133,41 @@ int main()
         // set render settings
         glfwSwapInterval(debugGui.GetVsync());
         glPolygonMode(GL_FRONT_AND_BACK, debugGui.GetPolygonMode());
-
+        // enable depth testing
+        glEnable(GL_DEPTH_TEST);
+        // enable face culling
+        glCullFace(GL_FRONT);
+        glFrontFace(GL_CCW);
         // clear screen
         ImVec4 clearColor = debugGui.GetClearColor();
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         camera.Update();
         shader.SetMat4("view", camera.GetView());
         shader.SetMat4("projection", camera.GetProjection());
+        // true rainbow cycle block color
+        //shader.SetVec3("blockColor", glm::vec3(sin(glfwGetTime() * 2.0f) / 2.0f + 0.5f, sin(glfwGetTime() * 2.0f + 2.0f) / 2.0f + 0.5f, sin(glfwGetTime() * 2.0f + 4.0f) / 2.0f + 0.5f));
+        shader.SetVec3("blockColor", glm::vec3(0.15f, 0.65f, 0.15f));
 
         // draw
         shader.Use();
         vao.Bind();
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-        debugGui.Draw();
 
+        // draw the 128x128 chunk generated from the noise
+        for (int y = 0; y < 128; y++)
+        {
+            for (int x = 0; x < 128; x++)
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, glm::vec3(x, (int)(noiseData[y * 128 + x] * 10), y));
+                shader.SetMat4("model", model);
+                glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, nullptr);
+            }
+        }
+
+        //glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, nullptr);
+        debugGui.Draw();
 
         // swap buffers
         glfwSwapBuffers(window);
@@ -125,5 +176,5 @@ int main()
     // terminate glfw
     glfwTerminate();
 
-    return EXIT_SUCCESS;
+    return 0;
 }

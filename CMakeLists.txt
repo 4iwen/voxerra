@@ -12,11 +12,11 @@ set(CORE
         source/core/ElementBuffer.cpp
         source/core/Shader.cpp
         source/core/Shader.cpp
-        source/core/debuggui/DebugGui.cpp source/core/FrameBuffer.cpp source/core/FrameBuffer.h)
+        source/core/debuggui/DebugGui.cpp source/core/utils/Utils.cpp source/core/utils/Utils.h)
 
 # get game source files
 set(GAME
-        source/game/Camera.cpp)
+        source/game/camera/Camera.cpp source/game/block/Block.h source/game/block/BlockType.h source/game/chunk/Chunk.cpp source/game/chunk/Chunk.h source/game/chunk/ChunkManager.cpp source/game/chunk/ChunkManager.h)
 
 # get util source files
 set(UTILS
