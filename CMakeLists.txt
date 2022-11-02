@@ -16,7 +16,9 @@ set(CORE
 
 # get game source files
 set(GAME
-        source/game/camera/Camera.cpp source/game/block/Block.h source/game/block/BlockType.h source/game/chunk/Chunk.cpp source/game/chunk/Chunk.h source/game/chunk/ChunkManager.cpp source/game/chunk/ChunkManager.h)
+        source/game/camera/Camera.cpp
+        source/game/chunk/Chunk.cpp
+        source/game/chunk/ChunkManager.cpp source/game/block/Block.cpp)
 
 # get util source files
 set(UTILS

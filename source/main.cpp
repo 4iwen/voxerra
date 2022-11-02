@@ -10,6 +10,7 @@
 #include "core/debuggui/DebugGui.h"
 #include "game/Camera/Camera.h"
 #include "FastNoiseLite/FastNoiseLite.h"
+#include "game/chunk/Chunk.h"
 
 // cube vertices
 float vertices[] = {
@@ -102,27 +103,14 @@ int main()
     // create debug gui
     DebugGui debugGui(window, &camera);
 
-    // create noise generator
-    FastNoiseLite noise(rand());
-    noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-    noise.SetFrequency(0.01f);
-    noise.SetFractalOctaves(5);
-    noise.SetFractalLacunarity(2.0f);
-    noise.SetFractalGain(0.5f);
-    noise.SetFractalType(FastNoiseLite::FractalType_FBm);
+    Chunk chunk(0, 0);
+    chunk.Generate();
+    chunk.GenerateVerticesAndIndices();
 
-
-    std::vector<float> noiseData(128 * 128);
-    int index = 0;
-
-    for (int y = 0; y < 128; y++)
-    {
-        for (int x = 0; x < 128; x++)
-        {
-            noiseData[index] = noise.GetNoise((float)x, (float)y);
-            index++;
-        }
-    }
+    std::vector<float> chunkVertices;
+    std::vector<unsigned int> chunkIndices;
+    chunk.GetVertices(chunkVertices);
+    chunk.GetIndices(chunkIndices);
 
     // main loop
     while (!glfwWindowShouldClose(window))
@@ -146,25 +134,18 @@ int main()
         camera.Update();
         shader.SetMat4("view", camera.GetView());
         shader.SetMat4("projection", camera.GetProjection());
-        // true rainbow cycle block color
-        //shader.SetVec3("blockColor", glm::vec3(sin(glfwGetTime() * 2.0f) / 2.0f + 0.5f, sin(glfwGetTime() * 2.0f + 2.0f) / 2.0f + 0.5f, sin(glfwGetTime() * 2.0f + 4.0f) / 2.0f + 0.5f));
+        //switch (chunk.GetChunkData()) {
+//
+        //}
         shader.SetVec3("blockColor", glm::vec3(0.15f, 0.65f, 0.15f));
 
         // draw
         shader.Use();
         vao.Bind();
 
-        // draw the 128x128 chunk generated from the noise
-        for (int y = 0; y < 128; y++)
-        {
-            for (int x = 0; x < 128; x++)
-            {
-                glm::mat4 model = glm::mat4(1.0f);
-                model = glm::translate(model, glm::vec3(x, (int)(noiseData[y * 128 + x] * 10), y));
-                shader.SetMat4("model", model);
-                glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, nullptr);
-            }
-        }
+        // draw the generated chunk with the vertices and indices from the chunk
+
+
 
         //glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, nullptr);
         debugGui.Draw();

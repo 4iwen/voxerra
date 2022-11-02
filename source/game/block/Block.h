@@ -1,12 +1,11 @@
 #include "BlockType.h"
-#include "glm/glm.hpp"
 
-class Block
-{
+class Block {
 public:
-    Block();
+    Block(BlockType type);
+
+    BlockType GetType();
 
 private:
     BlockType _blockType;
-    glm::vec3 _position;
 };

@@ -2,4 +2,10 @@
 
 #include "FastNoiseLite/FastNoiseLite.h"
 
-static FastNoiseLite Noise = FastNoiseLite(1337);
+namespace Utils {
+    static FastNoiseLite Noise(1337);
+
+    static float RandomRange(float min, float max) {
+        return min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+    }
+}

@@ -1,3 +1,4 @@
+#include "vector"
 #include "FastNoiseLite/FastNoiseLite.h"
 #include "../Block/Block.h"
 #include "../../core/utils/Utils.h"
@@ -17,10 +18,21 @@ public:
 
     Block GetBlock(int x, int y, int z);
 
-    void SetBlock(int x, int y, int z, Block block);
+    void SetBlock(int x, int y, int z, BlockType type);
+
+    void GenerateVerticesAndIndices();
+
+    void GetVertices(std::vector<float> &vertices);
+
+    void GetIndices(std::vector<unsigned int> &indices);
+
+
 
 private:
     int _x;
     int _z;
-    Block _chunkData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
+    BlockType _chunkData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
+
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
 };
