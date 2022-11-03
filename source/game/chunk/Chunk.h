@@ -18,7 +18,7 @@ public:
 
     Block GetBlock(int x, int y, int z);
 
-    void SetBlock(int x, int y, int z, BlockType type);
+    void SetBlock(int x, int y, int z, Block block);
 
     void GenerateVerticesAndIndices();
 
@@ -29,7 +29,7 @@ public:
 private:
     int _x;
     int _z;
-    BlockType _chunkData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
+    Block _chunkData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
 
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
