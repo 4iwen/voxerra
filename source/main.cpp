@@ -71,6 +71,28 @@ int main()
         return -1;
     }
 
+    // generate chunk
+    Chunk chunk(0, 0);
+    chunk.Generate();
+    chunk.GenerateVerticesAndIndices();
+
+    std::vector<float> chunkVertices;
+    std::vector<unsigned int> chunkIndices;
+    chunk.GetVertices(chunkVertices);
+    chunk.GetIndices(chunkIndices);
+
+    float vert[chunkVertices.size()];
+    for (int i = 0; i < chunkVertices.size(); i++)
+    {
+        vert[i] = chunkVertices[i];
+    }
+
+    unsigned int indi[chunkIndices.size()];
+    for (unsigned int i = 0; i < chunkIndices.size(); i++)
+    {
+        indi[i] = chunkIndices[i];
+    }
+
     // create vertex array object
     VertexArray vao;
     vao.Bind();
@@ -78,12 +100,12 @@ int main()
     // create vertex buffer object
     VertexBuffer vbo;
     vbo.Bind();
-    vbo.SetData(vertices, sizeof(vertices));
+    vbo.SetData(vert, sizeof(vert));
 
     // create element buffer object
     ElementBuffer ebo;
     ebo.Bind();
-    ebo.SetData(indices, sizeof(indices));
+    ebo.SetData(indi, sizeof(indi));
 
     // set vertex attributes
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -102,15 +124,6 @@ int main()
 
     // create debug gui
     DebugGui debugGui(window, &camera);
-
-    Chunk chunk(0, 0);
-    chunk.Generate();
-    chunk.GenerateVerticesAndIndices();
-
-    std::vector<float> chunkVertices;
-    std::vector<unsigned int> chunkIndices;
-    chunk.GetVertices(chunkVertices);
-    chunk.GetIndices(chunkIndices);
 
     // main loop
     while (!glfwWindowShouldClose(window))
@@ -143,9 +156,25 @@ int main()
         shader.Use();
         vao.Bind();
 
-        // draw the generated chunk with the vertices and indices from the chunk
+        // draw the generated chunk
+        for (int i = 0; i < chunk.GetChunkData().size(); i++)
+        {
+            glm::vec3 pos = chunk.GetChunkData()[i].GetPosition();
+            shader.SetMat4("model", glm::translate(glm::mat4(1.0f), pos));
+            glDrawElements(GL_TRIANGLES, sizeof(indi), GL_UNSIGNED_INT, 0);
+        }
 
+        // draw debug gui
+        debugGui.Draw();
 
+        // swap buffers
+        glfwSwapBuffers(window);
+    }
+
+    // terminate glfw
+    glfwTerminate();
+    return 0;
+}
 
         //glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, nullptr);
         debugGui.Draw();

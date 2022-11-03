@@ -43,7 +43,7 @@ void DebugGui::Draw()
         ImGui::Spacing();
         if (ImGui::CollapsingHeader("Rendering settings"))
         {
-            if (ImGui::TreeNode("camera"))
+            if (ImGui::TreeNode("Camera"))
             {
                 ImGui::Text("Position: x: %.1f, y: %.1f, z: %.1f", _camera->GetPosition().x, _camera->GetPosition().y, _camera->GetPosition().z);
                 ImGui::Text("Yaw: %.1f, Pitch: %.1f", _camera->GetYaw(), _camera->GetPitch());

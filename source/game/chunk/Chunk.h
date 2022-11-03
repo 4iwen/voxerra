@@ -26,8 +26,6 @@ public:
 
     void GetIndices(std::vector<unsigned int> &indices);
 
-
-
 private:
     int _x;
     int _z;
