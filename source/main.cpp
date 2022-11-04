@@ -103,8 +103,10 @@ int main()
     ebo.SetData(chunkIndices.data(), chunkIndices.size() * sizeof(unsigned int));
 
     // set vertex attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
 
     // unbind vertex array object
     vao.Unbind();
@@ -145,7 +147,7 @@ int main()
         //switch (chunk.GetChunkData()) {
 //
         //}
-        shader.SetVec3("blockColor", glm::vec3(0.15f, 0.65f, 0.15f));
+        //shader.SetVec3("blockColor", glm::vec3(0.15f, 0.65f, 0.15f));
 
         // draw
         shader.Use();

@@ -1,12 +1,13 @@
 #version 330 core
 
 layout (location = 0) in vec3 pos;
+layout (location = 1) in vec3 blockColor;
 
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 model;
 
-uniform vec3 blockColor;
+//uniform vec3 blockColor;
 
 out vec3 color;
 

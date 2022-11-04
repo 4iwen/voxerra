@@ -5,7 +5,8 @@ class Block {
 public:
     BlockType GetType();
 
+    void SetType(BlockType type);
+
 private:
     BlockType blockType;
-    glm::vec3 _color;
 };

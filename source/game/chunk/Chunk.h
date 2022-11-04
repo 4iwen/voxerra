@@ -2,6 +2,7 @@
 #include "FastNoiseLite/FastNoiseLite.h"
 #include "../Block/Block.h"
 #include "../../core/utils/Utils.h"
+#include "../Vertex.h"
 
 #define CHUNK_SIZE 16
 #define CHUNK_HEIGHT 256
@@ -33,4 +34,23 @@ private:
 
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
+
+    void AddRightSide(int x, int y, int z);
+
+    void AddLeftSide(int x, int y, int z);
+
+    void AddTopSide(int x, int y, int z);
+
+    void AddBottomSide(int x, int y, int z);
+
+    void AddFrontSide(int x, int y, int z);
+
+    void AddBackSide(int x, int y, int z);
+
+    glm::vec3 GetBlockColor(BlockType type);
+
+    void AddVertices(Vertex vertex, Vertex vertex1, Vertex vertex2, Vertex vertex3);
+
+    void AddIndices();
 };
+
