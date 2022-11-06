@@ -110,7 +110,7 @@
 //   static functions.
 //
 //   The basic concept is that you provide a "string" object which
-//   behaves like an array of characters. stb_textedit uses indices to
+//   behaves like an array of characters. stb_textedit uses _indices to
 //   refer to positions in the string, implicitly representing positions
 //   in the displayed textedit. This is true for both plain text and
 //   rich text; even with rich text stb_truetype interacts with your
@@ -165,8 +165,8 @@
 //    STB_TEXTEDIT_K_INSERT              keyboard input to toggle insert mode
 //    STB_TEXTEDIT_IS_SPACE(ch)          true if character is whitespace (e.g. 'isspace'),
 //                                          required for default WORDLEFT/WORDRIGHT handlers
-//    STB_TEXTEDIT_MOVEWORDLEFT(obj,i)   custom handler for WORDLEFT, returns index to move cursor to
-//    STB_TEXTEDIT_MOVEWORDRIGHT(obj,i)  custom handler for WORDRIGHT, returns index to move cursor to
+//    STB_TEXTEDIT_MOVEWORDLEFT(obj,i)   custom handler for WORDLEFT, returns _indicesIndex to move cursor to
+//    STB_TEXTEDIT_MOVEWORDRIGHT(obj,i)  custom handler for WORDRIGHT, returns _indicesIndex to move cursor to
 //    STB_TEXTEDIT_K_WORDLEFT            keyboard input to move cursor left one word // e.g. ctrl-LEFT
 //    STB_TEXTEDIT_K_WORDRIGHT           keyboard input to move cursor right one word // e.g. ctrl-RIGHT
 //    STB_TEXTEDIT_K_LINESTART2          secondary keyboard input to move cursor to start of line

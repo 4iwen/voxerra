@@ -11,8 +11,6 @@ class Chunk {
 public:
     Chunk(int x, int z);
 
-    ~Chunk();
-
     void Render();
 
     void Generate();
@@ -28,12 +26,12 @@ public:
     void GetIndices(std::vector<unsigned int> &indices);
 
 private:
-    int _x;
-    int _z;
-    Block _chunkData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
+    int _x, _z;
+    Block _chunkData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE]{};
 
-    std::vector<float> vertices;
-    std::vector<unsigned int> indices;
+    std::vector<float> _vertices;
+    std::vector<unsigned int> _indices;
+    int _indicesIndex = 0;
 
     void AddRightSide(int x, int y, int z);
 

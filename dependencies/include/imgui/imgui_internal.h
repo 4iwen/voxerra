@@ -730,7 +730,7 @@ struct ImChunkStream
 #ifndef IM_DRAWLIST_ARCFAST_TABLE_SIZE
 #define IM_DRAWLIST_ARCFAST_TABLE_SIZE                          48 // Number of samples in lookup table.
 #endif
-#define IM_DRAWLIST_ARCFAST_SAMPLE_MAX                          IM_DRAWLIST_ARCFAST_TABLE_SIZE // Sample index _PathArcToFastEx() for 360 angle.
+#define IM_DRAWLIST_ARCFAST_SAMPLE_MAX                          IM_DRAWLIST_ARCFAST_TABLE_SIZE // Sample _indicesIndex _PathArcToFastEx() for 360 angle.
 
 // Data shared between all ImDrawList instances
 // You may want to create your own instance of this if you want to use ImDrawList completely without ImGui. In that case, watch out for future changes to this structure.
@@ -900,7 +900,7 @@ enum ImGuiTooltipFlags_
 };
 
 // FIXME: this is in development, not exposed/functional as a generic feature yet.
-// Horizontal/Vertical enums are fixed to 0/1 so they may be used to index ImVec2
+// Horizontal/Vertical enums are fixed to 0/1 so they may be used to _indicesIndex ImVec2
 enum ImGuiLayoutType_
 {
     ImGuiLayoutType_Horizontal = 0,
@@ -916,7 +916,7 @@ enum ImGuiLogType
     ImGuiLogType_Clipboard,
 };
 
-// X/Y enums are fixed to 0/1 so they may be used to index ImVec2
+// X/Y enums are fixed to 0/1 so they may be used to _indicesIndex ImVec2
 enum ImGuiAxis
 {
     ImGuiAxis_None = -1,
@@ -1186,7 +1186,7 @@ struct ImGuiShrinkWidthItem
 struct ImGuiPtrOrIndex
 {
     void*       Ptr;            // Either field can be set, not both. e.g. Dock node tab bars are loose while BeginTabBar() ones are in a pool.
-    int         Index;          // Usually index in a main pool.
+    int         Index;          // Usually _indicesIndex in a main pool.
 
     ImGuiPtrOrIndex(void* ptr)  { Ptr = ptr; Index = -1; }
     ImGuiPtrOrIndex(int index)  { Ptr = NULL; Index = index; }
@@ -1292,9 +1292,9 @@ struct ImGuiListClipperRange
 {
     int     Min;
     int     Max;
-    bool    PosToIndexConvert;      // Begin/End are absolute position (will be converted to indices later)
-    ImS8    PosToIndexOffsetMin;    // Add to Min after converting to indices
-    ImS8    PosToIndexOffsetMax;    // Add to Min after converting to indices
+    bool    PosToIndexConvert;      // Begin/End are absolute position (will be converted to _indices later)
+    ImS8    PosToIndexOffsetMin;    // Add to Min after converting to _indices
+    ImS8    PosToIndexOffsetMax;    // Add to Min after converting to _indices
 
     static ImGuiListClipperRange    FromIndices(int min, int max)                               { ImGuiListClipperRange r = { min, max, false, 0, 0 }; return r; }
     static ImGuiListClipperRange    FromPositions(float y1, float y2, int off_min, int off_max) { ImGuiListClipperRange r = { (int)y1, (int)y2, true, (ImS8)off_min, (ImS8)off_max }; return r; }
@@ -2265,7 +2265,7 @@ struct IMGUI_API ImGuiWindowTempData
     ImVector<ImGuiWindow*>  ChildWindows;
     ImGuiStorage*           StateStorage;           // Current persistent per-window storage (store e.g. tree node open/close state)
     ImGuiOldColumns*        CurrentColumns;         // Current columns set
-    int                     CurrentTableIdx;        // Current table index (into g.Tables)
+    int                     CurrentTableIdx;        // Current table _indicesIndex (into g.Tables)
     ImGuiLayoutType         LayoutType;
     ImGuiLayoutType         ParentLayoutType;       // Layout type of parent window at the time of Begin()
 
@@ -2287,7 +2287,7 @@ struct IMGUI_API ImGuiWindow
     ImGuiViewportP*         Viewport;                           // Always set in Begin(). Inactive windows may have a NULL value here if their viewport was discarded.
     ImGuiID                 ViewportId;                         // We backup the viewport id (since the viewport may disappear or never be created if the window is inactive)
     ImVec2                  ViewportPos;                        // We backup the viewport position (since the viewport may disappear or never be created if the window is inactive)
-    int                     ViewportAllowPlatformMonitorExtend; // Reset to -1 every frame (index is guaranteed to be valid between NewFrame..EndFrame), only used in the Appearing frame of a tooltip/popup to enforce clamping to a given monitor
+    int                     ViewportAllowPlatformMonitorExtend; // Reset to -1 every frame (_indicesIndex is guaranteed to be valid between NewFrame..EndFrame), only used in the Appearing frame of a tooltip/popup to enforce clamping to a given monitor
     ImVec2                  Pos;                                // Position (always rounded-up to nearest pixel)
     ImVec2                  Size;                               // Current size (==SizeFull or collapsed title bar size)
     ImVec2                  SizeFull;                           // Size when non collapsed
@@ -3208,7 +3208,7 @@ namespace ImGui
     // Plot
     IMGUI_API int           PlotEx(ImGuiPlotType plot_type, const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 frame_size);
 
-    // Shade functions (write over already created vertices)
+    // Shade functions (write over already created _vertices)
     IMGUI_API void          ShadeVertsLinearColorGradientKeepAlpha(ImDrawList* draw_list, int vert_start_idx, int vert_end_idx, ImVec2 gradient_p0, ImVec2 gradient_p1, ImU32 col0, ImU32 col1);
     IMGUI_API void          ShadeVertsLinearUV(ImDrawList* draw_list, int vert_start_idx, int vert_end_idx, const ImVec2& a, const ImVec2& b, const ImVec2& uv_a, const ImVec2& uv_b, bool clamp);
 

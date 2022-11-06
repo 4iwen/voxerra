@@ -9,10 +9,9 @@
 #include "core/Shader.h"
 #include "core/debuggui/DebugGui.h"
 #include "game/Camera/Camera.h"
-#include "FastNoiseLite/FastNoiseLite.h"
-#include "game/chunk/Chunk.h"
+#include "game/chunk/ChunkManager.h"
 
-// cube vertices
+// cube _vertices
 float vertices[] = {
     //  x         y          z
     -0.5f, -0.5f, -0.5f,
@@ -25,7 +24,7 @@ float vertices[] = {
     -0.5f, 0.5f, 0.5f,
 };
 
-// indices for the cube above
+// _indices for the cube above
 unsigned int indices[] = {
     0, 1, 2, 2, 3, 0,
     1, 5, 6, 6, 2, 1,
@@ -71,22 +70,27 @@ int main()
         return -1;
     }
 
-    std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
 
-    // generate chunk
-    Chunk chunk(0, 0);
-    chunk.Generate();
-    std::cout << "chunk generated" << std::endl;
-    chunk.GenerateVerticesAndIndices();
-    std::cout << "chunk vertices and indices generated" << std::endl;
+    // generate chunks
+    std::vector<Chunk*> chunks;
+    ChunkManager chunkManager;
+    chunkManager.GenerateChunks(4, 4);
+    std::cout << "generated chunks" << std::endl;
+    chunkManager.GetChunks(chunks);
+    std::vector<float> worldVertices;
+    std::vector<unsigned int> worldIndices;
 
-    std::vector<float> chunkVertices;
-    std::vector<unsigned int> chunkIndices;
-    chunk.GetVertices(chunkVertices);
-    chunk.GetIndices(chunkIndices);
+    for (Chunk* chunk : chunks)
+    {
+        std::vector<float> chunkVertices;
+        std::vector<unsigned int> chunkIndices;
+        chunk->GetVertices(chunkVertices);
+        chunk->GetIndices(chunkIndices);
 
-    std::cout<< "vertices: " << chunkVertices.size() << std::endl;
-    std::cout<< "indices: " << chunkIndices.size() << std::endl;
+        worldVertices.insert(worldVertices.end(), chunkVertices.begin(), chunkVertices.end());
+        worldIndices.insert(worldIndices.end(), chunkIndices.begin(), chunkIndices.end());
+
+    }
 
     // create vertex array object
     VertexArray vao;
@@ -95,17 +99,17 @@ int main()
     // create vertex buffer object
     VertexBuffer vbo;
     vbo.Bind();
-    vbo.SetData(chunkVertices.data(), chunkVertices.size() * sizeof(float));
+    vbo.SetData(worldVertices.data(), worldVertices.size() * sizeof(float));
 
     // create element buffer object
     ElementBuffer ebo;
     ebo.Bind();
-    ebo.SetData(chunkIndices.data(), chunkIndices.size() * sizeof(unsigned int));
+    ebo.SetData(worldIndices.data(), worldIndices.size() * sizeof(unsigned int));
 
     // set vertex attributes
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // unbind vertex array object
@@ -144,18 +148,14 @@ int main()
         camera.Update();
         shader.SetMat4("view", camera.GetView());
         shader.SetMat4("projection", camera.GetProjection());
-        //switch (chunk.GetChunkData()) {
-//
-        //}
-        //shader.SetVec3("blockColor", glm::vec3(0.15f, 0.65f, 0.15f));
+        shader.SetMat4("model", glm::mat4(1.0f));
 
         // draw
         shader.Use();
         vao.Bind();
 
         // draw the generated chunk
-        shader.SetMat4("model", glm::mat4(1.0f));
-        glDrawElements(GL_TRIANGLES, chunkIndices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, worldIndices.size(), GL_UNSIGNED_INT, 0);
 
         // draw debug gui
         debugGui.Draw();

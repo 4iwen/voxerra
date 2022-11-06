@@ -1152,10 +1152,10 @@ static void ShowDemoWindowWidgets()
             flags &= ~ImGuiComboFlags_NoArrowButton; // Clear the other flag, as we cannot combine both
 
         // Using the generic BeginCombo() API, you have full control over how to display the combo contents.
-        // (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
+        // (your selection data could be an _indicesIndex, a pointer to the object, an id for the object, a flag intrusively
         // stored in the object itself, etc.)
         const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
-        static int item_current_idx = 0; // Here we store our selection data as an index.
+        static int item_current_idx = 0; // Here we store our selection data as an _indicesIndex.
         const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
         if (ImGui::BeginCombo("combo 1", combo_preview_value, flags))
         {
@@ -1194,10 +1194,10 @@ static void ShowDemoWindowWidgets()
     if (ImGui::TreeNode("List boxes"))
     {
         // Using the generic BeginListBox() API, you have full control over how to display the combo contents.
-        // (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
+        // (your selection data could be an _indicesIndex, a pointer to the object, an id for the object, a flag intrusively
         // stored in the object itself, etc.)
         const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
-        static int item_current_idx = 0; // Here we store our selection data as an index.
+        static int item_current_idx = 0; // Here we store our selection data as an _indicesIndex.
         if (ImGui::BeginListBox("listbox 1"))
         {
             for (int n = 0; n < IM_ARRAYSIZE(items); n++)
@@ -1746,7 +1746,7 @@ static void ShowDemoWindowWidgets()
         }
 
         // Use functions to generate output
-        // FIXME: This is rather awkward because current plot API only pass in indices.
+        // FIXME: This is rather awkward because current plot API only pass in _indices.
         // We probably want an API passing floats and user provide sample rate/count.
         struct Funcs
         {
@@ -2290,7 +2290,7 @@ static void ShowDemoWindowWidgets()
                 // Our buttons are both drag sources and drag targets here!
                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
                 {
-                    // Set payload to carry the index of our item (could be anything)
+                    // Set payload to carry the _indicesIndex of our item (could be anything)
                     ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 
                     // Display preview (could be anything, e.g. when dragging an image we could decide to display
@@ -3675,7 +3675,7 @@ namespace
 {
 // We are passing our own identifier to TableSetupColumn() to facilitate identifying columns in the sorting code.
 // This identifier will be passed down into ImGuiTableSortSpec::ColumnUserID.
-// But it is possible to omit the user id parameter of TableSetupColumn() and just use the column index instead! (ImGuiTableSortSpec::ColumnIndex)
+// But it is possible to omit the user id parameter of TableSetupColumn() and just use the column _indicesIndex instead! (ImGuiTableSortSpec::ColumnIndex)
 // If you don't use sorting, you will generally never care about giving column an ID!
 enum MyItemColumnID
 {
@@ -3709,7 +3709,7 @@ struct MyItem
         for (int n = 0; n < s_current_sort_specs->SpecsCount; n++)
         {
             // Here we identify columns using the ColumnUserID value that we ourselves passed to TableSetupColumn()
-            // We could also choose to identify columns based on their index (sort_spec->ColumnIndex), which is simpler!
+            // We could also choose to identify columns based on their _indicesIndex (sort_spec->ColumnIndex), which is simpler!
             const ImGuiTableColumnSortSpecs* sort_spec = &s_current_sort_specs->Specs[n];
             int delta = 0;
             switch (sort_spec->ColumnUserID)
@@ -5181,7 +5181,7 @@ static void ShowDemoWindowTables()
         {
             // Declare columns
             // We use the "user_id" parameter of TableSetupColumn() to specify a user id that will be stored in the sort specifications.
-            // This is so our sort function can identify a column given our own identifier. We could also identify them based on their index!
+            // This is so our sort function can identify a column given our own identifier. We could also identify them based on their _indicesIndex!
             // Demonstrate using a mixture of flags among available sort-related flags:
             // - ImGuiTableColumnFlags_DefaultSort
             // - ImGuiTableColumnFlags_NoSort / ImGuiTableColumnFlags_NoSortAscending / ImGuiTableColumnFlags_NoSortDescending
@@ -5399,7 +5399,7 @@ static void ShowDemoWindowTables()
         {
             // Declare columns
             // We use the "user_id" parameter of TableSetupColumn() to specify a user id that will be stored in the sort specifications.
-            // This is so our sort function can identify a column given our own identifier. We could also identify them based on their index!
+            // This is so our sort function can identify a column given our own identifier. We could also identify them based on their _indicesIndex!
             ImGui::TableSetupColumn("ID",           ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoHide, 0.0f, MyItemColumnID_ID);
             ImGui::TableSetupColumn("Name",         ImGuiTableColumnFlags_WidthFixed, 0.0f, MyItemColumnID_Name);
             ImGui::TableSetupColumn("Action",       ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, MyItemColumnID_Action);
@@ -6779,11 +6779,11 @@ struct ExampleAppConsole
             //      while (clipper.Step())
             //         for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
             // - That your items are evenly spaced (same height)
-            // - That you have cheap random access to your elements (you can access them given their index,
+            // - That you have cheap random access to your elements (you can access them given their _indicesIndex,
             //   without processing all the ones before)
             // You cannot this code as-is if a filter is active because it breaks the 'cheap random-access' property.
             // We would need random-access on the post-filtered list.
-            // A typical application wanting coarse clipping and filtering may want to pre-compute an array of indices
+            // A typical application wanting coarse clipping and filtering may want to pre-compute an array of _indices
             // or offsets of items that passed the filtering test, recomputing this array when user changes the filter,
             // and appending newly elements as they are inserted. This is left as a task to the user until we can manage
             // to improve this example code!
@@ -7250,7 +7250,7 @@ static void ShowPlaceholderObject(const char* prefix, int uid)
         static float placeholder_members[8] = { 0.0f, 0.0f, 1.0f, 3.1416f, 100.0f, 999.0f };
         for (int i = 0; i < 8; i++)
         {
-            ImGui::PushID(i); // Use field index as identifier.
+            ImGui::PushID(i); // Use field _indicesIndex as identifier.
             if (i < 2)
             {
                 ShowPlaceholderObject("Child", 424242);

@@ -160,7 +160,7 @@
 //         A visual character shape (every codepoint is rendered as
 //         some glyph)
 //
-//      Glyph index
+//      Glyph _indicesIndex
 //         A font-specific integer ID representing a glyph
 //
 //      Baseline
@@ -703,15 +703,15 @@ STBTT_DEF int stbtt_GetNumberOfFonts(const unsigned char *data);
 // This function will determine the number of fonts in a font file.  TrueType
 // collection (.ttc) files may contain multiple fonts, while TrueType font
 // (.ttf) files only contain one font. The number of fonts can be used for
-// indexing with the previous function where the index is between zero and one
+// indexing with the previous function where the _indicesIndex is between zero and one
 // less than the total fonts. If an error occurs, -1 is returned.
 
 STBTT_DEF int stbtt_GetFontOffsetForIndex(const unsigned char *data, int index);
 // Each .ttf/.ttc file may have more than one font. Each font has a sequential
-// index number starting from 0. Call this function to get the font offset for
-// a given index; it returns -1 if the index is out of range. A regular .ttf
+// _indicesIndex number starting from 0. Call this function to get the font offset for
+// a given _indicesIndex; it returns -1 if the _indicesIndex is out of range. A regular .ttf
 // file will only define one font and it always be at offset 0, so it will
-// return '0' for index 0, and -1 for all other indices.
+// return '0' for _indicesIndex 0, and -1 for all other _indices.
 
 // The following structure is defined publicly so you can declare one on
 // the stack or as a global or etc, but you should treat it as opaque.
@@ -725,12 +725,12 @@ struct stbtt_fontinfo
 
    int loca,head,glyf,hhea,hmtx,kern,gpos,svg; // table locations as offset from start of .ttf
    int index_map;                     // a cmap mapping for our chosen character encoding
-   int indexToLocFormat;              // format needed to map from glyph index to glyph
+   int indexToLocFormat;              // format needed to map from glyph _indicesIndex to glyph
 
    stbtt__buf cff;                    // cff font data
-   stbtt__buf charstrings;            // the charstring index
-   stbtt__buf gsubrs;                 // global charstring subroutines index
-   stbtt__buf subrs;                  // private charstring subroutines index
+   stbtt__buf charstrings;            // the charstring _indicesIndex
+   stbtt__buf gsubrs;                 // global charstring subroutines _indicesIndex
+   stbtt__buf subrs;                  // private charstring subroutines _indicesIndex
    stbtt__buf fontdicts;              // array of font dicts
    stbtt__buf fdselect;               // map from glyph to fontdict
 };
@@ -804,7 +804,7 @@ STBTT_DEF int stbtt_GetCodepointBox(const stbtt_fontinfo *info, int codepoint, i
 STBTT_DEF void stbtt_GetGlyphHMetrics(const stbtt_fontinfo *info, int glyph_index, int *advanceWidth, int *leftSideBearing);
 STBTT_DEF int  stbtt_GetGlyphKernAdvance(const stbtt_fontinfo *info, int glyph1, int glyph2);
 STBTT_DEF int  stbtt_GetGlyphBox(const stbtt_fontinfo *info, int glyph_index, int *x0, int *y0, int *x1, int *y1);
-// as above, but takes one or more glyph indices for greater efficiency
+// as above, but takes one or more glyph _indices for greater efficiency
 
 typedef struct stbtt_kerningentry
 {
@@ -849,7 +849,7 @@ STBTT_DEF int stbtt_IsGlyphEmpty(const stbtt_fontinfo *info, int glyph_index);
 
 STBTT_DEF int stbtt_GetCodepointShape(const stbtt_fontinfo *info, int unicode_codepoint, stbtt_vertex **vertices);
 STBTT_DEF int stbtt_GetGlyphShape(const stbtt_fontinfo *info, int glyph_index, stbtt_vertex **vertices);
-// returns # of vertices and fills *vertices with the pointer to them
+// returns # of _vertices and fills *_vertices with the pointer to them
 //   these are expressed in "unscaled" coordinates
 //
 // The shape is a series of contours. Each one starts with
@@ -915,7 +915,7 @@ STBTT_DEF void stbtt_GetCodepointBitmapBoxSubpixel(const stbtt_fontinfo *font, i
 // shift for the character
 
 // the following functions are equivalent to the above functions, but operate
-// on glyph indices instead of Unicode codepoints (for efficiency)
+// on glyph _indices instead of Unicode codepoints (for efficiency)
 STBTT_DEF unsigned char *stbtt_GetGlyphBitmap(const stbtt_fontinfo *info, float scale_x, float scale_y, int glyph, int *width, int *height, int *xoff, int *yoff);
 STBTT_DEF unsigned char *stbtt_GetGlyphBitmapSubpixel(const stbtt_fontinfo *info, float scale_x, float scale_y, float shift_x, float shift_y, int glyph, int *width, int *height, int *xoff, int *yoff);
 STBTT_DEF void stbtt_MakeGlyphBitmap(const stbtt_fontinfo *info, unsigned char *output, int out_w, int out_h, int out_stride, float scale_x, float scale_y, int glyph);
@@ -935,10 +935,10 @@ typedef struct
 // rasterize a shape with quadratic beziers into a bitmap
 STBTT_DEF void stbtt_Rasterize(stbtt__bitmap *result,        // 1-channel bitmap to draw into
                                float flatness_in_pixels,     // allowable error of curve in pixels
-                               stbtt_vertex *vertices,       // array of vertices defining shape
-                               int num_verts,                // number of vertices in above array
-                               float scale_x, float scale_y, // scale applied to input vertices
-                               float shift_x, float shift_y, // translation applied to input vertices
+                               stbtt_vertex *vertices,       // array of _vertices defining shape
+                               int num_verts,                // number of _vertices in above array
+                               float scale_x, float scale_y, // scale applied to input _vertices
+                               float shift_x, float shift_y, // translation applied to input _vertices
                                int x_off, int y_off,         // another translation applied to input
                                int invert,                   // if non-zero, vertically flip shape
                                void *userdata);              // context for to STBTT_MALLOC
@@ -1024,7 +1024,7 @@ STBTT_DEF unsigned char * stbtt_GetCodepointSDF(const stbtt_fontinfo *info, floa
 
 
 STBTT_DEF int stbtt_FindMatchingFont(const unsigned char *fontdata, const char *name, int flags);
-// returns the offset (not index) of the font that matches, or -1 if none
+// returns the offset (not _indicesIndex) of the font that matches, or -1 if none
 //   if you use STBTT_MACSTYLE_DONTCARE, use a font name like "Arial Bold".
 //   if you use any other flag, use a font name like "Arial"; this checks
 //     the 'macStyle' header field; i don't know if fonts set this consistently
@@ -1323,7 +1323,7 @@ static stbtt_uint32 stbtt__find_table(stbtt_uint8 *data, stbtt_uint32 fontstart,
 
 static int stbtt_GetFontOffsetForIndex_internal(unsigned char *font_collection, int index)
 {
-   // if it's just a font, there's only one valid index
+   // if it's just a font, there's only one valid _indicesIndex
    if (stbtt__isfont(font_collection))
       return index == 0 ? 0 : -1;
 
@@ -1611,8 +1611,8 @@ static int stbtt__GetGlyfOffset(const stbtt_fontinfo *info, int glyph_index)
 
    STBTT_assert(!info->cff.size);
 
-   if (glyph_index >= info->numGlyphs) return -1; // glyph index out of range
-   if (info->indexToLocFormat >= 2)    return -1; // unknown index->glyph map format
+   if (glyph_index >= info->numGlyphs) return -1; // glyph _indicesIndex out of range
+   if (info->indexToLocFormat >= 2)    return -1; // unknown _indicesIndex->glyph map format
 
    if (info->indexToLocFormat == 0) {
       g1 = info->glyf + ttUSHORT(info->data + info->loca + glyph_index * 2) * 2;
@@ -1702,7 +1702,7 @@ static int stbtt__GetGlyphShapeTT(const stbtt_fontinfo *info, int glyph_index, s
 
       n = 1+ttUSHORT(endPtsOfContours + numberOfContours*2-2);
 
-      m = n + 2*numberOfContours;  // a loose bound on how many vertices we might need
+      m = n + 2*numberOfContours;  // a loose bound on how many _vertices we might need
       vertices = (stbtt_vertex *) STBTT_malloc(m * sizeof(vertices[0]), info->userdata);
       if (vertices == 0)
          return 0;
@@ -1863,7 +1863,7 @@ static int stbtt__GetGlyphShapeTT(const stbtt_fontinfo *info, int glyph_index, s
          // Get indexed glyph.
          comp_num_verts = stbtt_GetGlyphShape(info, gidx, &comp_verts);
          if (comp_num_verts > 0) {
-            // Transform vertices.
+            // Transform _vertices.
             for (i = 0; i < comp_num_verts; ++i) {
                stbtt_vertex* v = &comp_verts[i];
                stbtt_vertex_type x,y;
@@ -1874,7 +1874,7 @@ static int stbtt__GetGlyphShapeTT(const stbtt_fontinfo *info, int glyph_index, s
                v->cx = (stbtt_vertex_type)(m * (mtx[0]*x + mtx[2]*y + mtx[4]));
                v->cy = (stbtt_vertex_type)(n * (mtx[1]*x + mtx[3]*y + mtx[5]));
             }
-            // Append vertices.
+            // Append _vertices.
             tmp = (stbtt_vertex*)STBTT_malloc((num_vertices+comp_num_verts)*sizeof(stbtt_vertex), info->userdata);
             if (!tmp) {
                if (vertices) STBTT_free(vertices, info->userdata);
@@ -2932,7 +2932,7 @@ static void stbtt__rasterize_sorted_edges(stbtt__bitmap *result, stbtt__edge *e,
    stbtt__active_edge *active = NULL;
    int y,j=0;
    int max_weight = (255 / vsubsample);  // weight per vertical scanline
-   int s; // vertical subsample index
+   int s; // vertical subsample _indicesIndex
    unsigned char scanline_data[512], *scanline;
 
    if (result->w > 512)

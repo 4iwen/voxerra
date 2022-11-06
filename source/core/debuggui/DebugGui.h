@@ -22,7 +22,8 @@ private:
     int _polygonMode = 0;
     float _frames[300]{};
     bool _showDemoWindow = false;
-    ImVec4 _clearColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+    // sky blue
+    ImVec4 _clearColor = ImVec4(0.53f, 0.81f, 0.92f, 1.00f);
 
     static void SetStyle();
     void FpsGraph();

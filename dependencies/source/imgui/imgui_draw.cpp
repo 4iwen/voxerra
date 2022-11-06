@@ -633,7 +633,7 @@ void ImDrawList::PopTextureID()
     _OnChangedTextureID();
 }
 
-// Reserve space for a number of vertices and indices.
+// Reserve space for a number of _vertices and _indices.
 // You must finish filling your reserved data before calling PrimReserve() again, as it may reallocate or
 // submit the intermediate results. PrimUnreserve() can be used to release unused allocations.
 void ImDrawList::PrimReserve(int idx_count, int vtx_count)
@@ -661,7 +661,7 @@ void ImDrawList::PrimReserve(int idx_count, int vtx_count)
     _IdxWritePtr = IdxBuffer.Data + idx_buffer_old_size;
 }
 
-// Release the a number of reserved vertices/indices from the end of the last reservation made with PrimReserve().
+// Release the a number of reserved _vertices/_indices from the end of the last reservation made with PrimReserve().
 void ImDrawList::PrimUnreserve(int idx_count, int vtx_count)
 {
     IM_ASSERT_PARANOID(idx_count >= 0 && vtx_count >= 0);
@@ -777,7 +777,7 @@ void ImDrawList::AddPolyline(const ImVec2* points, const int points_count, ImU32
         if (!closed)
             temp_normals[points_count - 1] = temp_normals[points_count - 2];
 
-        // If we are drawing a one-pixel-wide line without a texture, or a textured line of any width, we only need 2 or 3 vertices per point
+        // If we are drawing a one-pixel-wide line without a texture, or a textured line of any width, we only need 2 or 3 _vertices per point
         if (use_texture || !thick_line)
         {
             // [PATH 1] Texture-based lines (thick or non-thick)
@@ -799,14 +799,14 @@ void ImDrawList::AddPolyline(const ImVec2* points, const int points_count, ImU32
                 temp_points[(points_count-1)*2+1] = points[points_count-1] - temp_normals[points_count-1] * half_draw_size;
             }
 
-            // Generate the indices to form a number of triangles for each line segment, and the vertices for the line edges
+            // Generate the _indices to form a number of triangles for each line segment, and the _vertices for the line edges
             // This takes points n and n+1 and writes into n+1, with the first point in a closed line being generated from the final one (as n+1 wraps)
             // FIXME-OPT: Merge the different loops, possibly remove the temporary buffer.
-            unsigned int idx1 = _VtxCurrentIdx; // Vertex index for start of line segment
+            unsigned int idx1 = _VtxCurrentIdx; // Vertex _indicesIndex for start of line segment
             for (int i1 = 0; i1 < count; i1++) // i1 is the first point of the line segment
             {
                 const int i2 = (i1 + 1) == points_count ? 0 : i1 + 1; // i2 is the second point of the line segment
-                const unsigned int idx2 = ((i1 + 1) == points_count) ? _VtxCurrentIdx : (idx1 + (use_texture ? 2 : 3)); // Vertex index for end of segment
+                const unsigned int idx2 = ((i1 + 1) == points_count) ? _VtxCurrentIdx : (idx1 + (use_texture ? 2 : 3)); // Vertex _indicesIndex for end of segment
 
                 // Average normals
                 float dm_x = (temp_normals[i1].x + temp_normals[i2].x) * 0.5f;
@@ -824,7 +824,7 @@ void ImDrawList::AddPolyline(const ImVec2* points, const int points_count, ImU32
 
                 if (use_texture)
                 {
-                    // Add indices for two triangles
+                    // Add _indices for two triangles
                     _IdxWritePtr[0] = (ImDrawIdx)(idx2 + 0); _IdxWritePtr[1] = (ImDrawIdx)(idx1 + 0); _IdxWritePtr[2] = (ImDrawIdx)(idx1 + 1); // Right tri
                     _IdxWritePtr[3] = (ImDrawIdx)(idx2 + 1); _IdxWritePtr[4] = (ImDrawIdx)(idx1 + 1); _IdxWritePtr[5] = (ImDrawIdx)(idx2 + 0); // Left tri
                     _IdxWritePtr += 6;
@@ -845,7 +845,7 @@ void ImDrawList::AddPolyline(const ImVec2* points, const int points_count, ImU32
             // Add vertexes for each point on the line
             if (use_texture)
             {
-                // If we're using textures we only need to emit the left/right edge vertices
+                // If we're using textures we only need to emit the left/right edge _vertices
                 ImVec4 tex_uvs = _Data->TexUvLines[integer_thickness];
                 /*if (fractional_thickness != 0.0f) // Currently always zero when use_texture==false!
                 {
@@ -878,7 +878,7 @@ void ImDrawList::AddPolyline(const ImVec2* points, const int points_count, ImU32
         }
         else
         {
-            // [PATH 2] Non texture-based lines (thick): we need to draw the solid line core and thus require four vertices per point
+            // [PATH 2] Non texture-based lines (thick): we need to draw the solid line core and thus require four _vertices per point
             const float half_inner_thickness = (thickness - AA_SIZE) * 0.5f;
 
             // If line is not closed, the first and last points need to be generated differently as there are no normals to blend
@@ -895,14 +895,14 @@ void ImDrawList::AddPolyline(const ImVec2* points, const int points_count, ImU32
                 temp_points[points_last * 4 + 3] = points[points_last] - temp_normals[points_last] * (half_inner_thickness + AA_SIZE);
             }
 
-            // Generate the indices to form a number of triangles for each line segment, and the vertices for the line edges
+            // Generate the _indices to form a number of triangles for each line segment, and the _vertices for the line edges
             // This takes points n and n+1 and writes into n+1, with the first point in a closed line being generated from the final one (as n+1 wraps)
             // FIXME-OPT: Merge the different loops, possibly remove the temporary buffer.
-            unsigned int idx1 = _VtxCurrentIdx; // Vertex index for start of line segment
+            unsigned int idx1 = _VtxCurrentIdx; // Vertex _indicesIndex for start of line segment
             for (int i1 = 0; i1 < count; i1++) // i1 is the first point of the line segment
             {
                 const int i2 = (i1 + 1) == points_count ? 0 : (i1 + 1); // i2 is the second point of the line segment
-                const unsigned int idx2 = (i1 + 1) == points_count ? _VtxCurrentIdx : (idx1 + 4); // Vertex index for end of segment
+                const unsigned int idx2 = (i1 + 1) == points_count ? _VtxCurrentIdx : (idx1 + 4); // Vertex _indicesIndex for end of segment
 
                 // Average normals
                 float dm_x = (temp_normals[i1].x + temp_normals[i2].x) * 0.5f;
@@ -913,7 +913,7 @@ void ImDrawList::AddPolyline(const ImVec2* points, const int points_count, ImU32
                 float dm_in_x = dm_x * half_inner_thickness;
                 float dm_in_y = dm_y * half_inner_thickness;
 
-                // Add temporary vertices
+                // Add temporary _vertices
                 ImVec2* out_vtx = &temp_points[i2 * 4];
                 out_vtx[0].x = points[i2].x + dm_out_x;
                 out_vtx[0].y = points[i2].y + dm_out_y;
@@ -936,7 +936,7 @@ void ImDrawList::AddPolyline(const ImVec2* points, const int points_count, ImU32
                 idx1 = idx2;
             }
 
-            // Add vertices
+            // Add _vertices
             for (int i = 0; i < points_count; i++)
             {
                 _VtxWritePtr[0].pos = temp_points[i * 4 + 0]; _VtxWritePtr[0].uv = opaque_uv; _VtxWritePtr[0].col = col_trans;
@@ -1032,7 +1032,7 @@ void ImDrawList::AddConvexPolyFilled(const ImVec2* points, const int points_coun
             dm_x *= AA_SIZE * 0.5f;
             dm_y *= AA_SIZE * 0.5f;
 
-            // Add vertices
+            // Add _vertices
             _VtxWritePtr[0].pos.x = (points[i1].x - dm_x); _VtxWritePtr[0].pos.y = (points[i1].y - dm_y); _VtxWritePtr[0].uv = uv; _VtxWritePtr[0].col = col;        // Inner
             _VtxWritePtr[1].pos.x = (points[i1].x + dm_x); _VtxWritePtr[1].pos.y = (points[i1].y + dm_y); _VtxWritePtr[1].uv = uv; _VtxWritePtr[1].col = col_trans;  // Outer
             _VtxWritePtr += 2;
@@ -1773,7 +1773,7 @@ void ImDrawListSplitter::Merge(ImDrawList* draw_list)
     draw_list->CmdBuffer.resize(draw_list->CmdBuffer.Size + new_cmd_buffer_count);
     draw_list->IdxBuffer.resize(draw_list->IdxBuffer.Size + new_idx_buffer_count);
 
-    // Write commands and indices in order (they are fairly small structures, we don't copy vertices only indices)
+    // Write commands and _indices in order (they are fairly small structures, we don't copy _vertices only _indices)
     ImDrawCmd* cmd_write = draw_list->CmdBuffer.Data + draw_list->CmdBuffer.Size - new_cmd_buffer_count;
     ImDrawIdx* idx_write = draw_list->IdxBuffer.Data + draw_list->IdxBuffer.Size - new_idx_buffer_count;
     for (int i = 1; i < _Count; i++)
@@ -2217,7 +2217,7 @@ int ImFontAtlas::AddCustomRectRegular(int width, int height)
     r.Width = (unsigned short)width;
     r.Height = (unsigned short)height;
     CustomRects.push_back(r);
-    return CustomRects.Size - 1; // Return index
+    return CustomRects.Size - 1; // Return _indicesIndex
 }
 
 int ImFontAtlas::AddCustomRectFontGlyph(ImFont* font, ImWchar id, int width, int height, float advance_x, const ImVec2& offset)
@@ -2236,7 +2236,7 @@ int ImFontAtlas::AddCustomRectFontGlyph(ImFont* font, ImWchar id, int width, int
     r.GlyphOffset = offset;
     r.Font = font;
     CustomRects.push_back(r);
-    return CustomRects.Size - 1; // Return index
+    return CustomRects.Size - 1; // Return _indicesIndex
 }
 
 void ImFontAtlas::CalcCustomRectUV(const ImFontAtlasCustomRect* rect, ImVec2* out_uv_min, ImVec2* out_uv_max) const
@@ -2381,7 +2381,7 @@ static bool ImFontAtlasBuildWithStbTruetype(ImFontAtlas* atlas)
         ImFontConfig& cfg = atlas->ConfigData[src_i];
         IM_ASSERT(cfg.DstFont && (!cfg.DstFont->IsLoaded() || cfg.DstFont->ContainerAtlas == atlas));
 
-        // Find index from cfg.DstFont (we allow the user to set cfg.DstFont. Also it makes casual debugging nicer than when storing indices)
+        // Find _indicesIndex from cfg.DstFont (we allow the user to set cfg.DstFont. Also it makes casual debugging nicer than when storing _indices)
         src_tmp.DstIndex = -1;
         for (int output_i = 0; output_i < atlas->Fonts.Size && src_tmp.DstIndex == -1; output_i++)
             if (cfg.DstFont == atlas->Fonts[output_i])
@@ -3618,7 +3618,7 @@ void ImFont::RenderText(ImDrawList* draw_list, float size, const ImVec2& pos, Im
     if (s == text_end)
         return;
 
-    // Reserve vertices for remaining worse case (over-reserving is useful and easily amortized)
+    // Reserve _vertices for remaining worse case (over-reserving is useful and easily amortized)
     const int vtx_count_max = (int)(text_end - s) * 4;
     const int idx_count_max = (int)(text_end - s) * 6;
     const int idx_expected_size = draw_list->IdxBuffer.Size + idx_count_max;
@@ -3746,7 +3746,7 @@ void ImFont::RenderText(ImDrawList* draw_list, float size, const ImVec2& pos, Im
         x += char_width;
     }
 
-    // Give back unused vertices (clipped ones, blanks) ~ this is essentially a PrimUnreserve() action.
+    // Give back unused _vertices (clipped ones, blanks) ~ this is essentially a PrimUnreserve() action.
     draw_list->VtxBuffer.Size = (int)(vtx_write - draw_list->VtxBuffer.Data); // Same as calling shrink()
     draw_list->IdxBuffer.Size = (int)(idx_write - draw_list->IdxBuffer.Data);
     draw_list->CmdBuffer[draw_list->CmdBuffer.Size - 1].ElemCount -= (idx_expected_size - draw_list->IdxBuffer.Size);

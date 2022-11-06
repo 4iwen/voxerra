@@ -619,7 +619,7 @@ void ImGui::TableBeginApplyRequests(ImGuiTable* table)
         {
             // We need to handle reordering across hidden columns.
             // In the configuration below, moving C to the right of E will lead to:
-            //    ... C [D] E  --->  ... [D] E  C   (Column name/index)
+            //    ... C [D] E  --->  ... [D] E  C   (Column name/_indicesIndex)
             //    ... 2  3  4        ...  2  3  4   (Display order)
             const int reorder_dir = table->ReorderColumnDir;
             IM_ASSERT(reorder_dir == -1 || reorder_dir == +1);
@@ -727,7 +727,7 @@ void ImGui::TableUpdateLayout(ImGuiTable* table)
     table->MinColumnWidth = ImMax(1.0f, g.Style.FramePadding.x * 1.0f); // g.Style.ColumnsMinSpacing; // FIXME-TABLE
 
     // [Part 1] Apply/lock Enabled and Order states. Calculate auto/ideal width for columns. Count fixed/stretch columns.
-    // Process columns in their visible orders as we are building the Prev/Next indices.
+    // Process columns in their visible orders as we are building the Prev/Next _indices.
     int count_fixed = 0;                // Number of columns that have fixed sizing policies
     int count_stretch = 0;              // Number of columns that have stretch sizing policies
     int prev_visible_column_idx = -1;
@@ -1260,7 +1260,7 @@ void    ImGui::EndTable()
     // Strip out dummy channel draw calls
     // We have no way to prevent user submitting direct ImDrawList calls into a hidden column (but ImGui:: calls will be clipped out)
     // Pros: remove draw calls which will have no effect. since they'll have zero-size cliprect they may be early out anyway.
-    // Cons: making it harder for users watching metrics/debugger to spot the wasted vertices.
+    // Cons: making it harder for users watching metrics/debugger to spot the wasted _vertices.
     if (table->DummyDrawChannel != (ImGuiTableColumnIdx)-1)
     {
         ImDrawChannel* dummy_channel = &table->DrawSplitter._Channels[table->DummyDrawChannel];
@@ -3336,7 +3336,7 @@ void ImGui::TableLoadSettings(ImGuiTable* table)
         for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
             table->Columns[column_n].DisplayOrder = (ImGuiTableColumnIdx)column_n;
 
-    // Rebuild index
+    // Rebuild _indicesIndex
     for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
         table->DisplayOrderToIndex[table->Columns[column_n].DisplayOrder] = (ImGuiTableColumnIdx)column_n;
 }

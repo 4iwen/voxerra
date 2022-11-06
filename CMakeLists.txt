@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 project(voxerra)
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_FLAGS "-static-libgcc -static-libstdc++ -static")
 
 # get core source files
 set(CORE

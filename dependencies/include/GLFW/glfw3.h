@@ -5789,7 +5789,7 @@ GLFWAPI GLFWvkproc glfwGetInstanceProcAddress(VkInstance instance, const char* p
  *
  *  @param[in] instance The instance that the physical device belongs to.
  *  @param[in] device The physical device that the queue family belongs to.
- *  @param[in] queuefamily The index of the queue family to query.
+ *  @param[in] queuefamily The _indicesIndex of the queue family to query.
  *  @return `GLFW_TRUE` if the queue family supports presentation, or
  *  `GLFW_FALSE` otherwise.
  *

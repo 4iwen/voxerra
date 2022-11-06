@@ -223,7 +223,7 @@ typedef void (APIENTRYP PFNGLBINDTEXTUREPROC) (GLenum target, GLuint texture);
 typedef void (APIENTRYP PFNGLDELETETEXTURESPROC) (GLsizei n, const GLuint *textures);
 typedef void (APIENTRYP PFNGLGENTEXTURESPROC) (GLsizei n, GLuint *textures);
 #ifdef GL_GLEXT_PROTOTYPES
-GLAPI void APIENTRY glDrawElements (GLenum mode, GLsizei count, GLenum type, const void *indices);
+GLAPI void APIENTRY glDrawElements (GLenum mode, GLsizei count, GLenum type, const void *_indices);
 GLAPI void APIENTRY glBindTexture (GLenum target, GLuint texture);
 GLAPI void APIENTRY glDeleteTextures (GLsizei n, const GLuint *textures);
 GLAPI void APIENTRY glGenTextures (GLsizei n, GLuint *textures);
@@ -324,22 +324,22 @@ GLAPI GLuint APIENTRY glCreateShader (GLenum type);
 GLAPI void APIENTRY glDeleteProgram (GLuint program);
 GLAPI void APIENTRY glDeleteShader (GLuint shader);
 GLAPI void APIENTRY glDetachShader (GLuint program, GLuint shader);
-GLAPI void APIENTRY glDisableVertexAttribArray (GLuint index);
-GLAPI void APIENTRY glEnableVertexAttribArray (GLuint index);
+GLAPI void APIENTRY glDisableVertexAttribArray (GLuint _indicesIndex);
+GLAPI void APIENTRY glEnableVertexAttribArray (GLuint _indicesIndex);
 GLAPI GLint APIENTRY glGetAttribLocation (GLuint program, const GLchar *name);
 GLAPI void APIENTRY glGetProgramiv (GLuint program, GLenum pname, GLint *params);
 GLAPI void APIENTRY glGetProgramInfoLog (GLuint program, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
 GLAPI void APIENTRY glGetShaderiv (GLuint shader, GLenum pname, GLint *params);
 GLAPI void APIENTRY glGetShaderInfoLog (GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
 GLAPI GLint APIENTRY glGetUniformLocation (GLuint program, const GLchar *name);
-GLAPI void APIENTRY glGetVertexAttribiv (GLuint index, GLenum pname, GLint *params);
-GLAPI void APIENTRY glGetVertexAttribPointerv (GLuint index, GLenum pname, void **pointer);
+GLAPI void APIENTRY glGetVertexAttribiv (GLuint _indicesIndex, GLenum pname, GLint *params);
+GLAPI void APIENTRY glGetVertexAttribPointerv (GLuint _indicesIndex, GLenum pname, void **pointer);
 GLAPI void APIENTRY glLinkProgram (GLuint program);
 GLAPI void APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
 GLAPI void APIENTRY glUseProgram (GLuint program);
 GLAPI void APIENTRY glUniform1i (GLint location, GLint v0);
 GLAPI void APIENTRY glUniformMatrix4fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-GLAPI void APIENTRY glVertexAttribPointer (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
+GLAPI void APIENTRY glVertexAttribPointer (GLuint _indicesIndex, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
 #endif
 #endif /* GL_VERSION_2_0 */
 #ifndef GL_VERSION_3_0
@@ -356,7 +356,7 @@ typedef void (APIENTRYP PFNGLBINDVERTEXARRAYPROC) (GLuint array);
 typedef void (APIENTRYP PFNGLDELETEVERTEXARRAYSPROC) (GLsizei n, const GLuint *arrays);
 typedef void (APIENTRYP PFNGLGENVERTEXARRAYSPROC) (GLsizei n, GLuint *arrays);
 #ifdef GL_GLEXT_PROTOTYPES
-GLAPI const GLubyte *APIENTRY glGetStringi (GLenum name, GLuint index);
+GLAPI const GLubyte *APIENTRY glGetStringi (GLenum name, GLuint _indicesIndex);
 GLAPI void APIENTRY glBindVertexArray (GLuint array);
 GLAPI void APIENTRY glDeleteVertexArrays (GLsizei n, const GLuint *arrays);
 GLAPI void APIENTRY glGenVertexArrays (GLsizei n, GLuint *arrays);
@@ -374,7 +374,7 @@ typedef khronos_int64_t GLint64;
 typedef void (APIENTRYP PFNGLDRAWELEMENTSBASEVERTEXPROC) (GLenum mode, GLsizei count, GLenum type, const void *indices, GLint basevertex);
 typedef void (APIENTRYP PFNGLGETINTEGER64I_VPROC) (GLenum target, GLuint index, GLint64 *data);
 #ifdef GL_GLEXT_PROTOTYPES
-GLAPI void APIENTRY glDrawElementsBaseVertex (GLenum mode, GLsizei count, GLenum type, const void *indices, GLint basevertex);
+GLAPI void APIENTRY glDrawElementsBaseVertex (GLenum mode, GLsizei count, GLenum type, const void *_indices, GLint basevertex);
 #endif
 #endif /* GL_VERSION_3_2 */
 #ifndef GL_VERSION_3_3
