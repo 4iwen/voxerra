@@ -43,9 +43,40 @@ set(LIBS
 
 # link all source files
 add_executable(${PROJECT_NAME}
+<<<<<<< HEAD
         ${CORE}
         ${GAME}
+<<<<<<< HEAD
+<<<<<<< HEAD
         ${UTILS})
+=======
+        src/core/glad/glad.c
+        src/world-generation/FastNoiseLite.h
+        src/world-generation/Chunk.cpp
+        src/world-generation/Chunk.h
+        src/world-generation/ChunkManager.cpp
+        src/world-generation/ChunkManager.h
+        src/main.cpp
+        src/VBO.cpp
+        src/EBO.cpp
+        src/Shader.cpp
+        src/VAO.cpp
+        src/utils/enums.h
+        src/utils/vert.cpp
+        src/items/WeaponClass.cpp
+        src/items/WeaponClass.h
+        src/items/ArmorClass.cpp
+        src/items/ArmorClass.h
+        src/utils/Random.cpp
+        src/utils/Random.h)
+>>>>>>> liquid
+=======
+        ${UTILS}
+        ${WORLD_GEN})
+>>>>>>> 04c7689e74adb842664a7ad85d6b922551e366f1
+=======
+        ${UTILS})
+>>>>>>> 9d763e817fb109cd93a9d23707a0cfdc24b7aebb
 
 # link libraries
 target_link_libraries(${PROJECT_NAME} ${LIBS})
