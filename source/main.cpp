@@ -9,10 +9,10 @@
 #include "core/debuggui/DebugGui.h"
 #include "game/Camera.h"
 #include "core/FrameBuffer.h"
-#include "world-gen/chunk.h"
+#include "worldgen/chunkManager.h"
 
 // triangle vertices
-float vertices[] = {
+float TESTvertices[] = {
     //  x         y          z         r         g         b
     -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
@@ -21,18 +21,38 @@ float vertices[] = {
 };
 
 // indices for the triangle above
-unsigned int indices[] = {
+unsigned int TESTindices[] = {
     0, 1, 2,
 };
 
 
 int main()
 {
+
     FastNoiseLite noise;
-    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    std::cout << "before chunk" << std::endl;
-    chunk chunk(32,512,32,0,0,noise);
-    std::cout << "after chunk" << std::endl;
+    noise.SetFrequency(0.01f);
+    std::cout <<"a"<<std::endl;
+
+    chunkManager cm;
+    cm.updateChunks();
+
+    //std::cout << "before chunk" << std::endl;
+    //chunk chunk(16,256,16,0,0, noise);
+    //std::cout << "after chunk" << std::endl;
+//
+    //std::vector<GLfloat> *verticesVec = chunk.getVerts( );
+    //std::vector<GLuint> *indicesVec = chunk.getIndices();
+//
+    //GLfloat vertices[chunk.getVertSize()];
+    //GLuint indices[chunk.getIndiceSize()];
+//
+    //for (int i = 0; i < chunk.getIndiceSize(); i++) {
+    //    indices[i] = indicesVec->at(i);
+    //}
+//
+    //for (int v = 0; v < chunk.getVertSize(); v++) {
+    //    vertices[v] = verticesVec->at(v);
+    //}
 
     // initialize glfw
     glfwInit();
@@ -64,22 +84,6 @@ int main()
         return -1;
     }
 
-    //////////////////////////////////////
-    std::vector<GLfloat> *verticesVec = chunk.getVerts();
-    std::vector<GLuint> *indicesVec = chunk.getIndices();
-
-    GLfloat vertices[chunk.getVertSize()];
-    GLuint indices[chunk.getIndiceSize()];
-
-    for (int i = 0; i < chunk.getIndiceSize(); i++) {
-        indices[i] = indicesVec->at(i);
-    }
-
-    for (int v = 0; v < chunk.getVertSize(); v++) {
-        vertices[v] = verticesVec->at(v);
-    }
-    //////////////////////////////////////
-
     // create vertex array object
     VertexArray vao;
     vao.Bind();
@@ -87,12 +91,12 @@ int main()
     // create vertex buffer object
     VertexBuffer vbo;
     vbo.Bind();
-    vbo.SetData(*chunk.getVerts(), chunk.getVertSize());
+    vbo.SetData(cm.generateVertArray(), sizeof(cm.generateVertArray()));
 
     // create element buffer object
     ElementBuffer ebo;
     ebo.Bind();
-    ebo.SetData(chunk.getIndices(), chunk.getIndiceSize());
+    ebo.SetData(cm.generateIndiArray(), sizeof(cm.generateIndiArray()));
 
     // TODO: implement frame buffer
     // create frame buffer object
@@ -126,11 +130,13 @@ int main()
         // set render settings
         glfwSwapInterval(debugGui.GetVsync());
         glPolygonMode(GL_FRONT_AND_BACK, debugGui.GetPolygonMode());
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
         // clear screen
         ImVec4 clearColor = debugGui.GetClearColor();
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         camera.Update();
         shader.SetMat4("view", camera.GetView());
@@ -139,9 +145,8 @@ int main()
         // draw
         shader.Use();
         vao.Bind();
-        glDrawElements(GL_TRIANGLES, chunk.getIndiceSize(), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, sizeof(cm.generateIndiArray()), GL_UNSIGNED_INT, nullptr);
         debugGui.Draw();
-
 
         // swap buffers
         glfwSwapBuffers(window);

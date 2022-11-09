@@ -1,9 +1,3 @@
-//
-// Created by Liquid on 10/15/2022.
-//
-
-#ifndef VOXERRA_CHUNK_H
-#define VOXERRA_CHUNK_H
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
@@ -15,13 +9,16 @@
 
 class chunk {
 public :
-    chunk(int width, int height, int length,int posX,int posY,FastNoiseLite noise);
-
+    chunk(int width, int height, int length,int posX,int posY, FastNoiseLite noise);
     std::vector<GLfloat>* getVerts();
-    std::vector<GLint>* getIndices();
+    std::vector<GLuint>* getIndices();
 
     int getIndiceSize();
     int getVertSize();
+
+    GLuint *getIncide(int i);
+    GLfloat *getVert(int i);
+    glm::vec2 getPos();
 
 private :
     int width;
@@ -31,11 +28,11 @@ private :
     int posY;
     FastNoiseLite noise;
 
-    block blockData[32][512][32];
+    block blockData[16][256][16];
 
     std::vector<vert> verts;
     std::vector<GLfloat> GLverts;
-    std::vector<GLint> indices;
+    std::vector<GLuint> indices;
 
     void generateVerts();
     void generateNoise();
@@ -56,7 +53,6 @@ private :
     int generateHeight(int x, int z);
 
     void GENERATE_GL_VERTS();
+
 };
 
-
-#endif //VOXERRA_CHUNK_H

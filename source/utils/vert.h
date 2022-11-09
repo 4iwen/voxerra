@@ -1,12 +1,6 @@
-//
-// Created by Liquid on 8/29/2022.
-//
-#ifndef VOXERRA_INDI_H
-#define VOXERRA_INDI_H
-
-
 #include "glm/glm.hpp"
 #include <vector>
+#pragma once
 
 class vert {
 public :
@@ -37,5 +31,3 @@ public :
     void changeColor(int r, int g, int b);
 };
 
-
-#endif //VOXERRA_INDI_H
