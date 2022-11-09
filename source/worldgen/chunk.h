@@ -5,7 +5,7 @@
 
 #include "FastNoiseLite.h"
 #include "../utils/vert.h"
-#include "block.h"
+#include "../utils/enums.h"
 
 class chunk {
 public :
@@ -28,7 +28,7 @@ private :
     int posY;
     FastNoiseLite noise;
 
-    block blockData[16][256][16];
+    blockType blockData[16][256][16];
 
     std::vector<vert> verts;
     std::vector<GLfloat> GLverts;
@@ -54,5 +54,6 @@ private :
 
     void GENERATE_GL_VERTS();
 
+    glm::vec3 PICK_BLOCK_COLOR(blockType type);
 };
 

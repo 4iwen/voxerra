@@ -31,28 +31,20 @@ int main()
 
     FastNoiseLite noise;
     noise.SetFrequency(0.01f);
-    std::cout <<"a"<<std::endl;
 
-    chunkManager cm;
-    cm.updateChunks();
+    chunkManager chunkManager;
+    chunkManager.updateChunks();
 
-    //std::cout << "before chunk" << std::endl;
-    //chunk chunk(16,256,16,0,0, noise);
-    //std::cout << "after chunk" << std::endl;
-//
-    //std::vector<GLfloat> *verticesVec = chunk.getVerts( );
-    //std::vector<GLuint> *indicesVec = chunk.getIndices();
-//
-    //GLfloat vertices[chunk.getVertSize()];
-    //GLuint indices[chunk.getIndiceSize()];
-//
-    //for (int i = 0; i < chunk.getIndiceSize(); i++) {
-    //    indices[i] = indicesVec->at(i);
-    //}
-//
-    //for (int v = 0; v < chunk.getVertSize(); v++) {
-    //    vertices[v] = verticesVec->at(v);
-    //}
+    GLuint indices[chunkManager.getIndiceSize()];
+    GLfloat vertices [chunkManager.getVertSize()];
+
+    for (int i = 0; i < chunkManager.getIndiceSize(); i++) {
+        indices[i] = chunkManager.getIndicesVec().at(i);
+    }
+
+    for (int v = 0; v < chunkManager.getVertSize(); v++) {
+        vertices[v] = chunkManager.getVerticesVec().at(v);
+    }
 
     // initialize glfw
     glfwInit();
@@ -91,12 +83,12 @@ int main()
     // create vertex buffer object
     VertexBuffer vbo;
     vbo.Bind();
-    vbo.SetData(cm.generateVertArray(), sizeof(cm.generateVertArray()));
+    vbo.SetData(vertices, sizeof(vertices));
 
     // create element buffer object
     ElementBuffer ebo;
     ebo.Bind();
-    ebo.SetData(cm.generateIndiArray(), sizeof(cm.generateIndiArray()));
+    ebo.SetData(indices, sizeof(indices));
 
     // TODO: implement frame buffer
     // create frame buffer object
@@ -145,7 +137,7 @@ int main()
         // draw
         shader.Use();
         vao.Bind();
-        glDrawElements(GL_TRIANGLES, sizeof(cm.generateIndiArray()), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, nullptr);
         debugGui.Draw();
 
         // swap buffers

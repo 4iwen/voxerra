@@ -3,7 +3,7 @@
 
 void chunkManager::addChunk(chunk c)
 {
-    std::cout << "Adding chunk" << c.getPos().x  << c.getPos().y << std::endl;
+    std::cout << "Adding chunk" << c.getPos().x  << "|" << c.getPos().y << std::endl;
     chunks.push_back(c);
 }
 
@@ -27,30 +27,51 @@ void chunkManager::unloadChunk(chunk c) {
     }
 }
 
-GLfloat * chunkManager::generateVertArray(){
-    verticesARR = new GLfloat[getVerts().size()];
+void  chunkManager::generateVertArray(){
+    verticesARR = new GLfloat[vertsSize];
 
-    for (int i = 0; i < getVerts().size(); ++i) {
-        verticesARR[i] = getVerts()[i];
+    for (int i = 0; i < vertsSize; i++) {
+        verticesARR[i] = vertices->at(i);
     }
+}
+
+void chunkManager::generateIndiArray(){
+    indicesARR = new GLuint[indicesSize];
+    std::cout << sizeof(indicesARR) << std::endl;
+    for (int i = 0; i < indicesSize; i++) {
+        indicesARR[i] = indices->at(i);
+    }
+}
+
+GLfloat * chunkManager::getVertices()
+{
     return verticesARR;
 }
 
-GLuint * chunkManager::generateIndiArray(){
-    indicesARR = new GLuint[getVerts().size()];
-
-    for (int i = 0; i < getVerts().size(); ++i) {
-        verticesARR[i] = getVerts()[i];
-    }
+GLuint * chunkManager::getIndices()
+{
     return indicesARR;
+}
+
+void chunkManager::generateChunks(int x, int y)
+{
+    for(int i = playerPos.x - x; i < playerPos.x + x; i++)
+    {
+        for(int j = playerPos.y - y; j < playerPos.y + y; j++)
+        {
+            addChunk(chunk(width,height,length,i,j,noise));
+        }
+    }
+    generateVerts();
+    generateIndices();
 }
 
 void chunkManager::updateChunks()
 {
     std::cout << "Updating chunks" << std::endl;
-    for(int i = playerPos.x - renderDistance; i < playerPos.x + renderDistance; i++)
+    for(int i = playerPos.x - renderDistance; i <= playerPos.x; i++)
     {
-        for(int j = playerPos.y - renderDistance; j < playerPos.y + renderDistance; j++)
+        for(int j = playerPos.y - renderDistance; j <= playerPos.y; j++)
         {
             bool found = false;
             for (auto & chunk : chunks) {
@@ -73,6 +94,8 @@ void chunkManager::updateChunks()
             }
         }
     }
+    generateIndices();
+    generateVerts();
 }
 
 bool chunkManager::RENDER_DISTANCE_CHECK(glm::vec2 pos)
@@ -87,22 +110,26 @@ bool chunkManager::RENDER_DISTANCE_CHECK(glm::vec2 pos)
     return true;
 }
 
-std::vector<GLuint> chunkManager::getIndices() {
+void chunkManager::generateIndices() {
+    indices = new std::vector<GLuint>();
+    indicesSize = 0;
+
     for (auto & chunk : chunks) {
-        for (int i = 0; i < chunk.getIndiceSize(); ++i) {
-            indices->push_back(*chunk.getIncide(i));
-        }
+        indices->insert(indices->end(),chunk.getIndices()->begin(),chunk.getIndices()->end());
+        indicesSize += chunk.getIndiceSize();
     }
-    return *indices;
+    generateIndiArray();
 }
 
-std::vector<GLfloat> chunkManager::getVerts() {
+void chunkManager::generateVerts() {
+    vertices = new std::vector<GLfloat>();
+    vertsSize = 0;
+
     for (auto & chunk : chunks) {
-        for (int i = 0; i < chunk.getVertSize(); ++i) {
-            vertices->push_back(*chunk.getVert(i));
-        }
+        vertices->insert(vertices->end(),chunk.getVerts()->begin(),chunk.getVerts()->end());
+        vertsSize += chunk.getVertSize();
     }
-    return *vertices;
+    generateVertArray();
 }
 
 void chunkManager::setRenderDistance(int distance)
@@ -113,4 +140,23 @@ void chunkManager::setRenderDistance(int distance)
 int chunkManager::getRenderDistance()
 {
     return renderDistance;
+}
+
+int chunkManager::getVertSize()
+{
+    return vertsSize;
+}
+
+int chunkManager::getIndiceSize()
+{
+    return indicesSize;
+}
+
+std::vector<GLuint> chunkManager::getIndicesVec()
+{
+    return *indices;
+}
+std::vector<GLfloat> chunkManager::getVerticesVec()
+{
+    return *vertices;
 }

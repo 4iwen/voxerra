@@ -17,7 +17,6 @@ set(CORE
         source/worldgen/chunk.cpp source/worldgen/chunk.h
         source/worldgen/FastNoiseLite.h
         source/worldgen/chunkManager.cpp source/worldgen/chunkManager.h
-        source/worldgen/block.cpp source/worldgen/block.h
 
         source/utils/enums.h
         source/utils/random.cpp source/utils/random.h
