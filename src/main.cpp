@@ -79,7 +79,7 @@ int main()
     chunk.GenerateChunk(noise, 1, 1, 4, 4, 16);
 
     // Create a vector of integers
-    vector<GLfloat> *verticesVec = chunk.ReturnVerticies();
+    vector<GLfloat> *verticesVec = chunk.ReturnVerticies( );
     vector<GLuint> *indicesVec = chunk.ReturnIndecies();
 
     GLfloat vertices[chunk.ReturnVerticiesSize()];

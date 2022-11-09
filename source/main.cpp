@@ -1,3 +1,4 @@
+#include <iostream>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -8,6 +9,7 @@
 #include "core/debuggui/DebugGui.h"
 #include "game/Camera.h"
 #include "core/FrameBuffer.h"
+#include "world-gen/chunk.h"
 
 // triangle vertices
 float vertices[] = {
@@ -23,8 +25,15 @@ unsigned int indices[] = {
     0, 1, 2,
 };
 
+
 int main()
 {
+    FastNoiseLite noise;
+    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    std::cout << "before chunk" << std::endl;
+    chunk chunk(32,512,32,0,0,noise);
+    std::cout << "after chunk" << std::endl;
+
     // initialize glfw
     glfwInit();
 
@@ -55,6 +64,22 @@ int main()
         return -1;
     }
 
+    //////////////////////////////////////
+    std::vector<GLfloat> *verticesVec = chunk.getVerts();
+    std::vector<GLuint> *indicesVec = chunk.getIndices();
+
+    GLfloat vertices[chunk.getVertSize()];
+    GLuint indices[chunk.getIndiceSize()];
+
+    for (int i = 0; i < chunk.getIndiceSize(); i++) {
+        indices[i] = indicesVec->at(i);
+    }
+
+    for (int v = 0; v < chunk.getVertSize(); v++) {
+        vertices[v] = verticesVec->at(v);
+    }
+    //////////////////////////////////////
+
     // create vertex array object
     VertexArray vao;
     vao.Bind();
@@ -62,12 +87,12 @@ int main()
     // create vertex buffer object
     VertexBuffer vbo;
     vbo.Bind();
-    vbo.SetData(vertices, sizeof(vertices));
+    vbo.SetData(*chunk.getVerts(), chunk.getVertSize());
 
     // create element buffer object
     ElementBuffer ebo;
     ebo.Bind();
-    ebo.SetData(indices, sizeof(indices));
+    ebo.SetData(chunk.getIndices(), chunk.getIndiceSize());
 
     // TODO: implement frame buffer
     // create frame buffer object
@@ -114,7 +139,7 @@ int main()
         // draw
         shader.Use();
         vao.Bind();
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, chunk.getIndiceSize(), GL_UNSIGNED_INT, nullptr);
         debugGui.Draw();
 
 
