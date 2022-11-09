@@ -1,10 +1,11 @@
 #pragma once
 
 #include "glm/vec3.hpp"
+#include "block/BlockType.h"
 
 class Vertex {
 public:
-    Vertex(glm::vec3 position, glm::vec3 color);
+    Vertex(glm::vec3 position, BlockColor color);
 
     glm::vec3 LEFT = glm::vec3(-1,0,0);
     glm::vec3 RIGHT = glm::vec3(1,0,0);
@@ -22,11 +23,6 @@ public:
     glm::vec3 LEFT_BOTTOM_FRONT_CORNER = glm::vec3(0,0,1);
     glm::vec3 LEFT_BOTTOM_BACK_CORNER = glm::vec3(0,0,0);
 
-    glm::vec3 GetPosition();
-
-    glm::vec3 GetColor();
-
-private:
-    glm::vec3 _position;
-    glm::vec3 _color;
+    glm::vec3 position;
+    BlockColor color;
 };

@@ -6,7 +6,7 @@
 // Implemented features:
 //  [X] Renderer: User texture binding. Use 'GLuint' OpenGL texture identifier as void*/ImTextureID. Read the FAQ about ImTextureID!
 //  [X] Renderer: Multi-viewport support (multiple windows). Enable with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
-//  [x] Renderer: Large meshes support (64k+ _vertices) with 16-bit _indices (Desktop OpenGL only).
+//  [x] Renderer: Large meshes support (64k+ vertices) with 16-bit indices (Desktop OpenGL only).
 
 // You can use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
 // Prefer including the entire debuggui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
@@ -42,7 +42,7 @@
 //  2019-10-25: OpenGL: Using a combination of GL define and runtime GL version to decide whether to use glDrawElementsBaseVertex(). Fix building with pre-3.2 GL loaders.
 //  2019-09-22: OpenGL: Detect default GL loader using __has_include compiler facility.
 //  2019-09-16: OpenGL: Tweak initialization code to allow application calling ImGui_ImplOpenGL3_CreateFontsTexture() before the first NewFrame() call.
-//  2019-05-29: OpenGL: Desktop GL only: Added support for large mesh (64K+ _vertices), enable ImGuiBackendFlags_RendererHasVtxOffset flag.
+//  2019-05-29: OpenGL: Desktop GL only: Added support for large mesh (64K+ vertices), enable ImGuiBackendFlags_RendererHasVtxOffset flag.
 //  2019-04-30: OpenGL: Added support for special ImDrawCallback_ResetRenderState callback to reset render state.
 //  2019-03-29: OpenGL: Not calling glBindBuffer more than necessary in the render loop.
 //  2019-03-15: OpenGL: Added a GL call + comments in ImGui_ImplOpenGL3_Init() to detect uninitialized GL function loaders early.
@@ -229,19 +229,19 @@ struct ImGui_ImplOpenGL3_VtxAttribState
     GLint   Enabled, Size, Type, Normalized, Stride;
     GLvoid* Ptr;
 
-    void GetState(GLint _indicesIndex)
+    void GetState(GLint indicesIndex)
     {
-        glGetVertexAttribiv(_indicesIndex, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &Enabled);
-        glGetVertexAttribiv(_indicesIndex, GL_VERTEX_ATTRIB_ARRAY_SIZE, &Size);
-        glGetVertexAttribiv(_indicesIndex, GL_VERTEX_ATTRIB_ARRAY_TYPE, &Type);
-        glGetVertexAttribiv(_indicesIndex, GL_VERTEX_ATTRIB_ARRAY_NORMALIZED, &Normalized);
-        glGetVertexAttribiv(_indicesIndex, GL_VERTEX_ATTRIB_ARRAY_STRIDE, &Stride);
-        glGetVertexAttribPointerv(_indicesIndex, GL_VERTEX_ATTRIB_ARRAY_POINTER, &Ptr);
+        glGetVertexAttribiv(indicesIndex, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &Enabled);
+        glGetVertexAttribiv(indicesIndex, GL_VERTEX_ATTRIB_ARRAY_SIZE, &Size);
+        glGetVertexAttribiv(indicesIndex, GL_VERTEX_ATTRIB_ARRAY_TYPE, &Type);
+        glGetVertexAttribiv(indicesIndex, GL_VERTEX_ATTRIB_ARRAY_NORMALIZED, &Normalized);
+        glGetVertexAttribiv(indicesIndex, GL_VERTEX_ATTRIB_ARRAY_STRIDE, &Stride);
+        glGetVertexAttribPointerv(indicesIndex, GL_VERTEX_ATTRIB_ARRAY_POINTER, &Ptr);
     }
-    void SetState(GLint _indicesIndex)
+    void SetState(GLint indicesIndex)
     {
-        glVertexAttribPointer(_indicesIndex, Size, Type, (GLboolean)Normalized, Stride, Ptr);
-        if (Enabled) glEnableVertexAttribArray(_indicesIndex); else glDisableVertexAttribArray(_indicesIndex);
+        glVertexAttribPointer(indicesIndex, Size, Type, (GLboolean)Normalized, Stride, Ptr);
+        if (Enabled) glEnableVertexAttribArray(indicesIndex); else glDisableVertexAttribArray(indicesIndex);
     }
 };
 #endif
@@ -426,7 +426,7 @@ static void ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* draw_data, int fb_wid
     glBindVertexArray(vertex_array_object);
 #endif
 
-    // Bind vertex/_indicesIndex buffers and setup attributes for ImDrawVert
+    // Bind vertex/indicesIndex buffers and setup attributes for ImDrawVert
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, bd->VboHandle));
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bd->ElementsHandle));
     GL_CALL(glEnableVertexAttribArray(bd->AttribLocationVtxPos));
@@ -507,7 +507,7 @@ void    ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
     {
         const ImDrawList* cmd_list = draw_data->CmdLists[n];
 
-        // Upload vertex/_indicesIndex buffers
+        // Upload vertex/indicesIndex buffers
         // - On Intel windows drivers we got reports that regular glBufferData() led to accumulating leaks when using multi-viewports, so we started using orphaning + glBufferSubData(). (See https://github.com/ocornut/imgui/issues/4468)
         // - On NVIDIA drivers we got reports that using orphaning + glBufferSubData() led to glitches when using multi-viewports.
         // - OpenGL drivers are in a very sorry state in 2022, for now we are switching code path based on vendors.

@@ -97,9 +97,9 @@ int open_gl(void) {
     static const char *NAMES[] = {"libGL.so.1", "libGL.so"};
 #endif
 
-    unsigned int _indicesIndex = 0;
-    for(_indicesIndex = 0; _indicesIndex < (sizeof(NAMES) / sizeof(NAMES[0])); _indicesIndex++) {
-        libGL = dlopen(NAMES[_indicesIndex], RTLD_NOW | RTLD_GLOBAL);
+    unsigned int indicesIndex = 0;
+    for(indicesIndex = 0; indicesIndex < (sizeof(NAMES) / sizeof(NAMES[0])); indicesIndex++) {
+        libGL = dlopen(NAMES[indicesIndex], RTLD_NOW | RTLD_GLOBAL);
 
         if(libGL != NULL) {
 #if defined(__APPLE__) || defined(__HAIKU__)

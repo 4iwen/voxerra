@@ -11,7 +11,7 @@
 #include "game/Camera/Camera.h"
 #include "game/chunk/ChunkManager.h"
 
-// cube _vertices
+// cube vertices
 float vertices[] = {
     //  x         y          z
     -0.5f, -0.5f, -0.5f,
@@ -24,7 +24,7 @@ float vertices[] = {
     -0.5f, 0.5f, 0.5f,
 };
 
-// _indices for the cube above
+// indices for the cube above
 unsigned int indices[] = {
     0, 1, 2, 2, 3, 0,
     1, 5, 6, 6, 2, 1,
@@ -74,7 +74,7 @@ int main()
     // generate chunks
     std::vector<Chunk*> chunks;
     ChunkManager chunkManager;
-    chunkManager.GenerateChunks(4, 4);
+    chunkManager.GenerateChunks(1,  1);
     std::cout << "generated chunks" << std::endl;
     chunkManager.GetChunks(chunks);
     std::vector<float> worldVertices;
@@ -89,8 +89,10 @@ int main()
 
         worldVertices.insert(worldVertices.end(), chunkVertices.begin(), chunkVertices.end());
         worldIndices.insert(worldIndices.end(), chunkIndices.begin(), chunkIndices.end());
-
     }
+
+    std::cout << "vertices length: " << worldVertices.size() << std::endl;
+    std::cout << "indices length: " << worldIndices.size() << std::endl;
 
     // create vertex array object
     VertexArray vao;
@@ -154,8 +156,11 @@ int main()
         shader.Use();
         vao.Bind();
 
-        // draw the generated chunk
+        // draw the generated chunks
         glDrawElements(GL_TRIANGLES, worldIndices.size(), GL_UNSIGNED_INT, 0);
+
+        // unbind vertex array object
+        vao.Unbind();
 
         // draw debug gui
         debugGui.Draw();

@@ -21,7 +21,6 @@ set(GAME
         source/game/camera/Camera.cpp
         source/game/chunk/Chunk.cpp
         source/game/chunk/ChunkManager.cpp
-        source/game/block/Block.cpp
         source/game/Vertex.cpp)
 
 # get util source files
