@@ -3,8 +3,6 @@
 #include "GLFW/glfw3.h"
 
 #include "core/VertexArray.h"
-#include "core/VertexBuffer.h"
-#include "core/ElementBuffer.h"
 #include "core/Shader.h"
 #include "core/debuggui/DebugGui.h"
 #include "game/Camera.h"
@@ -33,18 +31,6 @@ int main()
     noise.SetFrequency(0.01f);
 
     chunkManager chunkManager;
-    chunkManager.updateChunks();
-
-    GLuint indices[chunkManager.getIndiceSize()];
-    GLfloat vertices [chunkManager.getVertSize()];
-
-    for (int i = 0; i < chunkManager.getIndiceSize(); i++) {
-        indices[i] = chunkManager.getIndicesVec().at(i);
-    }
-
-    for (int v = 0; v < chunkManager.getVertSize(); v++) {
-        vertices[v] = chunkManager.getVerticesVec().at(v);
-    }
 
     // initialize glfw
     glfwInit();
@@ -82,13 +68,12 @@ int main()
 
     // create vertex buffer object
     VertexBuffer vbo;
-    vbo.Bind();
-    vbo.SetData(vertices, sizeof(vertices));
 
     // create element buffer object
     ElementBuffer ebo;
-    ebo.Bind();
-    ebo.SetData(indices, sizeof(indices));
+
+    chunkManager.SET_RENDERER(&vbo, &ebo);
+    chunkManager.generateChunks(1,1);
 
     // TODO: implement frame buffer
     // create frame buffer object
@@ -137,7 +122,7 @@ int main()
         // draw
         shader.Use();
         vao.Bind();
-        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, chunkManager.getIndiceSize(), GL_UNSIGNED_INT, nullptr);
         debugGui.Draw();
 
         // swap buffers

@@ -10,13 +10,9 @@ chunk::chunk(int width, int height, int length,int posX,int posY, FastNoiseLite 
     this->posY = posY;
     this->noise = noise;
 
-    std::cout << "Filling with air" << std::endl;
     fillBlocksWithAir();
-    std::cout << "Generating Noise" << std::endl;
     generateNoise();
-    std::cout << "Generating Verts" << std::endl;
     generateVerts();
-    std::cout << "Generated vers" << std::endl;
 }
 void chunk::fillBlocksWithAir()
 {
@@ -100,7 +96,6 @@ void chunk::generateVerts()
 
 glm::vec3 chunk::PICK_BLOCK_COLOR(blockType type)
 {
-    std::cout << type << std::endl;
     switch (type)
     {
         case blockType::GRASS:
@@ -234,4 +229,9 @@ void chunk::ADD_INDI_SIDE()
     indices.push_back(verts.size() - 4);
     indices.push_back(verts.size() - 2);
     indices.push_back(verts.size() - 1);
+}
+
+void chunk::GEN()
+{
+
 }

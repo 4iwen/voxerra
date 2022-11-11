@@ -1,8 +1,13 @@
 #include "FastNoiseLite.h"
 #include "chunk.h"
+#include "../core/VertexBuffer.h"
+#include "../core/ElementBuffer.h"
 
 class chunkManager {
 private:
+    VertexBuffer* vbo;
+    ElementBuffer* ebo;
+
     int indicesSize;
     int vertsSize;
     int width = 16;
@@ -15,16 +20,14 @@ private:
     std::vector<GLuint> *indices;
     std::vector<GLfloat> *vertices;
 
-    int renderDistance = 1;
+    int renderDistance = 0;
 
     void unloadChunk(chunk c);
     void addChunk(chunk c);
 
-    void generateVerts();
-    void generateIndices();
-
-
     bool RENDER_DISTANCE_CHECK(glm::vec2 pos);
+
+    void SET_DATA(chunk c);
 public:
     void reloadChunks();
     int getRenderDistance();
@@ -50,4 +53,8 @@ public:
 
     std::vector<GLuint> getIndicesVec();
     std::vector<GLfloat> getVerticesVec();
+
+    void SET_RENDERER(VertexBuffer *vbo, ElementBuffer *ebo);
+
+    void renderChunks();
 };
