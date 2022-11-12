@@ -2,7 +2,7 @@
 
 #define CHUNK_SIZE 32
 #define CHUNK_HEIGHT 512
-#define BLOCK_SIZE 0.5f
+#define BLOCK_SIZE 1.0f
 
 BlockType chunkData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE]{static_cast<BlockType>(0)};
 
@@ -12,12 +12,17 @@ Chunk::Chunk(int x, int z) {
 }
 
 void Chunk::Generate() {
-    Utils::Noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    Utils::Noise.SetFrequency(0.01f);
-    Utils::Noise.SetFractalOctaves(8);
-    Utils::Noise.SetFractalLacunarity(2.0f);
-    Utils::Noise.SetFractalGain(0.5f);
-    Utils::Noise.SetFractalType(FastNoiseLite::FractalType_DomainWarpProgressive);
+    // "Cube World" game-like terrain generation
+    FastNoiseLite noise;
+    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    noise.SetFrequency(0.01f);
+    noise.SetFractalOctaves(4);
+    noise.SetFractalLacunarity(2.0f);
+    noise.SetFractalGain(0.5f);
+    noise.SetFractalType(FastNoiseLite::FractalType_FBm);
+    noise.SetCellularDistanceFunction(FastNoiseLite::CellularDistanceFunction_Euclidean);
+    noise.SetCellularReturnType(FastNoiseLite::CellularReturnType_Distance2Div);
+    noise.SetCellularJitter(0.45f);
 
     for (int x = 0; x < CHUNK_SIZE; x++) {
         for (int z = 0; z < CHUNK_SIZE; ++z) {

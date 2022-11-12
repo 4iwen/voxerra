@@ -34,6 +34,8 @@ unsigned int indices[] = {
     3, 2, 6, 6, 7, 3
 };
 
+void CheckGLError();
+
 int main()
 {
     // initialize glfw
@@ -70,11 +72,13 @@ int main()
         return -1;
     }
 
+    // opengl error checker
+
 
     // generate chunks
     std::vector<Chunk*> chunks;
     ChunkManager chunkManager;
-    chunkManager.GenerateChunks(1,  1);
+    chunkManager.GenerateChunks(8,  8);
     std::cout << "generated chunks" << std::endl;
     chunkManager.GetChunks(chunks);
     std::vector<float> worldVertices;
@@ -165,6 +169,9 @@ int main()
         // draw debug gui
         debugGui.Draw();
 
+        // check for gl errors
+        CheckGLError();
+
         // swap buffers
         glfwSwapBuffers(window);
     }
@@ -172,4 +179,11 @@ int main()
     // terminate glfw
     glfwTerminate();
     return 0;
+}
+
+void CheckGLError() {
+    GLenum err;
+    while ((err = glGetError()) != GL_NO_ERROR) {
+        std::cout << "OpenGL error: " << err << std::endl;
+    }
 }
