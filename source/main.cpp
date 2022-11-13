@@ -68,12 +68,13 @@ int main()
 
     // create vertex buffer object
     VertexBuffer vbo;
-
     // create element buffer object
     ElementBuffer ebo;
+    vbo.Bind();
+    ebo.Bind();
 
     chunkManager.SET_RENDERER(&vbo, &ebo);
-    chunkManager.generateChunks(1,1);
+    chunkManager.generateChunks(1,2);
 
     // TODO: implement frame buffer
     // create frame buffer object
