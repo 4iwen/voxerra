@@ -16,16 +16,9 @@ public :
     int getIndiceSize();
     int getVertSize();
 
-    GLuint *getIncide(int i);
-    GLfloat *getVert(int i);
     glm::vec2 getPos();
 
-    void GEN();
-
 private :
-    GLuint indicesARR[0];
-    GLfloat verticesARR[0];
-
     int width;
     int height;
     int length;
@@ -61,8 +54,5 @@ private :
 
     void GENERATE_GL_VERTS();
     glm::vec3 PICK_BLOCK_COLOR(blockType type);
-
-
-    void ADD_VERT_INFO(glm::vec3 pos, glm::vec3 color);
 };
 

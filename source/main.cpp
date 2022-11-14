@@ -36,8 +36,8 @@ int main()
     glfwInit();
 
     // set opengl version
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
@@ -73,8 +73,8 @@ int main()
     vbo.Bind();
     ebo.Bind();
 
-    chunkManager.SET_RENDERER(&vbo, &ebo);
-    chunkManager.generateChunks(1,2);
+    chunkManager.generateChunks(1,0);
+    chunkManager.renderChunks(&vbo,&ebo);
 
     // TODO: implement frame buffer
     // create frame buffer object

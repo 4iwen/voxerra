@@ -13,6 +13,7 @@ chunk::chunk(int width, int height, int length,int posX,int posY, FastNoiseLite 
     fillBlocksWithAir();
     generateNoise();
     generateVerts();
+    GENERATE_GL_VERTS();
 }
 void chunk::fillBlocksWithAir()
 {
@@ -190,18 +191,7 @@ void chunk::GENERATE_GL_VERTS()
 
 std::vector<GLfloat>* chunk::getVerts()
 {
-    GENERATE_GL_VERTS();
     return &GLverts;
-}
-
-GLuint *chunk::getIncide(int i)
-{
-    return &indices.at( i);
-}
-
-GLfloat *chunk::getVert(int i)
-{
-    return &GLverts.at( i);
 }
 
 std::vector<GLuint>* chunk::getIndices()
@@ -229,9 +219,4 @@ void chunk::ADD_INDI_SIDE()
     indices.push_back(verts.size() - 4);
     indices.push_back(verts.size() - 2);
     indices.push_back(verts.size() - 1);
-}
-
-void chunk::GEN()
-{
-
 }

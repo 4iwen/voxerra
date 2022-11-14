@@ -6,9 +6,6 @@
 
 class chunkManager {
 private:
-    VertexBuffer* vbo;
-    ElementBuffer* ebo;
-
     int indicesSize = 0;
     int width = 16;
     int height = 128;
@@ -24,7 +21,7 @@ private:
 
     bool RENDER_DISTANCE_CHECK(glm::vec2 pos);
 
-    void SET_DATA(chunk c);
+    void SET_DATA(chunk c,VertexBuffer *vbo, ElementBuffer *ebo);
 public:
     void reloadChunks();
     int getRenderDistance();
@@ -42,8 +39,6 @@ public:
     std::vector<GLuint> getIndicesVec();
     std::vector<GLfloat> getVerticesVec();
 
-    void SET_RENDERER(VertexBuffer *vbo, ElementBuffer *ebo);
-
-    void renderChunks();
-    void generateData();
+    void renderChunks(VertexBuffer *vbo, ElementBuffer *ebo);
+    void generateData(VertexBuffer *vbo, ElementBuffer *ebo);
 };

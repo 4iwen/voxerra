@@ -25,22 +25,15 @@ void chunkManager::unloadChunk(chunk c) {
     }
 }
 
-void chunkManager::SET_RENDERER(VertexBuffer *vbo, ElementBuffer *ebo)
-{
-    this->vbo = vbo;
-    this->ebo = ebo;
-}
-
 void chunkManager::generateChunks(int x, int y)
 {
-    for(int i = playerPos.x; i < x; i++)
+    for(int i = playerPos.x - x; i <= playerPos.y + x; i++)
     {
-        for(int j = playerPos.y; j < y; j++)
+        for(int j = playerPos.y - y; j <= playerPos.y + y; j++)
         {
             addChunk(chunk(width,height,length,i,j,noise));
         }
     }
-    renderChunks();
 }
 
 void chunkManager::updateChunks()
@@ -66,17 +59,17 @@ void chunkManager::updateChunks()
             }
             if(!found)
             {
-                chunk c = chunk(16,256,16,2,3,noise);
+                chunk c = chunk(16,256,16,i,j,noise);
                 addChunk(c);
             }
         }
     }
 }
 
-void chunkManager::renderChunks()
+void chunkManager::renderChunks(VertexBuffer *vbo, ElementBuffer *ebo)
 {
     for (auto & chunk : chunks) {
-        SET_DATA(chunk);
+        SET_DATA(chunk, vbo, ebo);
     }
 }
 
@@ -107,7 +100,7 @@ int chunkManager::getIndiceSize()
     return indicesSize;
 }
 
-void chunkManager::generateData()
+void chunkManager::generateData(VertexBuffer *vbo, ElementBuffer *ebo)
 {
     std::vector<GLfloat> vertices;
     std::vector<GLuint> indices;
@@ -127,8 +120,19 @@ void chunkManager::generateData()
         std::cout << indicesSize << std::endl;
     }
 
+
     GLuint indicesARR[indices.size()];
     GLfloat verticesARR[vertices.size()];
+
+    for(int i = 0; i < indices.size(); i++)
+    {
+        indicesARR[i] = indices[i];
+    }
+
+    for(int i = 0; i < vertices.size(); i++)
+    {
+        verticesARR[i] = vertices[i];
+    }
 
     std::cout << "Vertices ALL: " << sizeof(verticesARR) / sizeof(GLfloat) << std::endl;
     std::cout << "Indices ALL: " << sizeof(indicesARR) / sizeof(GLuint) << std::endl;
@@ -139,7 +143,7 @@ void chunkManager::generateData()
     ebo->SetData(indicesARR, sizeof(indicesARR) / sizeof(GLuint));
 }
 
-void chunkManager::SET_DATA(chunk c)
+void chunkManager::SET_DATA(chunk c, VertexBuffer *vbo, ElementBuffer *ebo)
 {
     GLuint indicesARR[c.getIndiceSize()];
     GLfloat verticesARR[c.getVertSize()];
