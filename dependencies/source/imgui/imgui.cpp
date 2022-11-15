@@ -12616,7 +12616,7 @@ ImGuiWindowSettings* ImGui::CreateNewWindowSettings(const char* name)
 #endif
     const size_t name_len = strlen(name);
 
-    // Allocate chunk
+    // Allocate Chunk
     const size_t chunk_size = sizeof(ImGuiWindowSettings) + name_len + 1;
     ImGuiWindowSettings* settings = g.SettingsWindows.alloc_chunk(chunk_size);
     IM_PLACEMENT_NEW(settings) ImGuiWindowSettings();

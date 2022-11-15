@@ -6,23 +6,25 @@
 #include "FastNoiseLite.h"
 #include "../utils/vert.h"
 #include "../utils/enums.h"
+#include "Mesh.h"
+#include "../core/Shader.h"
 
-class chunk {
+#define CHUNK_WIDTH 16
+#define CHUNK_LENGTH 16
+#define CHUNK_HEIGHT 256
+
+class Chunk {
 public :
-    chunk(int width, int height, int length,int posX,int posY, FastNoiseLite noise);
+    Chunk(int posX, int posY);
     std::vector<GLfloat>* getVerts();
     std::vector<GLuint>* getIndices();
-
-    int getIndiceSize();
-    int getVertSize();
+    Mesh mesh;
 
     glm::vec2 getPos();
 
-private :
-    int width;
-    int height;
-    int length;
+    void GenerateNoise(FastNoiseLite noise);
 
+private :
     int posX;
     int posY;
 
@@ -30,16 +32,15 @@ private :
 
     blockType blockData[16][256][16];
 
-    std::vector<vert> verts;
-    std::vector<GLfloat> GLverts;
+    std::vector<Vertex> vertices;
+    std::vector<GLfloat> floatVertices;
     std::vector<GLuint> indices;
 
-    void generateVerts();
-    void generateNoise();
+    void GenerateMesh();
 
-    void fillBlocksWithAir();
+    void FillBlocksWithAir();
 
-    bool checkForBlock(int x, int y, int z);
+    bool CheckForBlock(int x, int y, int z);
 
     void ADD_LEFT_SIDE(int x, int y, int z);
     void ADD_RIGHT_SIDE(int x, int y, int z);
@@ -50,9 +51,11 @@ private :
 
     void ADD_INDI_SIDE();
 
-    int generateHeight(int x, int z);
+    int GenerateHeight(int x, int z);
 
     void GENERATE_GL_VERTS();
     glm::vec3 PICK_BLOCK_COLOR(blockType type);
+
+    void DrawChunk(Shader shader);
 };
 

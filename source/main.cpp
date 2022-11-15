@@ -7,7 +7,7 @@
 #include "core/debuggui/DebugGui.h"
 #include "game/Camera.h"
 #include "core/FrameBuffer.h"
-#include "worldgen/chunkManager.h"
+#include "worldgen/ChunkManager.h"
 
 // triangle vertices
 float TESTvertices[] = {
@@ -30,7 +30,7 @@ int main()
     FastNoiseLite noise;
     noise.SetFrequency(0.01f);
 
-    chunkManager chunkManager;
+    ChunkManager chunkManager;
 
     // initialize glfw
     glfwInit();
@@ -73,8 +73,8 @@ int main()
     vbo.Bind();
     ebo.Bind();
 
-    chunkManager.generateChunks(1,0);
-    chunkManager.renderChunks(&vbo,&ebo);
+    ChunkManager chunk_manager;
+    chunk_manager.generateData(0, 0);
 
     // TODO: implement frame buffer
     // create frame buffer object

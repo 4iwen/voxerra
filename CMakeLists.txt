@@ -14,9 +14,10 @@ set(CORE
         source/core/Shader.cpp
         source/core/debuggui/DebugGui.cpp source/core/FrameBuffer.cpp source/core/FrameBuffer.h
 
-        source/worldgen/chunk.cpp source/worldgen/chunk.h
+        source/worldgen/Chunk.cpp source/worldgen/Chunk.h
         source/worldgen/FastNoiseLite.h
-        source/worldgen/chunkManager.cpp source/worldgen/chunkManager.h
+        source/worldgen/ChunkManager.cpp source/worldgen/ChunkManager.h
+        source/worldgen/Mesh.cpp source/worldgen/Mesh.h
 
         source/utils/enums.h
         source/utils/random.cpp source/utils/random.h

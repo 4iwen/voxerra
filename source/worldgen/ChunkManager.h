@@ -1,10 +1,10 @@
 #include "FastNoiseLite.h"
-#include "chunk.h"
+#include "Chunk.h"
 #include "../core/VertexBuffer.h"
 #include "../core/ElementBuffer.h"
 #include <iostream>
 
-class chunkManager {
+class ChunkManager {
 private:
     int indicesSize = 0;
     int width = 16;
@@ -12,21 +12,19 @@ private:
     int length = 16;
     glm::vec2 playerPos = glm::vec2(0,0);
     FastNoiseLite noise;
-    std::vector<chunk> chunks;
+    std::vector<Chunk> chunks;
 
     int renderDistance = 0;
 
-    void unloadChunk(chunk c);
-    void addChunk(chunk c);
+    void unloadChunk(Chunk c);
+    void addChunk(Chunk c);
 
     bool RENDER_DISTANCE_CHECK(glm::vec2 pos);
-
-    void SET_DATA(chunk c,VertexBuffer *vbo, ElementBuffer *ebo);
 public:
     void reloadChunks();
     int getRenderDistance();
 
-    std::vector<chunk> getChunks();
+    std::vector<Chunk> getChunks();
 
     void updateChunks();
 
