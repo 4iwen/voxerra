@@ -2,8 +2,8 @@
 
 DebugGui::DebugGui(GLFWwindow* window, Camera* camera)
 {
-    _window = window;
-    _camera = camera;
+    this->window = window;
+    this->camera = camera;
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -19,8 +19,8 @@ DebugGui::DebugGui(GLFWwindow* window, Camera* camera)
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 
-    ImGui_ImplGlfw_InitForOpenGL(_window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    ImGui_ImplGlfw_InitForOpenGL(this->window, true);
+    ImGui_ImplOpenGL3_Init("#version 460");
 }
 
 void DebugGui::Draw()
@@ -32,44 +32,44 @@ void DebugGui::Draw()
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
     // drawing
-    if (_showDemoWindow)
+    if (showDemoWindow)
     {
-        ImGui::ShowDemoWindow(&_showDemoWindow);
+        ImGui::ShowDemoWindow(&showDemoWindow);
     }
 
     {
         ImGui::Begin("Debug");
-        FpsGraph();
+        FrameTimesGraph();
         ImGui::Spacing();
         if (ImGui::CollapsingHeader("Rendering settings"))
         {
             if (ImGui::TreeNode("Camera"))
             {
-                ImGui::Text("Position: x: %.1f, y: %.1f, z: %.1f", _camera->GetPosition().x, _camera->GetPosition().y, _camera->GetPosition().z);
-                ImGui::Text("Yaw: %.1f, Pitch: %.1f", _camera->GetYaw(), _camera->GetPitch());
-                ImGui::Text("Fov: %.1f", _camera->GetFov());
+                ImGui::Text("Position: x: %.1f, y: %.1f, z: %.1f", camera->position.x, camera->position.y, camera->position.z);
+                ImGui::Text("Yaw: %.1f, Pitch: %.1f", camera->yaw, camera->pitch);
+                ImGui::Text("Fov: %.1f", camera->fov);
                 ImGui::TreePop();
             }
             ImGui::Spacing();
-            ImGui::Checkbox("Vsync", &_vsync);
+            ImGui::Checkbox("Vsync", &vsync);
             ImGui::Spacing();
             if (ImGui::TreeNode("Polygon mode"))
             {
-                ImGui::RadioButton("Solid", &_polygonMode, 0);
-                ImGui::RadioButton("Wireframe", &_polygonMode, 1);
-                ImGui::RadioButton("Point", &_polygonMode, 2);
+                ImGui::RadioButton("Solid", &polygonMode, 0);
+                ImGui::RadioButton("Wireframe", &polygonMode, 1);
+                ImGui::RadioButton("Point", &polygonMode, 2);
                 ImGui::TreePop();
             }
             ImGui::Spacing();
             ImGui::SetNextItemWidth(200);
-            ImGui::ColorPicker3("Clear color",(float *) &_clearColor);
+            ImGui::ColorPicker3("Clear color",(float *) &clearColor);
         }
         if (ImGui::CollapsingHeader("Terrain settings"))
         {
 
         }
         ImGui::Spacing();
-        ImGui::Checkbox("Demo window", &_showDemoWindow);
+        ImGui::Checkbox("Demo window", &showDemoWindow);
         ImGui::End();
     }
     // drawing end
@@ -87,7 +87,7 @@ DebugGui::~DebugGui()
 
 void DebugGui::SetStyle()
 {
-    // Voxerra Dark Theme style from ImThemes
+    // Voxerra Dark Theme style
     ImGuiStyle& style = ImGui::GetStyle();
 
     style.Alpha = 1.0;
@@ -179,11 +179,11 @@ void DebugGui::SetStyle()
 
 ImVec4 DebugGui::GetClearColor()
 {
-    return _clearColor;
+    return clearColor;
 }
 
 int DebugGui::GetPolygonMode() const {
-    switch (_polygonMode) {
+    switch (polygonMode) {
         case 1:
             return GL_LINE;
         case 2:
@@ -194,29 +194,50 @@ int DebugGui::GetPolygonMode() const {
 }
 
 int DebugGui::GetVsync() const {
-    return _vsync;
+    return vsync;
 }
 
-void DebugGui::FpsGraph() {
+void DebugGui::FrameTimesGraph() {
 
-    float fps = ImGui::GetIO().Framerate;
+    //float fps = ImGui::GetIO().Framerate;
+//
+    //for (size_t i = 1; i < IM_ARRAYSIZE(frames); i++)
+    //{
+    //    frames[i - 1] = frames[i];
+    //}
+    //frames[IM_ARRAYSIZE(frames) - 1] = fps;
+//
+    //float max = 0;
+    //for (float frame : frames)
+    //{
+    //    if (frame > max)
+    //    {
+    //        max = frame;
+    //    }
+    //}
+//
+    //std::string overlayText = "Average fps: " + std::to_string(fps);
+//
+    //ImGui::PlotLines("Framerate", frames, IM_ARRAYSIZE(frames), 0, overlayText.c_str(), 0.0f, max * 2, ImVec2(300, 100));
 
-    for (size_t i = 1; i < IM_ARRAYSIZE(_frames); i++)
+    // generate similiar graph for frametimes
+    for (size_t i = 1; i < IM_ARRAYSIZE(frameTimes); i++)
     {
-        _frames[i-1] = _frames[i];
+        frameTimes[i - 1] = frameTimes[i];
     }
-    _frames[IM_ARRAYSIZE(_frames) - 1] = fps;
 
-    float max = 0;
-    for (float frame : _frames)
+    frameTimes[IM_ARRAYSIZE(frameTimes) - 1] = 1000.0f / ImGui::GetIO().Framerate;
+
+    float maxFrameTime = 0;
+    for (float frameTime : frameTimes)
     {
-        if (frame > max)
+        if (frameTime > maxFrameTime)
         {
-            max = frame;
+            maxFrameTime = frameTime;
         }
     }
 
-    std::string overlayText = "Average fps: " + std::to_string(fps);
+    std::string overlayText = "Average frame time: " + std::to_string(frameTimes[IM_ARRAYSIZE(frameTimes) - 1]) + "ms";
 
-    ImGui::PlotLines("Framerate", _frames, IM_ARRAYSIZE(_frames), 0, overlayText.c_str(), 0.0f, max * 2, ImVec2(300, 100));
+    ImGui::PlotLines("Frame times", frameTimes, IM_ARRAYSIZE(frameTimes), 0, overlayText.c_str(), 0.0f, maxFrameTime * 2, ImVec2(300, 100));
 }

@@ -9,7 +9,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
     // create shader program
     ID = glCreateProgram();
-    //spdlog::info("Created Shader with ID: {0}", ID);
 
     // create vertex and fragment shaders
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -49,7 +48,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 Shader::~Shader()
 {
     glDeleteProgram(ID);
-    //spdlog::info("Deleted Shader with ID: {0}", ID);
 }
 
 void Shader::Use()
@@ -112,7 +110,6 @@ void Shader::CheckForCompileErrors(unsigned int shader, std::string type)
         if (!success)
         {
             glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-            //spdlog::error("Shader compilation error of type: {0}\n{1}", type, infoLog);
         }
     }
     else
@@ -121,7 +118,6 @@ void Shader::CheckForCompileErrors(unsigned int shader, std::string type)
         if (!success)
         {
             glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-            //spdlog::error("Shader program linking error of type: {0}\n{1}", type, infoLog);
         }
     }
 }
@@ -141,7 +137,7 @@ std::string Shader::ReadFile(const char* path)
     }
     catch (std::ifstream::failure e)
     {
-        //spdlog::error("Failed to read shader file: {0}", path);
+
     }
     return code;
 }

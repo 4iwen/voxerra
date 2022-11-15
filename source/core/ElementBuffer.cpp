@@ -5,13 +5,11 @@
 ElementBuffer::ElementBuffer()
 {
     glGenBuffers(1, &ID);
-    //spdlog::info("Created Element Buffer with ID: {0}", ID);
 }
 
 ElementBuffer::~ElementBuffer()
 {
     glDeleteBuffers(1, &ID);
-    //spdlog::info("Deleted Element Buffer with ID: {0}", ID);
 }
 
 void ElementBuffer::Bind()

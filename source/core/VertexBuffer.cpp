@@ -6,15 +6,11 @@ VertexBuffer::VertexBuffer()
 {
     glGenBuffers(1, &ID);
     glBindBuffer(GL_ARRAY_BUFFER, ID);
-
-    //spdlog::info("Created Vertex Buffer with ID: {0}", ID);
 }
 
 VertexBuffer::~VertexBuffer()
 {
     glDeleteBuffers(1, &ID);
-
-    //spdlog::info("Deleted Vertex Buffer with ID: {0}", ID);
 }
 
 void VertexBuffer::Bind()

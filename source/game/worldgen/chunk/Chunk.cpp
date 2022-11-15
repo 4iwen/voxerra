@@ -4,29 +4,21 @@
 #define CHUNK_HEIGHT 512
 #define BLOCK_SIZE 1.0f
 
-BlockType chunkData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE]{static_cast<BlockType>(0)};
+BlockType chunkData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE]{(BlockType)(0)};
 
 Chunk::Chunk(int x, int z) {
     chunkX = x;
     chunkZ = z;
+
+    vao = VertexArray();
+    vbo = VertexBuffer();
+    ebo = ElementBuffer();
 }
 
 void Chunk::Generate() {
-    // "Cube World" game-like terrain generation
-    FastNoiseLite noise;
-    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    noise.SetFrequency(0.01f);
-    noise.SetFractalOctaves(4);
-    noise.SetFractalLacunarity(2.0f);
-    noise.SetFractalGain(0.5f);
-    noise.SetFractalType(FastNoiseLite::FractalType_FBm);
-    noise.SetCellularDistanceFunction(FastNoiseLite::CellularDistanceFunction_Euclidean);
-    noise.SetCellularReturnType(FastNoiseLite::CellularReturnType_Distance2Div);
-    noise.SetCellularJitter(0.45f);
-
     for (int x = 0; x < CHUNK_SIZE; x++) {
         for (int z = 0; z < CHUNK_SIZE; ++z) {
-            int height = Utils::Noise.GetNoise((float) (x + chunkX * CHUNK_SIZE),
+            int height = Utils::noise.GetNoise((float) (x + chunkX * CHUNK_SIZE),
                                                (float) (z + chunkZ * CHUNK_SIZE)) * 20;
             height += 10;
             if (height < 0)
@@ -83,7 +75,7 @@ void Chunk::GetIndices(std::vector<unsigned int> &indices) {
 }
 
 void Chunk::AddLeftSide(int x, int y, int z) {
-    BlockColor color = GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = GetBlockColor(chunkData[x][y][z]);
 
     Vertex v1((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 1)) * BLOCK_SIZE, color);
     Vertex v2((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 1, 0)) * BLOCK_SIZE, color);
@@ -95,7 +87,7 @@ void Chunk::AddLeftSide(int x, int y, int z) {
 }
 
 void Chunk::AddRightSide(int x, int y, int z) {
-    BlockColor color = GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = GetBlockColor(chunkData[x][y][z]);
 
     Vertex v1((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 0, 0)) * BLOCK_SIZE, color);
     Vertex v2((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 1, 1)) * BLOCK_SIZE, color);
@@ -107,7 +99,8 @@ void Chunk::AddRightSide(int x, int y, int z) {
 }
 
 void Chunk::AddTopSide(int x, int y, int z) {
-    BlockColor color = GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = GetBlockColor(chunkData[x][y][z]);
+
 
     Vertex v1((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 1, 0)) * BLOCK_SIZE, color);
     Vertex v2((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 1, 1)) * BLOCK_SIZE, color);
@@ -119,7 +112,7 @@ void Chunk::AddTopSide(int x, int y, int z) {
 }
 
 void Chunk::AddBottomSide(int x, int y, int z) {
-    BlockColor color = GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = GetBlockColor(chunkData[x][y][z]);
 
     Vertex v1((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 1)) * BLOCK_SIZE, color);
     Vertex v2((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 0, 0)) * BLOCK_SIZE, color);
@@ -131,7 +124,7 @@ void Chunk::AddBottomSide(int x, int y, int z) {
 }
 
 void Chunk::AddFrontSide(int x, int y, int z) {
-    BlockColor color = GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = GetBlockColor(chunkData[x][y][z]);
 
     Vertex v1((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 0)) * BLOCK_SIZE, color);
     Vertex v2((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 1, 0)) * BLOCK_SIZE, color);
@@ -143,7 +136,7 @@ void Chunk::AddFrontSide(int x, int y, int z) {
 }
 
 void Chunk::AddBackSide(int x, int y, int z) {
-    BlockColor color = GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = GetBlockColor(chunkData[x][y][z]);
 
     Vertex v1((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 1, 1)) * BLOCK_SIZE, color);
     Vertex v2((glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 0, 1)) * BLOCK_SIZE, color);
@@ -194,41 +187,29 @@ void Chunk::AddIndices() {
     indicesIndex += 4;
 }
 
-BlockColor Chunk::GetBlockColor(BlockType type) {
-    BlockColor color{};
-
+glm::vec3 Chunk::GetBlockColor(BlockType type) {
     switch (type) {
         case BlockType::GRASS:
-            color.r = 0.0f;
-            color.g = 1.0f;
-            color.b = 0.0f;
-            break;
+            return {0.0f, 1.0f, 0.0f};
         case BlockType::DIRT:
-            color.r = 0.5f;
-            color.g = 0.35f;
-            color.b = 0.05f;
-            break;
+            return {0.5f, 0.35f, 0.05f};
         case BlockType::STONE:
-            color.r = 0.5f;
-            color.g = 0.5f;
-            color.b = 0.5f;
-            break;
+            return {0.5f, 0.5f, 0.5f};
         case BlockType::WATER:
-            color.r = 0.0f;
-            color.g = 0.0f;
-            color.b = 1.0f;
-            break;
+            return {0.0f, 0.0f, 1.0f};
         case BlockType::SAND:
-            color.r = 1.0f;
-            color.g = 0.9f;
-            color.b = 0.0f;
-            break;
+            return {1.0f, 0.9f, 0.0f};
         default:
-            color.r = 0.0f;
-            color.g = 0.0f;
-            color.b = 0.0f;
-            break;
+            return {0.0f, 0.0f, 0.0f};
     }
+}
 
-    return color;
+void Chunk::Draw() {
+    vao.Bind();
+    vbo.Bind();
+    vbo.SetData(vertices.data(), vertices.size() * sizeof(float));
+    ebo.Bind();
+    ebo.SetData(indices.data(), indices.size() * sizeof(unsigned int));
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    vao.Unbind();
 }

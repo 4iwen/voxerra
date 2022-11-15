@@ -1,3 +1,5 @@
+#pragma once
+
 class VertexArray
 {
 public:
@@ -7,5 +9,4 @@ public:
     ~VertexArray();
     void Bind();
     void Unbind();
-    void SetAttribute();
 };

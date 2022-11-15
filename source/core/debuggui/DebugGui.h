@@ -16,15 +16,14 @@ public:
     int GetVsync() const;
 
 private:
-    GLFWwindow* _window;
-    Camera* _camera;
-    bool _vsync = true;
-    int _polygonMode = 0;
-    float _frames[300]{};
-    bool _showDemoWindow = false;
-    // sky blue
-    ImVec4 _clearColor = ImVec4(0.53f, 0.81f, 0.92f, 1.00f);
+    GLFWwindow* window;
+    Camera* camera;
+    bool vsync = true;
+    int polygonMode = 0;
+    float frameTimes[300]{};
+    bool showDemoWindow = false;
+    ImVec4 clearColor = ImVec4(0.53f, 0.81f, 0.92f, 1.00f);
 
     static void SetStyle();
-    void FpsGraph();
+    void FrameTimesGraph();
 };

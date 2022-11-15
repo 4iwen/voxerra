@@ -1,14 +1,16 @@
 #include "vector"
 #include "FastNoiseLite/FastNoiseLite.h"
-#include "../Block/BlockType.h"
-#include "../../core/utils/Utils.h"
-#include "../Vertex.h"
+#include "../../block/BlockType.h"
+#include "../../../core/utils/Utils.h"
+#include "../mesh/Vertex.h"
+#include "../../../core/VertexArray.h"
+#include "../../../core/VertexBuffer.h"
+#include "../../../core/ElementBuffer.h"
+#include "glad/glad.h"
 
 class Chunk {
 public:
     Chunk(int x, int z);
-
-    void Render();
 
     void Generate();
 
@@ -19,6 +21,8 @@ public:
     void GetIndices(std::vector<unsigned int> &indices);
 
     int chunkX, chunkZ;
+
+    void Draw();
 
 private:
     std::vector<float> vertices;
@@ -41,6 +45,9 @@ private:
 
     void AddIndices();
 
-    BlockColor GetBlockColor(BlockType type);
-};
+    glm::vec3 GetBlockColor(BlockType blockType);
 
+    VertexArray vao;
+    VertexBuffer vbo;
+    ElementBuffer ebo;
+};
