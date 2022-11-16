@@ -3,7 +3,6 @@
 #include "GLFW/glfw3.h"
 
 #include "core/VertexArray.h"
-#include "core/Shader.h"
 #include "core/debuggui/DebugGui.h"
 #include "game/Camera.h"
 #include "core/FrameBuffer.h"
@@ -29,8 +28,6 @@ int main()
 
     FastNoiseLite noise;
     noise.SetFrequency(0.01f);
-
-    ChunkManager chunkManager;
 
     // initialize glfw
     glfwInit();
@@ -73,8 +70,8 @@ int main()
     vbo.Bind();
     ebo.Bind();
 
-    ChunkManager chunk_manager;
-    chunk_manager.generateData(0, 0);
+    ChunkManager chunk_manager(noise);
+    chunk_manager.reloadChunks(0, 0);
 
     // TODO: implement frame buffer
     // create frame buffer object
@@ -119,11 +116,11 @@ int main()
         camera.Update();
         shader.SetMat4("view", camera.GetView());
         shader.SetMat4("projection", camera.GetProjection());
+        chunk_manager.reloadChunks(0, 0);
 
         // draw
         shader.Use();
         vao.Bind();
-        glDrawElements(GL_TRIANGLES, chunkManager.getIndiceSize(), GL_UNSIGNED_INT, nullptr);
         debugGui.Draw();
 
         // swap buffers

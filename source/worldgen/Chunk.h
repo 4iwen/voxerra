@@ -4,58 +4,55 @@
 #include <vector>
 
 #include "FastNoiseLite.h"
-#include "../utils/vert.h"
 #include "../utils/enums.h"
 #include "Mesh.h"
 #include "../core/Shader.h"
 
-#define CHUNK_WIDTH 16
-#define CHUNK_LENGTH 16
-#define CHUNK_HEIGHT 256
+using namespace glm;
 
 class Chunk {
 public :
-    Chunk(int posX, int posY);
-    std::vector<GLfloat>* getVerts();
-    std::vector<GLuint>* getIndices();
+#define CHUNK_SIZE 16
+#define CHUNK_HEIGHT 256
+
+glm::vec3 vertex_positions[6][4] = {
+        {vec3(1,0,0), vec3(1,1,0), vec3(1,0,1), vec3(1,1,1)},
+        {vec3(0,0,0), vec3(0,1,0), vec3(0,0,1), vec3(0,1,1)},
+        {vec3(0,1,0), vec3(1,1,0), vec3(0,1,1), vec3(1,1,1)},
+        {vec3(0,0,0), vec3(1,0,0), vec3(0,0,1), vec3(1,0,1)},
+        {vec3(0,0,1), vec3(1,0,1), vec3(0,1,1), vec3(1,1,1)},
+        {vec3(0,0,0), vec3(1,0,0), vec3(0,1,0), vec3(1,1,0)}
+};
+
+    Chunk(int posX, int posZ, FastNoiseLite noise);
     Mesh mesh;
 
     glm::vec2 getPos();
 
-    void GenerateNoise(FastNoiseLite noise);
+    void GenerateNoise();
+
+    bool isChunkInRenderDistance(float d, float d1, int i);
+    void DrawChunk(Shader shader);
+    void GenerateMesh();
 
 private :
     int posX;
-    int posY;
-
+    int posZ;
     FastNoiseLite noise;
 
-    blockType blockData[16][256][16];
+    blockType blockData[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
 
     std::vector<Vertex> vertices;
     std::vector<GLfloat> floatVertices;
     std::vector<GLuint> indices;
 
-    void GenerateMesh();
-
     void FillBlocksWithAir();
 
     bool CheckForBlock(int x, int y, int z);
-
-    void ADD_LEFT_SIDE(int x, int y, int z);
-    void ADD_RIGHT_SIDE(int x, int y, int z);
-    void ADD_TOP_SIDE(int x, int y, int z);
-    void ADD_BOTTOM_SIDE(int x, int y, int z);
-    void ADD_FRONT_SIDE(int x, int y, int z);
-    void ADD_BACK_SIDE(int x, int y, int z);
-
-    void ADD_INDI_SIDE();
-
     int GenerateHeight(int x, int z);
 
-    void GENERATE_GL_VERTS();
-    glm::vec3 PICK_BLOCK_COLOR(blockType type);
+    glm::vec3 ColorPicker(blockType type);
 
-    void DrawChunk(Shader shader);
+    void AddVertex(int face, int x, int y, int z);
 };
 

@@ -3,40 +3,27 @@
 #include "../core/VertexBuffer.h"
 #include "../core/ElementBuffer.h"
 #include <iostream>
+#include <unordered_map>
 
 class ChunkManager {
 private:
-    int indicesSize = 0;
-    int width = 16;
-    int height = 128;
-    int length = 16;
-    glm::vec2 playerPos = glm::vec2(0,0);
-    FastNoiseLite noise;
-    std::vector<Chunk> chunks;
 
-    int renderDistance = 0;
+    const int RENDER_DISTANCE = 8;
 
-    void unloadChunk(Chunk c);
-    void addChunk(Chunk c);
-
-    bool RENDER_DISTANCE_CHECK(glm::vec2 pos);
 public:
-    void reloadChunks();
-    int getRenderDistance();
+    int frame_load_limit = 4;
+    FastNoiseLite noise;
 
-    std::vector<Chunk> getChunks();
+    ChunkManager(FastNoiseLite noise)
+    {
+        this->noise = noise;
+    }
+    ~ChunkManager();
+    int renderDistance;
 
-    void updateChunks();
-
-    void setRenderDistance(int distance);
-
-    void generateChunks(int x, int y);
-
-    int getIndiceSize();
-
-    std::vector<GLuint> getIndicesVec();
-    std::vector<GLfloat> getVerticesVec();
-
-    void renderChunks(VertexBuffer *vbo, ElementBuffer *ebo);
-    void generateData(VertexBuffer *vbo, ElementBuffer *ebo);
+    vector<Chunk*> chunks;
+    void addChunk(int coordinate_x, int coordinate_z);
+    void drawChunks(Shader& shader);
+    void updateChunks(float position_x, float position_z);
+    void reloadChunks(float position_x, float position_z);
 };

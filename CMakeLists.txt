@@ -20,8 +20,7 @@ set(CORE
         source/worldgen/Mesh.cpp source/worldgen/Mesh.h
 
         source/utils/enums.h
-        source/utils/random.cpp source/utils/random.h
-        source/utils/vert.cpp source/utils/vert.h
+        source/utils/random.h
         )
 
 # get game source files

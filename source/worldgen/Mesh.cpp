@@ -12,8 +12,6 @@ using namespace std;
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, vertices_size);
         glBindVertexArray(0);
-
-        glActiveTexture(GL_TEXTURE0);
     }
 
     void Mesh::updateMesh() {
@@ -41,6 +39,3 @@ using namespace std;
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Color));
     }
-
-
-}
