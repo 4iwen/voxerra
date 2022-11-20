@@ -3,7 +3,7 @@
 using namespace std;
 
 void ChunkManager::addChunk(int pos_x, int pos_z) {
-    Chunk* c = new Chunk(pos_x, pos_z,noise);
+    Chunk* c = new Chunk(pos_x, pos_z, noise);
     c->GenerateNoise();
     c->GenerateMesh();
 }

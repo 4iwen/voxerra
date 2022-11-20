@@ -6,7 +6,6 @@
 #include "FastNoiseLite.h"
 #include "../utils/enums.h"
 #include "Mesh.h"
-#include "../core/Shader.h"
 
 using namespace glm;
 

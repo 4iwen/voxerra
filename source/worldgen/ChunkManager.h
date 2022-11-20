@@ -18,9 +18,6 @@ public:
     {
         this->noise = noise;
     }
-    ~ChunkManager();
-    int renderDistance;
-
     vector<Chunk*> chunks;
     void addChunk(int coordinate_x, int coordinate_z);
     void drawChunks(Shader& shader);

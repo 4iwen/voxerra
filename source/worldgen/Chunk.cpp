@@ -109,6 +109,8 @@ void Chunk::AddVertex(int face,int x, int y, int z)
 {
     glm::vec3 color = ColorPicker(blockData[x][y][z]);
 
+    std::cout << "FACE " << face << " X " << x << " Y " << y << " Z " << z << std::endl;
+
     for (int i = 0; i < 4; ++i) {
         mesh.vertices.push_back(Vertex(vertex_positions[face][i] + glm::vec3(x + (posX * CHUNK_SIZE),y,z+ (posZ * CHUNK_SIZE)), color));
     }
@@ -192,4 +194,5 @@ bool Chunk::isChunkInRenderDistance(float d, float d1, int i) {
             return true;
         }
     }
+    return false;
 }

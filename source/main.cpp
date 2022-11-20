@@ -72,6 +72,7 @@ int main()
 
     ChunkManager chunk_manager(noise);
     chunk_manager.reloadChunks(0, 0);
+    drawChunks(Shader);
 
     // TODO: implement frame buffer
     // create frame buffer object
