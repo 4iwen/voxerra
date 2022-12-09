@@ -198,29 +198,6 @@ int DebugGui::GetVsync() const {
 }
 
 void DebugGui::FrameTimesGraph() {
-
-    //float fps = ImGui::GetIO().Framerate;
-//
-    //for (size_t i = 1; i < IM_ARRAYSIZE(frames); i++)
-    //{
-    //    frames[i - 1] = frames[i];
-    //}
-    //frames[IM_ARRAYSIZE(frames) - 1] = fps;
-//
-    //float max = 0;
-    //for (float frame : frames)
-    //{
-    //    if (frame > max)
-    //    {
-    //        max = frame;
-    //    }
-    //}
-//
-    //std::string overlayText = "Average fps: " + std::to_string(fps);
-//
-    //ImGui::PlotLines("Framerate", frames, IM_ARRAYSIZE(frames), 0, overlayText.c_str(), 0.0f, max * 2, ImVec2(300, 100));
-
-    // generate similiar graph for frametimes
     for (size_t i = 1; i < IM_ARRAYSIZE(frameTimes); i++)
     {
         frameTimes[i - 1] = frameTimes[i];
@@ -228,14 +205,14 @@ void DebugGui::FrameTimesGraph() {
 
     frameTimes[IM_ARRAYSIZE(frameTimes) - 1] = 1000.0f / ImGui::GetIO().Framerate;
 
-    float maxFrameTime = 0;
-    for (float frameTime : frameTimes)
+    float maxFrameTime = 0.0f;
+    float avgFrameTime = 0.0f;
+    for (size_t i = 0; i < IM_ARRAYSIZE(frameTimes); i++)
     {
-        if (frameTime > maxFrameTime)
-        {
-            maxFrameTime = frameTime;
-        }
+        maxFrameTime = std::max(maxFrameTime, frameTimes[i]);
+        avgFrameTime += frameTimes[i];
     }
+    avgFrameTime /= IM_ARRAYSIZE(frameTimes);
 
     std::string overlayText = "Average frame time: " + std::to_string(frameTimes[IM_ARRAYSIZE(frameTimes) - 1]) + "ms";
 

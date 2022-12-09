@@ -1,7 +1,5 @@
 #include "ElementBuffer.h"
 
-#include "glad/glad.h"
-
 ElementBuffer::ElementBuffer()
 {
     glGenBuffers(1, &ID);

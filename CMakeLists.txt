@@ -14,14 +14,16 @@ set(CORE
         source/core/Shader.cpp
         source/core/Shader.cpp
         source/core/debuggui/DebugGui.cpp
-        source/core/utils/Utils.cpp source/core/application/Application.cpp source/core/application/Application.h source/core/window/Window.cpp source/core/window/Window.h)
+        source/core/utils/Utils.cpp
+        source/core/application/Application.cpp
+        source/core/window/Window.cpp)
 
 # get game source files
 set(GAME
         source/game/camera/Camera.cpp
         source/game/worldgen/chunk/Chunk.cpp
         source/game/worldgen/chunkmanager/ChunkManager.cpp
-        source/game/worldgen/mesh/Mesh.cpp source/game/worldgen/mesh/Mesh.h)
+        source/game/worldgen/mesh/Mesh.cpp)
 
 # get util source files
 set(UTILS

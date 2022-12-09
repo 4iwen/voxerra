@@ -1,6 +1,5 @@
 #include "vector"
 #include "Vertex.h"
-#include "glad/glad.h"
 #include "../../../core/ElementBuffer.h"
 #include "../../../core/VertexArray.h"
 #include "../../../core/VertexBuffer.h"
@@ -13,6 +12,10 @@ public:
     Mesh();
 
     void Draw();
+
+    void AddVertices(Vertex vertex, Vertex vertex1, Vertex vertex2, Vertex vertex3);
+
+    void AddIndices();
 
 private:
     VertexArray vao;

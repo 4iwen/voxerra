@@ -6,7 +6,7 @@
 #include "../../../core/VertexArray.h"
 #include "../../../core/VertexBuffer.h"
 #include "../../../core/ElementBuffer.h"
-#include "glad/glad.h"
+#include "../mesh/Mesh.h"
 
 class Chunk {
 public:
@@ -16,13 +16,11 @@ public:
 
     void GenerateVerticesAndIndices();
 
-    void GetVertices(std::vector<float> &vertices);
-
-    void GetIndices(std::vector<unsigned int> &indices);
+    void Draw();
 
     int chunkX, chunkZ;
 
-    void Draw();
+    Mesh mesh;
 
 private:
     std::vector<float> vertices;
@@ -40,14 +38,4 @@ private:
     void AddFrontSide(int x, int y, int z);
 
     void AddBackSide(int x, int y, int z);
-
-    void AddVertices(Vertex vertex, Vertex vertex1, Vertex vertex2, Vertex vertex3);
-
-    void AddIndices();
-
-    glm::vec3 GetBlockColor(BlockType blockType);
-
-    VertexArray vao;
-    VertexBuffer vbo;
-    ElementBuffer ebo;
 };

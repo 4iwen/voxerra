@@ -5,9 +5,8 @@
 #include "../../game/block/BlockType.h"
 
 namespace Utils {
-    static FastNoiseLite *noise;
+    static FastNoiseLite noise;
 
-    static float RandomRange(float min, float max);
-
-    static glm::vec3 GetBlockColor(BlockType type);
+    float RandomRangeF(float min, float max);
+    glm::vec3 GetBlockColor(BlockType type);
 }

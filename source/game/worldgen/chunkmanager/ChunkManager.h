@@ -8,7 +8,7 @@ public:
 
     void GenerateChunk(int x, int z);
 
-    std::vector<Chunk *> chunks;
+    std::vector<Chunk *> chunks = {};
 
     void Update(int playerX, int playerZ, int renderDistance);
 

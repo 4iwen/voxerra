@@ -1,5 +1,4 @@
 #include "Window.h"
-#include "../debuggui/DebugGui.h"
 
 Window::Window(int windowWidth, int windowHeight, const char *windowName) {
     // initialize glfw

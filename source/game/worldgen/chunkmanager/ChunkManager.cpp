@@ -5,12 +5,12 @@
 #define BLOCK_SIZE 1.0f
 
 ChunkManager::ChunkManager(int worldSeed) {
-    Utils::noise->SetSeed(worldSeed);
-    Utils::noise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    Utils::noise->SetFrequency(0.01f);
-    Utils::noise->SetFractalOctaves(4);
-    Utils::noise->SetFractalLacunarity(2.0f);
-    Utils::noise->SetFractalGain(0.5f);
+    Utils::noise.SetSeed(worldSeed);
+    Utils::noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    Utils::noise.SetFrequency(0.01f);
+    Utils::noise.SetFractalOctaves(4);
+    Utils::noise.SetFractalLacunarity(2.0f);
+    Utils::noise.SetFractalGain(0.5f);
 }
 
 ChunkManager::~ChunkManager() {

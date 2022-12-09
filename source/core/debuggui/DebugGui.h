@@ -1,7 +1,6 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "glad/glad.h"
 #include "string"
 #include "cmath"
 #include "../../game/Camera/Camera.h"
@@ -20,7 +19,7 @@ private:
     Camera* camera;
     bool vsync = true;
     int polygonMode = 0;
-    float frameTimes[300]{};
+    float frameTimes[1000]{};
     bool showDemoWindow = false;
     ImVec4 clearColor = ImVec4(0.53f, 0.81f, 0.92f, 1.00f);
 

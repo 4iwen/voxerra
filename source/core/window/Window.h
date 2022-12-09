@@ -1,6 +1,8 @@
-#include "GLFW/glfw3.h"
-#include "glad/glad.h"
+#pragma once
+
 #include "iostream"
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 
 class Window {
 
@@ -15,7 +17,7 @@ public:
 
     void PollEvents();
 
-    GLFWwindow *window;
-
     void Clear();
+
+    GLFWwindow *window;
 };
