@@ -20,4 +20,6 @@ public:
     void Clear();
 
     GLFWwindow *window;
+
+    void SetClearColor(float r, float g, float b, float a);
 };

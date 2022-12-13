@@ -23,10 +23,6 @@ public:
     Mesh mesh;
 
 private:
-    std::vector<float> vertices;
-    std::vector<unsigned int> indices;
-    int indicesIndex = 0;
-
     void AddRightSide(int x, int y, int z);
 
     void AddLeftSide(int x, int y, int z);

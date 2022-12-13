@@ -3897,7 +3897,7 @@ typedef int stbrp_coord;
 ////////////////////////////////////////////////////////////////////////////////////
 //                                                                                //
 //                                                                                //
-// COMPILER WARNING ?!?!?                                                         //
+// COMPILER WARN ?!?!?                                                         //
 //                                                                                //
 //                                                                                //
 // if you get a compile warning due to these symbols being defined more than      //

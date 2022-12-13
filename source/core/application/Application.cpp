@@ -21,8 +21,6 @@ void Application::Run() {
         //// clear screen
         //ImVec4 clearColor = debugGui.GetClearColor();
         //glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
-        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         window.Clear();
         camera->Update();
@@ -31,7 +29,7 @@ void Application::Run() {
         blockShader.SetMat4("projection", camera->projection);
         blockShader.SetMat4("model", camera->model);
         chunkManager.Update(1, 1, 8);
-        chunkManager.Draw();
+        // chunkManager.Draw();
         debugGui.Draw();
         window.SwapBuffers();
     }

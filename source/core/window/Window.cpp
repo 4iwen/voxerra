@@ -33,11 +33,63 @@ Window::Window(int windowWidth, int windowHeight, const char *windowName) {
 
     // set opengl error callback
     glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(
-            [](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message,
-               const void *userParam) {
-                std::cout << "OpenGL Error: " << message << std::endl;
-            }, nullptr);
+    glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
+        // the variables: type, id, severity are shown in numbers, not in words make them show in words
+        std::string typeString;
+
+        switch (type) {
+            case GL_DEBUG_TYPE_ERROR:
+                typeString = "ERROR";
+                break;
+            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+                typeString = "DEPRECATED_BEHAVIOR";
+                break;
+            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+                typeString = "UNDEFINED_BEHAVIOR";
+                break;
+            case GL_DEBUG_TYPE_PORTABILITY:
+                typeString = "PORTABILITY";
+                break;
+            case GL_DEBUG_TYPE_PERFORMANCE:
+                typeString = "PERFORMANCE";
+                break;
+            case GL_DEBUG_TYPE_MARKER:
+                typeString = "MARKER";
+                break;
+            case GL_DEBUG_TYPE_PUSH_GROUP:
+                typeString = "PUSH_GROUP";
+                break;
+            case GL_DEBUG_TYPE_POP_GROUP:
+                typeString = "POP_GROUP";
+                break;
+            case GL_DEBUG_TYPE_OTHER:
+                typeString = "OTHER";
+                break;
+        }
+
+        std::string severityString;
+
+        switch(severity) {
+            case GL_DEBUG_SEVERITY_HIGH:
+                severityString = "HIGH";
+                break;
+            case GL_DEBUG_SEVERITY_MEDIUM:
+                severityString = "MEDIUM";
+                break;
+            case GL_DEBUG_SEVERITY_LOW:
+                severityString = "LOW";
+                break;
+            case GL_DEBUG_SEVERITY_NOTIFICATION:
+                severityString = "NOTIFICATION";
+                break;
+        }
+
+        std::cout << message << "\n";
+        std::cout << "type: " << typeString << "\n";
+        std::cout << "severity: " << severityString << "\n";
+        std::cout << std::endl;
+
+    }, nullptr);
 }
 
 Window::~Window() {
@@ -58,4 +110,8 @@ void Window::PollEvents() {
 
 void Window::Clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Window::SetClearColor(float r, float g, float b, float a) {
+    glClearColor(r, g, b, a);
 }

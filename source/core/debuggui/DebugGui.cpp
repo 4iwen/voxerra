@@ -1,4 +1,5 @@
 #include "DebugGui.h"
+#include "../utils/Utils.h"
 
 DebugGui::DebugGui(GLFWwindow* window, Camera* camera)
 {
