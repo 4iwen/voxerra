@@ -1,4 +1,4 @@
-#include "Chunk.h"
+#include "chunk.h"
 
 #define CHUNK_SIZE 32
 #define CHUNK_HEIGHT 512
@@ -12,7 +12,7 @@ Chunk::Chunk(int x, int z) {
     mesh = Mesh();
 }
 
-void Chunk::Generate() {
+void Chunk::generate() {
     for (int x = 0; x < CHUNK_SIZE; x++) {
         for (int z = 0; z < CHUNK_SIZE; ++z) {
             int height = Utils::noise.GetNoise((float) (x + chunkX * CHUNK_SIZE),
@@ -64,7 +64,7 @@ void Chunk::GenerateVerticesAndIndices() {
 }
 
 void Chunk::AddLeftSide(int x, int y, int z) {
-    glm::vec3 color = Utils::GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 1)) * BLOCK_SIZE,
               color};
@@ -80,7 +80,7 @@ void Chunk::AddLeftSide(int x, int y, int z) {
 }
 
 void Chunk::AddRightSide(int x, int y, int z) {
-    glm::vec3 color = Utils::GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 0, 0)) * BLOCK_SIZE,
               color};
@@ -96,7 +96,7 @@ void Chunk::AddRightSide(int x, int y, int z) {
 }
 
 void Chunk::AddTopSide(int x, int y, int z) {
-    glm::vec3 color = Utils::GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 1, 0)) * BLOCK_SIZE,
               color};
@@ -112,7 +112,7 @@ void Chunk::AddTopSide(int x, int y, int z) {
 }
 
 void Chunk::AddBottomSide(int x, int y, int z) {
-    glm::vec3 color = Utils::GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 1)) * BLOCK_SIZE,
               color};
@@ -128,7 +128,7 @@ void Chunk::AddBottomSide(int x, int y, int z) {
 }
 
 void Chunk::AddFrontSide(int x, int y, int z) {
-    glm::vec3 color = Utils::GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 0)) * BLOCK_SIZE,
               color};
@@ -144,7 +144,7 @@ void Chunk::AddFrontSide(int x, int y, int z) {
 }
 
 void Chunk::AddBackSide(int x, int y, int z) {
-    glm::vec3 color = Utils::GetBlockColor(chunkData[x][y][z]);
+    glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 1, 1)) * BLOCK_SIZE,
               color};

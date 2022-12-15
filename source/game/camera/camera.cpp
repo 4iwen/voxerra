@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "camera.h"
 
 Camera::Camera(GLFWwindow* window, glm::vec3 position, float fov, float near, float far)
 {
@@ -19,7 +19,6 @@ void Camera::Update()
     view = glm::lookAt(position, position + front, up);
     projection = glm::perspective(glm::radians(fov),  (float)windowWidth / (float)windowHeight, nearPlane, farPlane);
     model = glm::mat4(1.0f);
-    //viewMatrix = projection * view * model;
 }
 
 void Camera::ProcessMouseInputs()

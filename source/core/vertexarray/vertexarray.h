@@ -5,10 +5,10 @@
 class VertexArray
 {
 public:
-    unsigned int ID;
+    unsigned int id;
 
     VertexArray();
     ~VertexArray();
-    void Bind();
-    void Unbind();
+    void bind();
+    void unbind();
 };

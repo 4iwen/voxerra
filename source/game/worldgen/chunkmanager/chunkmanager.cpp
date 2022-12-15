@@ -1,4 +1,4 @@
-#include "ChunkManager.h"
+#include "chunkmanager.h"
 
 #define CHUNK_SIZE 32
 #define CHUNK_HEIGHT 512
@@ -14,53 +14,53 @@ ChunkManager::ChunkManager(int worldSeed) {
 }
 
 ChunkManager::~ChunkManager() {
-    for (auto &chunk : chunks) {
+    for (auto &chunk: m_chunks) {
         delete chunk;
     }
 
-    chunks.clear();
+    m_chunks.clear();
 }
 
-void ChunkManager::Update(int playerX, int playerZ, int renderDistance) {
+void ChunkManager::update(int playerX, int playerZ, int renderDistance) {
     int playerChunkX = playerX / CHUNK_SIZE;
     int playerChunkZ = playerZ / CHUNK_SIZE;
 
-    // delete chunks that out of the render distance
-    for (int i = 0; i < chunks.size(); i++) {
-        int chunkX = chunks[i]->chunkX;
-        int chunkZ = chunks[i]->chunkZ;
+    // delete m_chunks that out of the render distance
+    for (int i = 0; i < m_chunks.size(); i++) {
+        int chunkX = m_chunks[i]->chunkX;
+        int chunkZ = m_chunks[i]->chunkZ;
         if (abs(chunkX - playerChunkX) > renderDistance || abs(chunkZ - playerChunkZ) > renderDistance) {
-            delete chunks[i];
-            chunks.erase(chunks.begin() + i);
+            delete m_chunks[i];
+            m_chunks.erase(m_chunks.begin() + i);
         }
     }
 
-    // generate chunks that are in the render distance
+    // generate m_chunks that are in the render distance
     for (int x = playerChunkX - renderDistance; x < playerChunkX + renderDistance; x++) {
         for (int z = playerChunkZ - renderDistance; z < playerChunkZ + renderDistance; z++) {
             bool chunkExists = false;
-            for (int i = 0; i < chunks.size(); i++) {
-                if (chunks[i]->chunkX == x && chunks[i]->chunkZ == z) {
+            for (int i = 0; i < m_chunks.size(); i++) {
+                if (m_chunks[i]->chunkX == x && m_chunks[i]->chunkZ == z) {
                     chunkExists = true;
                     break;
                 }
             }
             if (!chunkExists) {
-                GenerateChunk(x, z);
+                generateChunk(x, z);
             }
         }
     }
 }
 
-void ChunkManager::Draw() {
-    for (int i = 0; i < chunks.size(); i++) {
-        chunks[i]->Draw();
+void ChunkManager::draw() {
+    for (int i = 0; i < m_chunks.size(); i++) {
+        m_chunks[i]->Draw();
     }
 }
 
-void ChunkManager::GenerateChunk(int x, int z) {
-    Chunk* chunk = new Chunk(x, z);
-    chunk->Generate();
+void ChunkManager::generateChunk(int x, int z) {
+    Chunk *chunk = new Chunk(x, z);
+    chunk->generate();
     chunk->GenerateVerticesAndIndices();
-    chunks.push_back(chunk);
+    m_chunks.push_back(chunk);
 }

@@ -1,4 +1,4 @@
-// dear debuggui: Renderer Backend for modern OpenGL with shaders / programmatic pipeline
+// dear gui: Renderer Backend for modern OpenGL with shaders / programmatic pipeline
 // - Desktop GL: 2.x 3.x 4.x
 // - Embedded GL: ES 2.0 (WebGL 1.0), ES 3.0 (WebGL 2.0)
 // This needs to be used along with a Platform Backend (e.g. GLFW, SDL, Win32, custom..)
@@ -9,8 +9,8 @@
 //  [x] Renderer: Large meshes support (64k+ vertices) with 16-bit indices (Desktop OpenGL only).
 
 // You can use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
-// Prefer including the entire debuggui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
-// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of debuggui.cpp.
+// Prefer including the entire gui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
+// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of gui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
 // CHANGELOG
@@ -396,7 +396,7 @@ static void ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* draw_data, int fb_wid
 #endif
 
     // Setup viewport, orthographic projection matrix
-    // Our visible debuggui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right). DisplayPos is (0,0) for single viewport apps.
+    // Our visible gui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right). DisplayPos is (0,0) for single viewport apps.
     GL_CALL(glViewport(0, 0, (GLsizei)fb_width, (GLsizei)fb_height));
     float L = draw_data->DisplayPos.x;
     float R = draw_data->DisplayPos.x + draw_data->DisplaySize.x;
@@ -557,7 +557,7 @@ void    ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
                 // Apply scissor/clipping rectangle (Y is inverted in OpenGL)
                 GL_CALL(glScissor((int)clip_min.x, (int)((float)fb_height - clip_max.y), (int)(clip_max.x - clip_min.x), (int)(clip_max.y - clip_min.y)));
 
-                // Bind texture, Draw
+                // Bind texture, draw
                 GL_CALL(glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->GetTexID()));
 #ifdef IMGUI_IMPL_OPENGL_MAY_HAVE_VTX_OFFSET
                 if (bd->GlVersion >= 320)
@@ -893,7 +893,7 @@ void    ImGui_ImplOpenGL3_DestroyDeviceObjects()
 //--------------------------------------------------------------------------------------------------------
 // MULTI-VIEWPORT / PLATFORM INTERFACE SUPPORT
 // This is an _advanced_ and _optional_ feature, allowing the backend to create and handle multiple viewports simultaneously.
-// If you are new to dear debuggui or creating a new binding for dear debuggui, it is recommended that you completely ignore this section first..
+// If you are new to dear gui or creating a new binding for dear gui, it is recommended that you completely ignore this section first..
 //--------------------------------------------------------------------------------------------------------
 
 static void ImGui_ImplOpenGL3_RenderWindow(ImGuiViewport* viewport, void*)

@@ -428,7 +428,7 @@ int main(int arg, char **argv)
 ////   link with the C runtime library.
 
 #ifdef STB_TRUETYPE_IMPLEMENTATION
-   // #define your own (u)stbtt_int8/16/32 before including to override this
+   // #define your own (update)stbtt_int8/16/32 before including to override this
    #ifndef stbtt_uint8
    typedef unsigned char   stbtt_uint8;
    typedef signed   char   stbtt_int8;
@@ -474,7 +474,7 @@ int main(int arg, char **argv)
    #ifndef STBTT_malloc
    #include <stdlib.h>
    #define STBTT_malloc(x,u)  ((void)(u),malloc(x))
-   #define STBTT_free(x,u)    ((void)(u),free(x))
+   #define STBTT_free(x,u)    ((void)(update),free(x))
    #endif
 
    #ifndef STBTT_assert

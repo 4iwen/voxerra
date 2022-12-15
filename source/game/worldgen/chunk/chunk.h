@@ -1,18 +1,18 @@
 #include "vector"
 #include "FastNoiseLite/FastNoiseLite.h"
-#include "../../block/BlockType.h"
-#include "../../../core/utils/Utils.h"
+#include "../../block/blocktype.h"
+#include "../../../core/utils/utils.h"
 #include "../mesh/Vertex.h"
-#include "../../../core/VertexArray.h"
-#include "../../../core/VertexBuffer.h"
-#include "../../../core/ElementBuffer.h"
+#include "../../../core/vertexarray/vertexarray.h"
+#include "../../../core/vertexbuffer/vertexbuffer.h"
+#include "../../../core/elementbuffer/elementbuffer.h"
 #include "../mesh/Mesh.h"
 
 class Chunk {
 public:
     Chunk(int x, int z);
 
-    void Generate();
+    void generate();
 
     void GenerateVerticesAndIndices();
 

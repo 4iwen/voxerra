@@ -9,8 +9,3 @@ enum BlockType
     SAND,
     WATER
 };
-
-struct BlockColor
-{
-    float r, g, b;
-};

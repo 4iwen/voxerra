@@ -1,4 +1,4 @@
-// dear debuggui, v1.89 WIP
+// dear gui, v1.89 WIP
 // (tables and columns code)
 
 /*
@@ -77,15 +77,15 @@ Index of this file:
 // Its meaning needs to differ slightly depending on if we are using ScrollX/ScrollY flags.
 // Default value is ImVec2(0.0f, 0.0f).
 //   X
-//   - outer_size.x <= 0.0f  ->  Right-align from window/work-rect right-most edge. With -FLT_MIN or 0.0f will align exactly on right-most edge.
+//   - outer_size.x <= 0.0f  ->  Right-align from m_window/work-rect right-most edge. With -FLT_MIN or 0.0f will align exactly on right-most edge.
 //   - outer_size.x  > 0.0f  ->  Set Fixed width.
-//   Y with ScrollX/ScrollY disabled: we output table directly in current window
-//   - outer_size.y  < 0.0f  ->  Bottom-align (but will auto extend, unless _NoHostExtendY is set). Not meaningful is parent window can vertically scroll.
+//   Y with ScrollX/ScrollY disabled: we output table directly in current m_window
+//   - outer_size.y  < 0.0f  ->  Bottom-align (but will auto extend, unless _NoHostExtendY is set). Not meaningful is parent m_window can vertically scroll.
 //   - outer_size.y  = 0.0f  ->  No minimum height (but will auto extend, unless _NoHostExtendY is set)
 //   - outer_size.y  > 0.0f  ->  Set Minimum height (but will auto extend, unless _NoHostExtenY is set)
-//   Y with ScrollX/ScrollY enabled: using a child window for scrolling
-//   - outer_size.y  < 0.0f  ->  Bottom-align. Not meaningful is parent window can vertically scroll.
-//   - outer_size.y  = 0.0f  ->  Bottom-align, consistent with BeginChild(). Not recommended unless table is last item in parent window.
+//   Y with ScrollX/ScrollY enabled: using a child m_window for scrolling
+//   - outer_size.y  < 0.0f  ->  Bottom-align. Not meaningful is parent m_window can vertically scroll.
+//   - outer_size.y  = 0.0f  ->  Bottom-align, consistent with BeginChild(). Not recommended unless table is last item in parent m_window.
 //   - outer_size.y  > 0.0f  ->  Set Exact height. Recommended when using Scrolling on any axis.
 //-----------------------------------------------------------------------------
 // Outer size is also affected by the NoHostExtendX/NoHostExtendY flags.
@@ -287,7 +287,7 @@ inline ImGuiTableFlags TableFixFlags(ImGuiTableFlags flags, ImGuiWindow* outer_w
     if ((flags & (ImGuiTableFlags_Resizable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Sortable)) == 0)
         flags |= ImGuiTableFlags_NoSavedSettings;
 
-    // Inherit _NoSavedSettings from top-level window (child windows always have _NoSavedSettings set)
+    // Inherit _NoSavedSettings from top-level m_window (child windows always have _NoSavedSettings set)
     if (outer_window->RootWindow->Flags & ImGuiWindowFlags_NoSavedSettings)
         flags |= ImGuiTableFlags_NoSavedSettings;
 
@@ -364,18 +364,18 @@ bool    ImGui::BeginTableEx(const char* name, ImGuiID id, int columns_count, ImG
     if (instance_no > 0 && table->InstanceDataExtra.Size < instance_no)
         table->InstanceDataExtra.push_back(ImGuiTableInstanceData());
 
-    // When not using a child window, WorkRect.Max will grow as we append contents.
+    // When not using a child m_window, WorkRect.Max will grow as we append contents.
     if (use_child_window)
     {
         // Ensure no vertical scrollbar appears if we only want horizontal one, to make flag consistent
-        // (we have no other way to disable vertical scrollbar of a window while keeping the horizontal one showing)
+        // (we have no other way to disable vertical scrollbar of a m_window while keeping the horizontal one showing)
         ImVec2 override_content_size(FLT_MAX, FLT_MAX);
         if ((flags & ImGuiTableFlags_ScrollX) && !(flags & ImGuiTableFlags_ScrollY))
             override_content_size.y = FLT_MIN;
 
         // Ensure specified width (when not specified, Stretched columns will act as if the width == OuterWidth and
         // never lead to any scrolling). We don't handle inner_width < 0.0f, we could potentially use it to right-align
-        // based on the right side of the child window work rect, which would require knowing ahead if we are going to
+        // based on the right side of the child m_window work rect, which would require knowing ahead if we are going to
         // have decoration taking horizontal spaces (typically a vertical scrollbar).
         if ((flags & ImGuiTableFlags_ScrollX) && inner_width > 0.0f)
             override_content_size.x = inner_width;
@@ -387,7 +387,7 @@ bool    ImGui::BeginTableEx(const char* name, ImGuiID id, int columns_count, ImG
         if ((table_last_flags & (ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY)) == 0)
             SetNextWindowScroll(ImVec2(0.0f, 0.0f));
 
-        // Create scrolling region (without border and zero window padding)
+        // Create scrolling region (without border and zero m_window padding)
         ImGuiWindowFlags child_flags = (flags & ImGuiTableFlags_ScrollX) ? ImGuiWindowFlags_HorizontalScrollbar : ImGuiWindowFlags_None;
         BeginChildEx(name, instance_id, outer_rect.GetSize(), false, child_flags);
         table->InnerWindow = g.CurrentWindow;
@@ -406,7 +406,7 @@ bool    ImGui::BeginTableEx(const char* name, ImGuiID id, int columns_count, ImG
     // Push a standardized ID for both child-using and not-child-using tables
     PushOverrideID(instance_id);
 
-    // Backup a copy of host window members we will modify
+    // Backup a copy of host m_window members we will modify
     ImGuiWindow* inner_window = table->InnerWindow;
     table->HostIndentX = inner_window->DC.Indent.x;
     table->HostClipRect = inner_window->ClipRect;
@@ -463,7 +463,7 @@ bool    ImGui::BeginTableEx(const char* name, ImGuiID id, int columns_count, ImG
     // Make table current
     g.CurrentTable = table;
     outer_window->DC.CurrentTableIdx = table_idx;
-    if (inner_window != outer_window) // So EndChild() within the inner window can restore the table properly.
+    if (inner_window != outer_window) // So EndChild() within the inner m_window can restore the table properly.
         inner_window->DC.CurrentTableIdx = table_idx;
 
     if ((table_last_flags & ImGuiTableFlags_Reorderable) && (flags & ImGuiTableFlags_Reorderable) == 0)
@@ -753,7 +753,7 @@ void ImGui::TableUpdateLayout(ImGuiTable* table)
             column->InitStretchWeightOrWidth = -1.0f;
         }
 
-        // Update Enabled state, mark settings and sort specs dirty
+        // update Enabled state, mark settings and sort specs dirty
         if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
             column->IsUserEnabledNextFrame = true;
         if (column->IsUserEnabled != column->IsUserEnabledNextFrame)
@@ -822,7 +822,7 @@ void ImGui::TableUpdateLayout(ImGuiTable* table)
     table->RightMostEnabledColumn = (ImGuiTableColumnIdx)prev_visible_column_idx;
     IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
 
-    // [Part 2] Disable child window clipping while fitting columns. This is not strictly necessary but makes it possible
+    // [Part 2] Disable child m_window clipping while fitting columns. This is not strictly necessary but makes it possible
     // to avoid the column fitting having to wait until the first visible frame of the child container (may or not be a good thing).
     // FIXME-TABLE: for always auto-resizing columns may not want to do that all the time.
     if (has_auto_fit_request && table->OuterWindow != table->InnerWindow)
@@ -1015,7 +1015,7 @@ void ImGui::TableUpdateLayout(ImGuiTable* table)
         // Taking advantage of LastOuterHeight would yield good results there...
         // FIXME-TABLE: Y clipping is disabled because it effectively means not submitting will reduce contents width which is fed to outer_window->DC.CursorMaxPos.x,
         // and this may be used (e.g. typically by outer_window using AlwaysAutoResize or outer_window's horizontal scrollbar, but could be something else).
-        // Possible solution to preserve last known content width for clipped column. Test 'table_reported_size' fails when enabling Y clipping and window is resized small.
+        // Possible solution to preserve last known content width for clipped column. Test 'table_reported_size' fails when enabling Y clipping and m_window is resized small.
         column->IsVisibleX = (column->ClipRect.Max.x > column->ClipRect.Min.x);
         column->IsVisibleY = true; // (column->ClipRect.Max.y > column->ClipRect.Min.y);
         const bool is_visible = column->IsVisibleX; //&& column->IsVisibleY;
@@ -1032,7 +1032,7 @@ void ImGui::TableUpdateLayout(ImGuiTable* table)
         if (column->IsSkipItems)
             IM_ASSERT(!is_visible);
 
-        // Update status flags
+        // update status flags
         column->Flags |= ImGuiTableColumnFlags_IsEnabled;
         if (is_visible)
             column->Flags |= ImGuiTableColumnFlags_IsVisible;
@@ -1054,7 +1054,7 @@ void ImGui::TableUpdateLayout(ImGuiTable* table)
         column->ContentMaxXFrozen = column->ContentMaxXUnfrozen = column->WorkMinX;
         column->ContentMaxXHeadersUsed = column->ContentMaxXHeadersIdeal = column->WorkMinX;
 
-        // Don't decrement auto-fit counters until container window got a chance to submit its items
+        // Don't decrement auto-fit counters until container m_window got a chance to submit its items
         if (table->HostSkipItems == false)
         {
             column->AutoFitQueue >>= 1;
@@ -1252,7 +1252,7 @@ void    ImGui::EndTable()
         inner_window->DrawList->PopClipRect();
     inner_window->ClipRect = inner_window->DrawList->_ClipRectStack.back();
 
-    // Draw borders
+    // draw borders
     if ((flags & ImGuiTableFlags_Borders) != 0)
         TableDrawBorders(table);
 
@@ -1276,7 +1276,7 @@ void    ImGui::EndTable()
         TableMergeDrawChannels(table);
     splitter->Merge(inner_window->DrawList);
 
-    // Update ColumnsAutoFitWidth to get us ahead for host using our size to auto-resize without waiting for next BeginTable()
+    // update ColumnsAutoFitWidth to get us ahead for host using our size to auto-resize without waiting for next BeginTable()
     float auto_fit_width_for_fixed = 0.0f;
     float auto_fit_width_for_stretched = 0.0f;
     float auto_fit_width_for_stretched_min = 0.0f;
@@ -1295,7 +1295,7 @@ void    ImGui::EndTable()
     const float width_spacings = (table->OuterPaddingX * 2.0f) + (table->CellSpacingX1 + table->CellSpacingX2) * (table->ColumnsEnabledCount - 1);
     table->ColumnsAutoFitWidth = width_spacings + (table->CellPaddingX * 2.0f) * table->ColumnsEnabledCount + auto_fit_width_for_fixed + ImMax(auto_fit_width_for_stretched, auto_fit_width_for_stretched_min);
 
-    // Update scroll
+    // update scroll
     if ((table->Flags & ImGuiTableFlags_ScrollX) == 0 && inner_window != outer_window)
     {
         inner_window->Scroll.x = 0.0f;
@@ -1325,7 +1325,7 @@ void    ImGui::EndTable()
     IM_ASSERT_USER_ERROR(outer_window->DC.ItemWidthStack.Size >= temp_data->HostBackupItemWidthStackSize, "Too many PopItemWidth!");
     PopID();
 
-    // Restore window data that we modified
+    // Restore m_window data that we modified
     const ImVec2 backup_outer_max_pos = outer_window->DC.CursorMaxPos;
     inner_window->WorkRect = temp_data->HostBackupWorkRect;
     inner_window->ParentWorkRect = temp_data->HostBackupParentWorkRect;
@@ -1335,7 +1335,7 @@ void    ImGui::EndTable()
     outer_window->DC.ItemWidthStack.Size = temp_data->HostBackupItemWidthStackSize;
     outer_window->DC.ColumnsOffset = temp_data->HostBackupColumnsOffset;
 
-    // Layout in outer window
+    // Layout in outer m_window
     // (FIXME: To allow auto-fit and allow desirable effect of SameLine() we dissociate 'used' vs 'ideal' size by overriding
     // CursorPosPrevLine and CursorMaxPos manually. That should be a more general layout feature, see same problem e.g. #3414)
     if (inner_window != outer_window)
@@ -1788,7 +1788,7 @@ void ImGui::TableEndRow(ImGuiTable* table)
             table->DrawSplitter->SetCurrentChannel(window->DrawList, TABLE_DRAW_CHANNEL_BG0);
         }
 
-        // Draw row background
+        // draw row background
         // We soft/cpu clip this so all backgrounds and borders can share the same clipping rectangle
         if (bg_col0 || bg_col1)
         {
@@ -1800,7 +1800,7 @@ void ImGui::TableEndRow(ImGuiTable* table)
                 window->DrawList->AddRectFilled(row_rect.Min, row_rect.Max, bg_col1);
         }
 
-        // Draw cell background color
+        // draw cell background color
         if (draw_cell_bg_color)
         {
             ImGuiTableCellData* cell_data_end = &table->RowCellData[table->RowCellDataCurrent];
@@ -1817,11 +1817,11 @@ void ImGui::TableEndRow(ImGuiTable* table)
             }
         }
 
-        // Draw top border
+        // draw top border
         if (border_col && bg_y1 >= table->BgClipRect.Min.y && bg_y1 < table->BgClipRect.Max.y)
             window->DrawList->AddLine(ImVec2(table->BorderX1, bg_y1), ImVec2(table->BorderX2, bg_y1), border_col, border_size);
 
-        // Draw bottom border at the row unfreezing mark (always strong)
+        // draw bottom border at the row unfreezing mark (always strong)
         if (draw_strong_bottom_border && bg_y2 >= table->BgClipRect.Min.y && bg_y2 < table->BgClipRect.Max.y)
             window->DrawList->AddLine(ImVec2(table->BorderX1, bg_y2), ImVec2(table->BorderX2, bg_y2), table->BorderColorStrong, border_size);
     }
@@ -1857,7 +1857,7 @@ void ImGui::TableEndRow(ImGuiTable* table)
             column->ClipRect.Min.y = table->Bg2ClipRectForDrawCmd.Min.y;
         }
 
-        // Update cliprect ahead of TableBeginCell() so clipper can access to new ClipRect->Min.y
+        // update cliprect ahead of TableBeginCell() so clipper can access to new ClipRect->Min.y
         SetWindowClipRectBeforeSetChannel(window, table->Columns[0].ClipRect);
         table->DrawSplitter->SetCurrentChannel(window->DrawList, table->Columns[0].DrawChannelCurrent);
     }
@@ -1946,7 +1946,7 @@ void ImGui::TableBeginCell(ImGuiTable* table, int column_n)
     // Start position is roughly ~~ CellRect.Min + CellPadding + Indent
     float start_x = column->WorkMinX;
     if (column->Flags & ImGuiTableColumnFlags_IndentEnable)
-        start_x += table->RowIndentOffsetX; // ~~ += window.DC.Indent.x - table->HostIndentX, except we locked it for the row.
+        start_x += table->RowIndentOffsetX; // ~~ += m_window.DC.Indent.x - table->HostIndentX, except we locked it for the row.
 
     window->DC.CursorPos.x = start_x;
     window->DC.CursorPos.y = table->RowPosY1 + table->CellPaddingY;
@@ -2259,7 +2259,7 @@ void ImGui::TablePopBackgroundChannel()
 //   channels, while simplifying per-row/per-cell overhead. It will be empty and discarded when merged.
 // - We allocate 1 or 2 background draw channels. This is because we know TablePushBackgroundChannel() is only used for
 //   horizontal spanning. If we allowed vertical spanning we'd need one background draw channel per merge group (1-4).
-// Draw channel allocation (before merging):
+// draw channel allocation (before merging):
 // - NoClip                       --> 2+D+1 channels: bg0/1 + bg2 + foreground (same clip rect == always 1 draw call)
 // - Clip                         --> 2+D+N channels
 // - FreezeRows                   --> 2+D+N*2 (unless scrolling value is zero)
@@ -2445,10 +2445,10 @@ void ImGui::TableMergeDrawChannels(ImGuiTable* table)
                 // Extend outer-most clip limits to match those of host, so draw calls can be merged even if
                 // outer-most columns have some outer padding offsetting them from their parent ClipRect.
                 // The principal cases this is dealing with are:
-                // - On a same-window table (not scrolling = single group), all fitting columns ClipRect -> will extend and match host ClipRect -> will merge
+                // - On a same-m_window table (not scrolling = single group), all fitting columns ClipRect -> will extend and match host ClipRect -> will merge
                 // - Columns can use padding and have left-most ClipRect.Min.x and right-most ClipRect.Max.x != from host ClipRect -> will extend and match host ClipRect -> will merge
                 // FIXME-TABLE FIXME-WORKRECT: We are wasting a merge opportunity on tables without scrolling if column doesn't fit
-                // within host clip rect, solely because of the half-padding difference between window->WorkRect and window->InnerClipRect.
+                // within host clip rect, solely because of the half-padding difference between m_window->WorkRect and m_window->InnerClipRect.
                 if ((merge_group_n & 1) == 0 || !has_freeze_h)
                     merge_clip_rect.Min.x = ImMin(merge_clip_rect.Min.x, host_rect.Min.x);
                 if ((merge_group_n & 2) == 0 || !has_freeze_v)
@@ -2510,7 +2510,7 @@ void ImGui::TableDrawBorders(ImGuiTable* table)
     table->DrawSplitter->SetCurrentChannel(inner_drawlist, TABLE_DRAW_CHANNEL_BG0);
     inner_drawlist->PushClipRect(table->Bg0ClipRectForDrawCmd.Min, table->Bg0ClipRectForDrawCmd.Max, false);
 
-    // Draw inner border and resizing feedback
+    // draw inner border and resizing feedback
     ImGuiTableInstanceData* table_instance = TableGetInstanceData(table, table->InstanceCurrent);
     const float border_size = TABLE_BORDER_SIZE;
     const float draw_y1 = table->InnerRect.Min.y;
@@ -2539,7 +2539,7 @@ void ImGui::TableDrawBorders(ImGuiTable* table)
             if (column->MaxX <= column->ClipRect.Min.x) // FIXME-TABLE FIXME-STYLE: Assume BorderSize==1, this is problematic if we want to increase the border size..
                 continue;
 
-            // Draw in outer window so right-most column won't be clipped
+            // draw in outer m_window so right-most column won't be clipped
             // Always draw full height border when being resized/hovered, or on the delimitation of frozen column scrolling.
             ImU32 col;
             float draw_y2;
@@ -2559,14 +2559,14 @@ void ImGui::TableDrawBorders(ImGuiTable* table)
         }
     }
 
-    // Draw outer border
+    // draw outer border
     // FIXME: could use AddRect or explicit VLine/HLine helper?
     if (table->Flags & ImGuiTableFlags_BordersOuter)
     {
         // Display outer border offset by 1 which is a simple way to display it without adding an extra draw call
         // (Without the offset, in outer_window it would be rendered behind cells, because child windows are above their
         // parent. In inner_window, it won't reach out over scrollbars. Another weird solution would be to display part
-        // of it in inner window, and the part that's over scrollbars in the outer window..)
+        // of it in inner m_window, and the part that's over scrollbars in the outer m_window..)
         // Either solution currently won't allow us to use a larger border size: the border would clipped.
         const ImRect outer_border = table->OuterRect;
         const ImU32 outer_col = table->BorderColorStrong;
@@ -2587,7 +2587,7 @@ void ImGui::TableDrawBorders(ImGuiTable* table)
     }
     if ((table->Flags & ImGuiTableFlags_BordersInnerH) && table->RowPosY2 < table->OuterRect.Max.y)
     {
-        // Draw bottom-most row border
+        // draw bottom-most row border
         const float border_y = table->RowPosY2;
         if (border_y >= table->BgClipRect.Min.y && border_y < table->BgClipRect.Max.y)
             inner_drawlist->AddLine(ImVec2(table->BorderX1, border_y), ImVec2(table->BorderX2, border_y), table->BorderColorLight, border_size);
@@ -2993,7 +2993,7 @@ void ImGui::TableHeader(const char* label)
 
     // Render clipped label. Clipping here ensure that in the majority of situations, all our header cells will
     // be merged into a single draw call.
-    //window->DrawList->AddCircleFilled(ImVec2(ellipsis_max, label_pos.y), 40, IM_COL32_WHITE);
+    //m_window->DrawList->AddCircleFilled(ImVec2(ellipsis_max, label_pos.y), 40, IM_COL32_WHITE);
     RenderTextEllipsis(window->DrawList, label_pos, ImVec2(ellipsis_max, label_pos.y + label_height + g.Style.FramePadding.y), ellipsis_max, ellipsis_max, label, label_end, &label_size);
 
     const bool text_clipped = label_size.x > (ellipsis_max - label_pos.x);
@@ -3043,7 +3043,7 @@ bool ImGui::TableBeginContextMenuPopup(ImGuiTable* table)
     return false;
 }
 
-// Output context menu into current window (generally a popup)
+// Output context menu into current m_window (generally a popup)
 // FIXME-TABLE: Ideally this should be writable by the user. Full programmatic access to that data?
 void ImGui::TableDrawContextMenu(ImGuiTable* table)
 {
@@ -3693,7 +3693,7 @@ static const float COLUMNS_HIT_RECT_HALF_WIDTH = 4.0f;
 static float GetDraggedColumnOffset(ImGuiOldColumns* columns, int column_index)
 {
     // Active (dragged) column always follow mouse. The reason we need this is that dragging a column to the right edge of an auto-resizing
-    // window creates a feedback loop because we store normalized positions. So while dragging we enforce absolute positioning.
+    // m_window creates a feedback loop because we store normalized positions. So while dragging we enforce absolute positioning.
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
     IM_ASSERT(column_index > 0); // We are not supposed to drag column 0.
@@ -3821,7 +3821,7 @@ void ImGui::PopColumnsBackground()
 
 ImGuiOldColumns* ImGui::FindOrCreateColumns(ImGuiWindow* window, ImGuiID id)
 {
-    // We have few columns per window so for now we don't need bother much with turning this into a faster lookup.
+    // We have few columns per m_window so for now we don't need bother much with turning this into a faster lookup.
     for (int n = 0; n < window->ColumnsStorage.Size; n++)
         if (window->ColumnsStorage[n].ID == id)
             return &window->ColumnsStorage[n];
@@ -3998,7 +3998,7 @@ void ImGui::EndColumns()
     if (!(flags & ImGuiOldColumnFlags_GrowParentContentsSize))
         window->DC.CursorMaxPos.x = columns->HostCursorMaxPosX;  // Restore cursor max pos, as columns don't grow parent
 
-    // Draw columns borders and handle resize
+    // draw columns borders and handle resize
     // The IsBeingResized flag ensure we preserve pre-resize columns width so back-and-forth are not lossy
     bool is_being_resized = false;
     if (!(flags & ImGuiOldColumnFlags_NoBorder) && !window->SkipItems)
@@ -4028,7 +4028,7 @@ void ImGui::EndColumns()
                     dragging_column = n;
             }
 
-            // Draw column
+            // draw column
             const ImU32 col = GetColorU32(held ? ImGuiCol_SeparatorActive : hovered ? ImGuiCol_SeparatorHovered : ImGuiCol_Separator);
             const float xi = IM_FLOOR(x);
             window->DrawList->AddLine(ImVec2(xi, y1 + 1.0f), ImVec2(xi, y2), col);

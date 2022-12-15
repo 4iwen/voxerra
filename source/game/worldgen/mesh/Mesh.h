@@ -1,8 +1,8 @@
 #include "vector"
 #include "Vertex.h"
-#include "../../../core/ElementBuffer.h"
-#include "../../../core/VertexArray.h"
-#include "../../../core/VertexBuffer.h"
+#include "../../../core/elementbuffer/elementbuffer.h"
+#include "../../../core/vertexarray/vertexarray.h"
+#include "../../../core/vertexbuffer/vertexbuffer.h"
 
 class Mesh {
 public:

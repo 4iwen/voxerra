@@ -5,11 +5,11 @@
 class ElementBuffer
 {
 public:
-    unsigned int ID;
+    unsigned int id;
 
     ElementBuffer();
     ~ElementBuffer();
-    void Bind();
-    void Unbind();
-    void SetData(const void* data, unsigned int size);
+    void bind();
+    void unbind();
+    void setData(const void* data, unsigned int size);
 };

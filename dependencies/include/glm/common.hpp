@@ -303,7 +303,7 @@ namespace glm
 	/// glm::vec4 r = glm::mix(g, h, a); // Interpolate with a floating-point scalar two vectors.
 	/// glm::vec4 s = glm::mix(g, h, b); // Returns g or h;
 	/// glm::dvec3 t = glm::mix(e, f, a); // Types of the third parameter is not required to match with the first and the second.
-	/// glm::vec4 u = glm::mix(g, h, r); // Interpolations can be perform per component with a vector for the last parameter.
+	/// glm::vec4 update = glm::mix(g, h, r); // Interpolations can be perform per component with a vector for the last parameter.
 	/// @endcode
 	template<typename genTypeT, typename genTypeU>
 	GLM_FUNC_DECL genTypeT mix(genTypeT x, genTypeT y, genTypeU a);

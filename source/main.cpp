@@ -1,7 +1,7 @@
-#include "core/application/Application.h"
+#include "core/application/application.h"
 
 int main() {
     Application application;
-    application.Run();
+    application.run();
     return EXIT_SUCCESS;
 }

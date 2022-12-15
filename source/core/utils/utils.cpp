@@ -1,10 +1,6 @@
-#include "Utils.h"
+#include "utils.h"
 
-float Utils::RandomRangeF(float min, float max)  {
-    return min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
-}
-
-glm::vec3 Utils::GetBlockColor(BlockType type)  {
+glm::vec3 Utils::getBlockColor(BlockType type)  {
     switch (type) {
         case BlockType::GRASS:
             return {0.0f, 1.0f, 0.0f};

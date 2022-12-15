@@ -8,21 +8,21 @@ set(CMAKE_CXX_FLAGS "-static-libgcc -static-libstdc++ -static")
 set(CORE
         dependencies/source/glad/glad.c
         source/main.cpp
-        source/core/VertexArray.cpp
-        source/core/VertexBuffer.cpp
-        source/core/ElementBuffer.cpp
-        source/core/Shader.cpp
-        source/core/Shader.cpp
-        source/core/debuggui/DebugGui.cpp
-        source/core/utils/Utils.cpp
-        source/core/application/Application.cpp
-        source/core/window/Window.cpp)
+        source/core/vertexarray/vertexarray.cpp
+        source/core/vertexbuffer/vertexbuffer.cpp
+        source/core/elementbuffer/elementbuffer.cpp
+        source/core/shader/shader.cpp
+        source/core/shader/shader.cpp
+        source/core/gui/gui.cpp
+        source/core/utils/utils.cpp
+        source/core/application/application.cpp
+        source/core/window/window.cpp)
 
 # get game source files
 set(GAME
-        source/game/camera/Camera.cpp
-        source/game/worldgen/chunk/Chunk.cpp
-        source/game/worldgen/chunkmanager/ChunkManager.cpp
+        source/game/camera/camera.cpp
+        source/game/worldgen/chunk/chunk.cpp
+        source/game/worldgen/chunkmanager/chunkmanager.cpp
         source/game/worldgen/mesh/Mesh.cpp)
 
 # get util source files

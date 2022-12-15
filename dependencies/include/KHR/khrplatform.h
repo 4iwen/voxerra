@@ -156,7 +156,7 @@ typedef uint64_t                khronos_uint64_t;
 /*
  * To support platform where unsigned long cannot be used interchangeably with
  * inptr_t (e.g. CHERI-extended ISAs), we can use the stdint.h intptr_t.
- * Ideally, we could just use (u)intptr_t everywhere, but this could result in
+ * Ideally, we could just use (update)intptr_t everywhere, but this could result in
  * ABI breakage if khronos_uintptr_t is changed from unsigned long to
  * unsigned long long or similar (this results in different C++ name mangling).
  * To avoid changes for existing platforms, we restrict usage of intptr_t to

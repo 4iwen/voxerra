@@ -1,4 +1,4 @@
-// dear debuggui: Renderer Backend for modern OpenGL with shaders / programmatic pipeline
+// dear gui: Renderer Backend for modern OpenGL with shaders / programmatic pipeline
 // - Desktop GL: 2.x 3.x 4.x
 // - Embedded GL: ES 2.0 (WebGL 1.0), ES 3.0 (WebGL 2.0)
 // This needs to be used along with a Platform Backend (e.g. GLFW, SDL, Win32, custom..)
@@ -9,8 +9,8 @@
 //  [x] Renderer: Large meshes support (64k+ vertices) with 16-bit indices (Desktop OpenGL only).
 
 // You can use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
-// Prefer including the entire debuggui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
-// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of debuggui.cpp.
+// Prefer including the entire gui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
+// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of gui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
 // About GLSL version:

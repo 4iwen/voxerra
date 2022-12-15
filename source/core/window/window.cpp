@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "window.h"
 
 Window::Window(int windowWidth, int windowHeight, const char *windowName) {
     // initialize glfw
@@ -6,13 +6,13 @@ Window::Window(int windowWidth, int windowHeight, const char *windowName) {
         return;
     }
 
-    // set window hints
+    // set m_window hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
-    // create window
+    // create m_window
     window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
     if (window == nullptr) {
         glfwTerminate();
@@ -20,7 +20,7 @@ Window::Window(int windowWidth, int windowHeight, const char *windowName) {
     }
     glfwMakeContextCurrent(window);
 
-    // set window resize callback
+    // set m_window resize callback
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow *window, int width, int height) {
         glViewport(0, 0, width, height);
     });
@@ -96,22 +96,26 @@ Window::~Window() {
     glfwTerminate();
 }
 
-bool Window::ShouldClose() {
+bool Window::shouldClose() {
     return glfwWindowShouldClose(window);
 }
 
-void Window::SwapBuffers() {
+void Window::swapBuffers() {
     glfwSwapBuffers(window);
 }
 
-void Window::PollEvents() {
+void Window::pollEvents() {
     glfwPollEvents();
 }
 
-void Window::Clear() {
+void Window::clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Window::SetClearColor(float r, float g, float b, float a) {
+void Window::setClearColor(float r, float g, float b, float a) {
     glClearColor(r, g, b, a);
+}
+
+void Window::setVsync(bool vsync) {
+    glfwSwapInterval(vsync);
 }
