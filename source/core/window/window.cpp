@@ -108,12 +108,9 @@ void Window::pollEvents() {
     glfwPollEvents();
 }
 
-void Window::clear() {
+void Window::clear(glm::vec3 color) {
+    glClearColor(color.x, color.y, color.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void Window::setClearColor(float r, float g, float b, float a) {
-    glClearColor(r, g, b, a);
 }
 
 void Window::setVsync(bool vsync) {

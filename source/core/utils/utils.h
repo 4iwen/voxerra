@@ -5,7 +5,7 @@
 #include "../../game/block/blocktype.h"
 
 namespace Utils {
-    static FastNoiseLite *s_noise;
+    static FastNoiseLite s_noise;
 
     glm::vec3 getBlockColor(BlockType type);
 }

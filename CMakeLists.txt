@@ -23,7 +23,7 @@ set(GAME
         source/game/camera/camera.cpp
         source/game/worldgen/chunk/chunk.cpp
         source/game/worldgen/chunkmanager/chunkmanager.cpp
-        source/game/worldgen/mesh/Mesh.cpp)
+        source/game/worldgen/mesh/mesh.cpp)
 
 # get util source files
 set(UTILS

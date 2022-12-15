@@ -3,6 +3,7 @@
 #include "iostream"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+#include "glm/vec3.hpp"
 
 class Window {
 
@@ -17,9 +18,7 @@ public:
 
     void pollEvents();
 
-    void clear();
-
-    void setClearColor(float r, float g, float b, float a);
+    void clear(glm::vec3 color);
 
     void setVsync(bool vsync);
 

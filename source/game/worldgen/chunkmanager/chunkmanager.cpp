@@ -5,12 +5,12 @@
 #define BLOCK_SIZE 1.0f
 
 ChunkManager::ChunkManager(int worldSeed) {
-    Utils::noise.SetSeed(worldSeed);
-    Utils::noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    Utils::noise.SetFrequency(0.01f);
-    Utils::noise.SetFractalOctaves(4);
-    Utils::noise.SetFractalLacunarity(2.0f);
-    Utils::noise.SetFractalGain(0.5f);
+    Utils::s_noise.SetSeed(worldSeed);
+    Utils::s_noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+    Utils::s_noise.SetFrequency(0.01f);
+    Utils::s_noise.SetFractalOctaves(4);
+    Utils::s_noise.SetFractalLacunarity(2.0f);
+    Utils::s_noise.SetFractalGain(0.5f);
 }
 
 ChunkManager::~ChunkManager() {
@@ -54,13 +54,13 @@ void ChunkManager::update(int playerX, int playerZ, int renderDistance) {
 
 void ChunkManager::draw() {
     for (int i = 0; i < m_chunks.size(); i++) {
-        m_chunks[i]->Draw();
+        m_chunks[i]->draw();
     }
 }
 
 void ChunkManager::generateChunk(int x, int z) {
     Chunk *chunk = new Chunk(x, z);
     chunk->generate();
-    chunk->GenerateVerticesAndIndices();
+    chunk->generateVerticesAndIndices();
     m_chunks.push_back(chunk);
 }

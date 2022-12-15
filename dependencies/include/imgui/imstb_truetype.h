@@ -160,7 +160,7 @@
 //         A visual character shape (every codepoint is rendered as
 //         some glyph)
 //
-//      Glyph indicesIndex
+//      Glyph index
 //         A font-specific integer ID representing a glyph
 //
 //      Baseline
@@ -428,7 +428,7 @@ int main(int arg, char **argv)
 ////   link with the C runtime library.
 
 #ifdef STB_TRUETYPE_IMPLEMENTATION
-   // #define your own (update)stbtt_int8/16/32 before including to override this
+   // #define your own (u)stbtt_int8/16/32 before including to override this
    #ifndef stbtt_uint8
    typedef unsigned char   stbtt_uint8;
    typedef signed   char   stbtt_int8;
@@ -474,7 +474,7 @@ int main(int arg, char **argv)
    #ifndef STBTT_malloc
    #include <stdlib.h>
    #define STBTT_malloc(x,u)  ((void)(u),malloc(x))
-   #define STBTT_free(x,u)    ((void)(update),free(x))
+   #define STBTT_free(x,u)    ((void)(u),free(x))
    #endif
 
    #ifndef STBTT_assert
@@ -703,15 +703,15 @@ STBTT_DEF int stbtt_GetNumberOfFonts(const unsigned char *data);
 // This function will determine the number of fonts in a font file.  TrueType
 // collection (.ttc) files may contain multiple fonts, while TrueType font
 // (.ttf) files only contain one font. The number of fonts can be used for
-// indexing with the previous function where the indicesIndex is between zero and one
+// indexing with the previous function where the index is between zero and one
 // less than the total fonts. If an error occurs, -1 is returned.
 
 STBTT_DEF int stbtt_GetFontOffsetForIndex(const unsigned char *data, int index);
 // Each .ttf/.ttc file may have more than one font. Each font has a sequential
-// indicesIndex number starting from 0. Call this function to get the font offset for
-// a given indicesIndex; it returns -1 if the indicesIndex is out of range. A regular .ttf
+// index number starting from 0. Call this function to get the font offset for
+// a given index; it returns -1 if the index is out of range. A regular .ttf
 // file will only define one font and it always be at offset 0, so it will
-// return '0' for indicesIndex 0, and -1 for all other indices.
+// return '0' for index 0, and -1 for all other indices.
 
 // The following structure is defined publicly so you can declare one on
 // the stack or as a global or etc, but you should treat it as opaque.
@@ -725,12 +725,12 @@ struct stbtt_fontinfo
 
    int loca,head,glyf,hhea,hmtx,kern,gpos,svg; // table locations as offset from start of .ttf
    int index_map;                     // a cmap mapping for our chosen character encoding
-   int indexToLocFormat;              // format needed to map from glyph indicesIndex to glyph
+   int indexToLocFormat;              // format needed to map from glyph index to glyph
 
    stbtt__buf cff;                    // cff font data
-   stbtt__buf charstrings;            // the charstring indicesIndex
-   stbtt__buf gsubrs;                 // global charstring subroutines indicesIndex
-   stbtt__buf subrs;                  // private charstring subroutines indicesIndex
+   stbtt__buf charstrings;            // the charstring index
+   stbtt__buf gsubrs;                 // global charstring subroutines index
+   stbtt__buf subrs;                  // private charstring subroutines index
    stbtt__buf fontdicts;              // array of font dicts
    stbtt__buf fdselect;               // map from glyph to fontdict
 };
@@ -1024,7 +1024,7 @@ STBTT_DEF unsigned char * stbtt_GetCodepointSDF(const stbtt_fontinfo *info, floa
 
 
 STBTT_DEF int stbtt_FindMatchingFont(const unsigned char *fontdata, const char *name, int flags);
-// returns the offset (not indicesIndex) of the font that matches, or -1 if none
+// returns the offset (not index) of the font that matches, or -1 if none
 //   if you use STBTT_MACSTYLE_DONTCARE, use a font name like "Arial Bold".
 //   if you use any other flag, use a font name like "Arial"; this checks
 //     the 'macStyle' header field; i don't know if fonts set this consistently
@@ -1323,7 +1323,7 @@ static stbtt_uint32 stbtt__find_table(stbtt_uint8 *data, stbtt_uint32 fontstart,
 
 static int stbtt_GetFontOffsetForIndex_internal(unsigned char *font_collection, int index)
 {
-   // if it's just a font, there's only one valid indicesIndex
+   // if it's just a font, there's only one valid index
    if (stbtt__isfont(font_collection))
       return index == 0 ? 0 : -1;
 
@@ -1611,8 +1611,8 @@ static int stbtt__GetGlyfOffset(const stbtt_fontinfo *info, int glyph_index)
 
    STBTT_assert(!info->cff.size);
 
-   if (glyph_index >= info->numGlyphs) return -1; // glyph indicesIndex out of range
-   if (info->indexToLocFormat >= 2)    return -1; // unknown indicesIndex->glyph map format
+   if (glyph_index >= info->numGlyphs) return -1; // glyph index out of range
+   if (info->indexToLocFormat >= 2)    return -1; // unknown index->glyph map format
 
    if (info->indexToLocFormat == 0) {
       g1 = info->glyf + ttUSHORT(info->data + info->loca + glyph_index * 2) * 2;
@@ -2932,7 +2932,7 @@ static void stbtt__rasterize_sorted_edges(stbtt__bitmap *result, stbtt__edge *e,
    stbtt__active_edge *active = NULL;
    int y,j=0;
    int max_weight = (255 / vsubsample);  // weight per vertical scanline
-   int s; // vertical subsample indicesIndex
+   int s; // vertical subsample index
    unsigned char scanline_data[512], *scanline;
 
    if (result->w > 512)
@@ -3897,7 +3897,7 @@ typedef int stbrp_coord;
 ////////////////////////////////////////////////////////////////////////////////////
 //                                                                                //
 //                                                                                //
-// COMPILER WARN ?!?!?                                                         //
+// COMPILER WARNING ?!?!?                                                         //
 //                                                                                //
 //                                                                                //
 // if you get a compile warning due to these symbols being defined more than      //

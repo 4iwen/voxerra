@@ -7,19 +7,10 @@ void Application::run() {
     m_chunkManager = new ChunkManager(157);
     m_blockShader = new Shader("shaders/block.vert", "shaders/block.frag");
 
-    /*
-    Window m_window(1280, 720, "voxerra");
-    Camera* camera = new Camera(m_window.m_window, glm::vec3(0.0f, 0.0f, 3.0f), 90.0f, 0.1f, 100.0f);
-    gui debugGui(m_window.m_window, camera);
-    ChunkManager chunkManager(157);
-    Shader blockShader("shaders/block.vert", "shaders/block.frag");
-     */
-
     while (!m_window->shouldClose()) {
         m_window->pollEvents();
         m_window->setVsync(true);
-        m_window->setClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-        m_window->clear();
+        m_window->clear({0.1f, 0.1f, 0.1f});
 
         // TODO: move all of this to a separate function(s)
         //glfwSwapInterval(debugGui.GetVsync());
@@ -32,7 +23,6 @@ void Application::run() {
         //// clear screen
         //ImVec4 clearColor = debugGui.GetClearColor();
         //glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
-
 
         m_camera->Update();
         m_blockShader->use();

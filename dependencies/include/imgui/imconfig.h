@@ -6,10 +6,10 @@
 // A) You may edit imconfig.h (and not overwrite it when updating Dear ImGui, or maintain a patch/rebased branch with your modifications to it)
 // B) or '#define IMGUI_USER_CONFIG "my_imgui_config.h"' in your project and then add directives in your own file without touching this template.
 //-----------------------------------------------------------------------------
-// You need to make sure that configuration settings are defined consistently _everywhere_ Dear ImGui is used, which include the gui*.cpp
+// You need to make sure that configuration settings are defined consistently _everywhere_ Dear ImGui is used, which include the imgui*.cpp
 // files but also _any_ of your code that uses Dear ImGui. This is because some compile-time options have an affect on data structures.
 // Defining those options in imconfig.h will ensure every compilation unit gets to see the same data structure layouts.
-// Call IMGUI_CHECKVERSION() from your .cpp files to verify that the data structures your files are using are matching the ones gui.cpp is using.
+// Call IMGUI_CHECKVERSION() from your .cpp files to verify that the data structures your files are using are matching the ones imgui.cpp is using.
 //-----------------------------------------------------------------------------
 
 #pragma once
@@ -22,7 +22,7 @@
 //---- Define attributes of all API symbols declarations, e.g. for DLL under Windows
 // Using Dear ImGui via a shared library is not recommended, because of function call overhead and because we don't guarantee backward nor forward ABI compatibility.
 // DLL users: heaps and globals are not shared across DLL boundaries! You will need to call SetCurrentContext() + SetAllocatorFunctions()
-// for each static/DLL boundary you are calling from. Read "Context and Memory Allocators" section of gui.cpp for more details.
+// for each static/DLL boundary you are calling from. Read "Context and Memory Allocators" section of imgui.cpp for more details.
 //#define IMGUI_API __declspec( dllexport )
 //#define IMGUI_API __declspec( dllimport )
 
@@ -49,7 +49,7 @@
 //#define IMGUI_DISABLE_DEFAULT_ALLOCATORS                  // Don't implement default allocators calling malloc()/free() to avoid linking with them. You will need to call ImGui::SetAllocatorFunctions().
 //#define IMGUI_DISABLE_SSE                                 // Disable use of SSE intrinsics even if available
 
-//---- Include imgui_user.h at the end of gui.h as a convenience
+//---- Include imgui_user.h at the end of imgui.h as a convenience
 //#define IMGUI_INCLUDE_IMGUI_USER_H
 
 //---- Pack colors to BGRA8 instead of RGBA8 (to avoid converting from one to another)
@@ -107,11 +107,6 @@
 // (use 'Metrics->Tools->Item Picker' to pick widgets with the mouse and break into them for easy debugging.)
 //#define IM_DEBUG_BREAK  IM_ASSERT(0)
 //#define IM_DEBUG_BREAK  __debugbreak()
-
-//---- Debug Tools: Have the Item Picker break in the ItemAdd() function instead of ItemHoverable(),
-// (which comes earlier in the code, will catch a few extra items, allow picking items other than Hovered one.)
-// This adds a small runtime cost which is why it is not enabled by default.
-//#define IMGUI_DEBUG_TOOL_ITEM_PICKER_EX
 
 //---- Debug Tools: Enable slower asserts
 //#define IMGUI_DEBUG_PARANOID

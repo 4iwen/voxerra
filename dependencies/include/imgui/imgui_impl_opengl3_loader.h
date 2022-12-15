@@ -18,7 +18,7 @@
 // WILL NOT BE USING OUR LOADER, AND INSTEAD EXPECT ANOTHER/YOUR LOADER TO BE AVAILABLE IN THE COMPILATION UNIT.
 //
 // Regenerate with:
-//   python gl3w_gen.py --output ../gui/backends/imgui_impl_opengl3_loader.h --ref ../gui/backends/imgui_impl_opengl3.cpp ./extra_symbols.txt
+//   python gl3w_gen.py --output ../imgui/backends/imgui_impl_opengl3_loader.h --ref ../imgui/backends/imgui_impl_opengl3.cpp ./extra_symbols.txt
 //
 // More info:
 //   https://github.com/dearimgui/gl3w_stripped
@@ -324,22 +324,22 @@ GLAPI GLuint APIENTRY glCreateShader (GLenum type);
 GLAPI void APIENTRY glDeleteProgram (GLuint program);
 GLAPI void APIENTRY glDeleteShader (GLuint shader);
 GLAPI void APIENTRY glDetachShader (GLuint program, GLuint shader);
-GLAPI void APIENTRY glDisableVertexAttribArray (GLuint indicesIndex);
-GLAPI void APIENTRY glEnableVertexAttribArray (GLuint indicesIndex);
+GLAPI void APIENTRY glDisableVertexAttribArray (GLuint index);
+GLAPI void APIENTRY glEnableVertexAttribArray (GLuint index);
 GLAPI GLint APIENTRY glGetAttribLocation (GLuint program, const GLchar *name);
 GLAPI void APIENTRY glGetProgramiv (GLuint program, GLenum pname, GLint *params);
 GLAPI void APIENTRY glGetProgramInfoLog (GLuint program, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
 GLAPI void APIENTRY glGetShaderiv (GLuint shader, GLenum pname, GLint *params);
 GLAPI void APIENTRY glGetShaderInfoLog (GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
 GLAPI GLint APIENTRY glGetUniformLocation (GLuint program, const GLchar *name);
-GLAPI void APIENTRY glGetVertexAttribiv (GLuint indicesIndex, GLenum pname, GLint *params);
-GLAPI void APIENTRY glGetVertexAttribPointerv (GLuint indicesIndex, GLenum pname, void **pointer);
+GLAPI void APIENTRY glGetVertexAttribiv (GLuint index, GLenum pname, GLint *params);
+GLAPI void APIENTRY glGetVertexAttribPointerv (GLuint index, GLenum pname, void **pointer);
 GLAPI void APIENTRY glLinkProgram (GLuint program);
 GLAPI void APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
 GLAPI void APIENTRY glUseProgram (GLuint program);
 GLAPI void APIENTRY glUniform1i (GLint location, GLint v0);
 GLAPI void APIENTRY glUniformMatrix4fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-GLAPI void APIENTRY glVertexAttribPointer (GLuint indicesIndex, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
+GLAPI void APIENTRY glVertexAttribPointer (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
 #endif
 #endif /* GL_VERSION_2_0 */
 #ifndef GL_VERSION_3_0
@@ -356,7 +356,7 @@ typedef void (APIENTRYP PFNGLBINDVERTEXARRAYPROC) (GLuint array);
 typedef void (APIENTRYP PFNGLDELETEVERTEXARRAYSPROC) (GLsizei n, const GLuint *arrays);
 typedef void (APIENTRYP PFNGLGENVERTEXARRAYSPROC) (GLsizei n, GLuint *arrays);
 #ifdef GL_GLEXT_PROTOTYPES
-GLAPI const GLubyte *APIENTRY glGetStringi (GLenum name, GLuint indicesIndex);
+GLAPI const GLubyte *APIENTRY glGetStringi (GLenum name, GLuint index);
 GLAPI void APIENTRY glBindVertexArray (GLuint array);
 GLAPI void APIENTRY glDeleteVertexArrays (GLsizei n, const GLuint *arrays);
 GLAPI void APIENTRY glGenVertexArrays (GLsizei n, GLuint *arrays);

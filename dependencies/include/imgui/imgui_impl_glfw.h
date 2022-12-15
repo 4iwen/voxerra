@@ -1,4 +1,4 @@
-// dear gui: Platform Backend for GLFW
+// dear imgui: Platform Backend for GLFW
 // This needs to be used along with a Renderer (e.g. OpenGL3, Vulkan, WebGPU..)
 // (Info: GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
 // (Requires: GLFW 3.1+. Prefer GLFW 3.3+ for full feature support.)
@@ -14,13 +14,9 @@
 //  [ ] Platform: Multi-viewport support: ParentViewportID not honored, and so io.ConfigViewportsNoDefaultParent has no effect (minor).
 
 // You can use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
-// Prefer including the entire gui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
-// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of gui.cpp.
+// Prefer including the entire imgui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
+// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
-
-// About GLSL version:
-// The 'glsl_version' initialization parameter defaults to "#version 150" if NULL.
-// Only override if your GL version doesn't handle this GLSL version. Keep NULL if unsure!
 
 #pragma once
 #include "imgui.h"      // IMGUI_IMPL_API

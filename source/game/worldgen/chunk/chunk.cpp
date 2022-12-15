@@ -15,7 +15,7 @@ Chunk::Chunk(int x, int z) {
 void Chunk::generate() {
     for (int x = 0; x < CHUNK_SIZE; x++) {
         for (int z = 0; z < CHUNK_SIZE; ++z) {
-            int height = Utils::noise.GetNoise((float) (x + chunkX * CHUNK_SIZE),
+            int height = Utils::s_noise.GetNoise((float) (x + chunkX * CHUNK_SIZE),
                                                 (float) (z + chunkZ * CHUNK_SIZE)) * 20;
             height += 10;
             if (height < 0)
@@ -32,7 +32,7 @@ void Chunk::generate() {
     }
 }
 
-void Chunk::GenerateVerticesAndIndices() {
+void Chunk::generateVerticesAndIndices() {
     for (int x = 0; x < CHUNK_SIZE; x++) {
         for (int y = 0; y < CHUNK_HEIGHT; y++) {
             for (int z = 0; z < CHUNK_SIZE; z++) {
@@ -41,29 +41,29 @@ void Chunk::GenerateVerticesAndIndices() {
                 }
 
                 if (x == 0 || chunkData[x - 1][y][z] == BlockType::AIR) {
-                    AddLeftSide(x, y, z);
+                    addLeftSide(x, y, z);
                 }
                 if (x == CHUNK_SIZE - 1 || chunkData[x + 1][y][z] == BlockType::AIR) {
-                    AddRightSide(x, y, z);
+                    addRightSide(x, y, z);
                 }
                 if (y == 0 || chunkData[x][y - 1][z] == BlockType::AIR) {
-                    AddBottomSide(x, y, z);
+                    addBottomSide(x, y, z);
                 }
                 if (y == CHUNK_HEIGHT - 1 || chunkData[x][y + 1][z] == BlockType::AIR) {
-                    AddTopSide(x, y, z);
+                    addTopSide(x, y, z);
                 }
                 if (z == 0 || chunkData[x][y][z - 1] == BlockType::AIR) {
-                    AddFrontSide(x, y, z);
+                    addFrontSide(x, y, z);
                 }
                 if (z == CHUNK_SIZE - 1 || chunkData[x][y][z + 1] == BlockType::AIR) {
-                    AddBackSide(x, y, z);
+                    addBackSide(x, y, z);
                 }
             }
         }
     }
 }
 
-void Chunk::AddLeftSide(int x, int y, int z) {
+void Chunk::addLeftSide(int x, int y, int z) {
     glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 1)) * BLOCK_SIZE,
@@ -75,11 +75,11 @@ void Chunk::AddLeftSide(int x, int y, int z) {
     Vertex v4{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 1, 1)) * BLOCK_SIZE,
               color};
 
-    mesh.AddVertices(v1, v2, v3, v4);
-    mesh.AddIndices();
+    mesh.addVertices(v1, v2, v3, v4);
+    mesh.addIndices();
 }
 
-void Chunk::AddRightSide(int x, int y, int z) {
+void Chunk::addRightSide(int x, int y, int z) {
     glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 0, 0)) * BLOCK_SIZE,
@@ -91,11 +91,11 @@ void Chunk::AddRightSide(int x, int y, int z) {
     Vertex v4{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 1, 0)) * BLOCK_SIZE,
               color};
 
-    mesh.AddVertices(v1, v2, v3, v4);
-    mesh.AddIndices();
+    mesh.addVertices(v1, v2, v3, v4);
+    mesh.addIndices();
 }
 
-void Chunk::AddTopSide(int x, int y, int z) {
+void Chunk::addTopSide(int x, int y, int z) {
     glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 1, 0)) * BLOCK_SIZE,
@@ -107,11 +107,11 @@ void Chunk::AddTopSide(int x, int y, int z) {
     Vertex v4{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(1, 1, 0)) * BLOCK_SIZE,
               color};
 
-    mesh.AddVertices(v1, v2, v3, v4);
-    mesh.AddIndices();
+    mesh.addVertices(v1, v2, v3, v4);
+    mesh.addIndices();
 }
 
-void Chunk::AddBottomSide(int x, int y, int z) {
+void Chunk::addBottomSide(int x, int y, int z) {
     glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 1)) * BLOCK_SIZE,
@@ -123,11 +123,11 @@ void Chunk::AddBottomSide(int x, int y, int z) {
     Vertex v4{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 0)) * BLOCK_SIZE,
               color};
 
-    mesh.AddVertices(v1, v2, v3, v4);
-    mesh.AddIndices();
+    mesh.addVertices(v1, v2, v3, v4);
+    mesh.addIndices();
 }
 
-void Chunk::AddFrontSide(int x, int y, int z) {
+void Chunk::addFrontSide(int x, int y, int z) {
     glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 0)) * BLOCK_SIZE,
@@ -139,11 +139,11 @@ void Chunk::AddFrontSide(int x, int y, int z) {
     Vertex v4{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 1, 0)) * BLOCK_SIZE,
               color};
 
-    mesh.AddVertices(v1, v2, v3, v4);
-    mesh.AddIndices();
+    mesh.addVertices(v1, v2, v3, v4);
+    mesh.addIndices();
 }
 
-void Chunk::AddBackSide(int x, int y, int z) {
+void Chunk::addBackSide(int x, int y, int z) {
     glm::vec3 color = Utils::getBlockColor(chunkData[x][y][z]);
 
     Vertex v1{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 1, 1)) * BLOCK_SIZE,
@@ -155,10 +155,10 @@ void Chunk::AddBackSide(int x, int y, int z) {
     Vertex v4{(glm::vec3(x + chunkX * CHUNK_SIZE, y, z + chunkZ * CHUNK_SIZE) + glm::vec3(0, 0, 1)) * BLOCK_SIZE,
               color};
 
-    mesh.AddVertices(v1, v2, v3, v4);
-    mesh.AddIndices();
+    mesh.addVertices(v1, v2, v3, v4);
+    mesh.addIndices();
 }
 
-void Chunk::Draw() {
-    mesh.Draw();
+void Chunk::draw() {
+    mesh.draw();
 }

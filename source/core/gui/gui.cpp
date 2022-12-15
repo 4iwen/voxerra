@@ -5,7 +5,6 @@ Gui::Gui(GLFWwindow* window)
 {
     this->m_window = window;
 
-    IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
